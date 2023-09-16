@@ -2,12 +2,14 @@ import { Version3Client } from 'jira.js';
 import { DataSource } from './types';
 
 export class DataSourcesRepository {
+  constructor(private readonly client: Version3Client) {}
+
   async getDataSources(query: string): Promise<DataSource[]> {
-    const projectsPage = await client.projects.searchProjects({
+    const projectsPage = await this.client.projects.searchProjects({
       query,
     });
 
-    const filtersPage = await client.filters.getFiltersPaginated({
+    const filtersPage = await this.client.filters.getFiltersPaginated({
       filterName: query,
       expand: 'jql',
     });
@@ -27,18 +29,3 @@ export class DataSourcesRepository {
     return [...projects, ...filters];
   }
 }
-
-const email: string = process.env.JIRA_USER ?? '';
-const apiToken: string = process.env.JIRA_TOKEN ?? '';
-const host: string | undefined = process.env.JIRA_HOST;
-
-export const client = new Version3Client({
-  host,
-  authentication: {
-    basic: {
-      email,
-      apiToken,
-    },
-  },
-  newErrorHandling: true,
-});

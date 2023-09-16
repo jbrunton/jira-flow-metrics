@@ -9,9 +9,14 @@ export type CreateDataSetParams = Omit<DataSet, 'id'>;
 export class DataSetsRepository {
   constructor(private readonly cache: JsonDB) {}
 
-  async getDataSets() {
-    const dataSets = await this.cache.getObject<DataSet[]>('/dataSets');
+  async getDataSets(): Promise<DataSet[]> {
+    const dataSets =
+      await this.cache.getObject<Record<string, DataSet>>('/dataSets');
     return Object.values(dataSets);
+  }
+
+  getDataSet(dataSetId: string): Promise<DataSet> {
+    return this.cache.getObject<DataSet>(`/dataSets/${dataSetId}`);
   }
 
   async addDataSet(params: CreateDataSetParams) {

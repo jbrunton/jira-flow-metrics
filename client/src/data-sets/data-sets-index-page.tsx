@@ -1,5 +1,5 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Table } from "antd";
+import { Button, Space, Table } from "antd";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { AddDataSetModal } from "./add-data-set-modal";
@@ -28,7 +28,12 @@ export const DataSetsIndexPage = () => {
     <Table dataSource={dataSource} columns={[
       { title: 'Name', dataIndex: 'name', key: 'name' },
       { title: 'JQL', dataIndex: 'jql', key: 'jql' },
-      { key: 'actions', render: (_, dataSet) => <Link to={`/datasets/${dataSet.id}`}>Metrics</Link> }
+      { key: 'actions', render: (_, dataSet) => (
+        <Space size="large">
+          <Link to={`/datasets/${dataSet.id}/metrics`}>Metrics</Link>
+          <Link to={`/datasets/${dataSet.id}/issues`}>Issues</Link>
+        </Space>
+      )}
     ]} />
 
     <AddDataSetModal isOpen={isModalOpen} close={hideModal} />

@@ -3,6 +3,7 @@ import { DomainsDropdown } from './components/domains-dropdown'
 import { Col, Layout, Row } from 'antd'
 import { DomainsPage } from './domains/domains-page';
 import { DataSetsIndexPage } from './data-sets/data-sets-index-page';
+import { IssuesIndexPage } from './data-sets/issues-index-page';
 
 const { Header, Content } = Layout;
 
@@ -24,6 +25,7 @@ const App = () => {
           <Routes>
             <Route path="/domains" element={<DomainsPage />} />
             <Route path="/domains/:domainId" element={<DataSetsIndexPage />} />
+            <Route path="/datasets/:dataSetId/issues" element={<IssuesIndexPage />} />
             <Route path="*" element={<Navigate to="/domains" replace={true} />} />
           </Routes>
         </BrowserRouter>
