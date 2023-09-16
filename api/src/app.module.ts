@@ -5,6 +5,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { DomainsModule } from './domains/domains.module';
 import { DataSetsModule } from './data-sets/data-sets.module';
+import { IssuesModule } from './issues/issues.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { DataSetsModule } from './data-sets/data-sets.module';
     }),
     DomainsModule,
     DataSetsModule,
+    IssuesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
