@@ -3,10 +3,15 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { useGreeting } from './data/greeting'
+import { useDomains } from './data/domains'
+import { DomainsDropdown } from './components/domains-dropdown'
 
 function App() {
   const [count, setCount] = useState(0)
   const { data: greeting } = useGreeting();
+  const { data: domains } = useDomains();
+
+  console.log(domains);
 
   return (
     <>
@@ -21,6 +26,7 @@ function App() {
       <h1>Vite + React</h1>
       <div className="card">
         <p>Greeting: {greeting}</p>
+        <DomainsDropdown />
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>

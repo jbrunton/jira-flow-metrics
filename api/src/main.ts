@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 const port = parseInt(process.env.PORT ?? '3000', 10);
 
@@ -10,6 +11,14 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
   app.enableCors();
+
+  const config = new DocumentBuilder()
+    .setTitle('Jira Flow Metrics')
+    .setDescription('API for Jira Flow Metrics')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
 
   logger.log(`Running server on PID=${process.pid}, http://localhost:${port}`);
   await app.listen(port);
