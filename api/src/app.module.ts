@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { DomainsModule } from './domains/domains.module';
+import { DataSetsModule } from './data-sets/data-sets.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { DomainsModule } from './domains/domains.module';
       exclude: ['/api/(.*)'],
     }),
     DomainsModule,
+    DataSetsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

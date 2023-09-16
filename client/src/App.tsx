@@ -1,8 +1,8 @@
-import { BrowserRouter, Navigate, Outlet, Route, RouterProvider, Routes, createBrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { DomainsDropdown } from './components/domains-dropdown'
 import { Col, Layout, Row } from 'antd'
 import { DomainsPage } from './domains/domains-page';
-import { ProjectsIndexPage } from './projects/projects-index-page';
+import { DataSetsIndexPage } from './data-sets/data-sets-index-page';
 
 const { Header, Content } = Layout;
 
@@ -23,7 +23,7 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/domains" element={<DomainsPage />} />
-            <Route path="/domains/:domainId" element={<ProjectsIndexPage />} />
+            <Route path="/domains/:domainId" element={<DataSetsIndexPage />} />
             <Route path="*" element={<Navigate to="/domains" replace={true} />} />
           </Routes>
         </BrowserRouter>
