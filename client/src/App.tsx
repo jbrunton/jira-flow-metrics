@@ -1,44 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { useGreeting } from './data/greeting'
-import { useDomains } from './data/domains'
+import { BrowserRouter, Navigate, Outlet, Route, RouterProvider, Routes, createBrowserRouter } from 'react-router-dom';
 import { DomainsDropdown } from './components/domains-dropdown'
+import { Col, Layout, Row } from 'antd'
+import { DomainsPage } from './domains/domains-page';
+import { ProjectsIndexPage } from './projects/projects-index-page';
 
-function App() {
-  const [count, setCount] = useState(0)
-  const { data: greeting } = useGreeting();
-  const { data: domains } = useDomains();
+const { Header, Content } = Layout;
 
-  console.log(domains);
-
+const App = () => {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <p>Greeting: {greeting}</p>
-        <DomainsDropdown />
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Layout>
+      <Header>
+        <Row>
+          <Col flex="auto">
+            <span>Jira Flow Metrics</span>
+          </Col>
+          <Col style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+            <DomainsDropdown />
+          </Col>
+        </Row>
+      </Header>
+      <Content style={{ margin: '0 50px' }}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/domains" element={<DomainsPage />} />
+            <Route path="/domains/:domainId" element={<ProjectsIndexPage />} />
+            <Route path="*" element={<Navigate to="/domains" replace={true} />} />
+          </Routes>
+        </BrowserRouter>
+      </Content>
+    </Layout>
   )
 }
 
-export default App
+export default App;
+
+// const router = createBrowserRouter([
+//   {
+//     path: '/',
+//     element: <Root />,
+//   }
+// ]);
+
+// const App = <RouterProvider router={router} />
+
+// export default App;
