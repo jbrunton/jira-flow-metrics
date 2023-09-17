@@ -19,7 +19,7 @@ const getDataSources = async (query: string): Promise<DataSource[]> => {
     return [];
   }
 
-  const response = await axios.get(`http://localhost:3000/api/datasets/sources?query=${encodeURI(query)}`);
+  const response = await axios.get(`/api/datasets/sources?query=${encodeURI(query)}`);
   return response.data;
 }
 
@@ -31,19 +31,34 @@ export const useDataSources = (query: string) => {
 }
 
 const getDataSets = async (): Promise<DataSet[]> => {
-  const response = await axios.get(`http://localhost:3000/api/datasets`);
+  const response = await axios.get(`/api/datasets`);
   return response.data;
 }
 
 export const useDataSets = () => {
   return useQuery({
     queryKey: ['datasets'],
-    queryFn: getDataSets,
+    queryFn: () => getDataSets(),
   });
 }
 
-const createDataSet = async (dataSet: Omit<DataSet, "id">): Promise<DataSet> => {
-  const response = await axios.post('http://localhost:3000/api/datasets', dataSet);
+const syncDataSet = async (dataSetId: string): Promise<void> => {
+  await axios.put(`/api/issues/${dataSetId}/sync`);
+}
+
+export const useSyncDataSet = () => {
+  return useMutation({
+    mutationFn: syncDataSet,
+    onSuccess: () => client.invalidateQueries(['issues'])
+  })
+}
+
+export type CreateDataSetParams = Omit<DataSet, "id"> & {
+  domainId: string;
+}
+
+const createDataSet = async (dataSet: CreateDataSetParams): Promise<DataSet> => {
+  const response = await axios.post(`/api/datasets`, dataSet);
   return response.data;
 }
 

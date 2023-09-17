@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 export type AddDataSetModalParams = {
   isOpen: boolean;
   close: () => void;
+  domainId?: string;
 }
 
-export const AddDataSetModal: React.FC<AddDataSetModalParams> = ({ isOpen, close }) => {
+export const AddDataSetModal: React.FC<AddDataSetModalParams> = ({ isOpen, close, domainId }) => {
   const [form] = Form.useForm();
 
   const [dataSourceQuery, setDataSourceQuery] = useState<string>("");
@@ -21,7 +22,7 @@ export const AddDataSetModal: React.FC<AddDataSetModalParams> = ({ isOpen, close
   const onSubmit = async () => {
     try {
       const values = await form.validateFields();
-      createDataSet.mutate({ jql: dataSource?.jql, ...values });
+      createDataSet.mutate({ jql: dataSource?.jql, domainId, ...values });
       form.resetFields();
     } catch (e) {
       // validation failed

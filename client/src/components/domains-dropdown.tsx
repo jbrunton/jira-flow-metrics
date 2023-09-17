@@ -1,52 +1,48 @@
 import { Button, Divider, Select } from "antd";
-import { PlusOutlined } from '@ant-design/icons';
 import { Domain, useDomains } from "../data/domains"
-import { useState } from "react";
-import { AddDomainModal } from "./add-domain-modal";
+import { useDomainContext } from "../domains/context";
 
 export const DomainsDropdown = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const showModal = () => setIsModalOpen(true);
-  const hideModal = () => setIsModalOpen(false);
-
   const { data: domains } = useDomains();
-  
+  const { domainId, setDomainId } = useDomainContext();
+
   if (!domains) {
     return <Select style={{ width: 200 }} loading />
   }
 
   const options = getOptions(domains);
 
+  const navigateToDomains = () => window.location.pathname = '/domains';
+
   return <>
     <Select
       style={{ width: 200 }}
-      defaultValue={domains[0].id}
+      value={domainId}
+      onChange={setDomainId}
       options={options}
       dropdownRender={(menu) => (
         <>
-        {menu}
-        <Divider style={{ margin: '5px 0' }} />
-        <Button type="text" style={{ width: '100%' }} icon={<PlusOutlined />} onClick={showModal}>Add Domain</Button>
+          {menu}
+          <Divider style={{ margin: '5px 0' }} />
+          <Button type="text" style={{ width: '100%' }} onClick={navigateToDomains}>Manage Domains</Button>
         </>
       )}
     />
-    <AddDomainModal isOpen={isModalOpen} close={hideModal} />
   </>
 }
 
 const getLabel = (host: string): string => {
-  try {
-    const url = new URL(host);
-    return url.host;
+    try {
+      const url = new URL(host);
+      return url.host;
   } catch {
-    return host;
+      return host;
   }
 }
 
 const getOptions = (domains: Domain[]) => {
-  return domains.map(({ id, host }) => {
-    const label = getLabel(host);
-    return { value: id, label };
+    return domains.map(({ id, host }) => {
+      const label = getLabel(host);
+      return { value: id, label };
   })
 }

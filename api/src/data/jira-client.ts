@@ -1,16 +1,14 @@
 import { Version3Client } from 'jira.js';
+import { Domain } from 'src/domains/types';
 
-const email: string = process.env.JIRA_USER ?? '';
-const apiToken: string = process.env.JIRA_TOKEN ?? '';
-const host: string | undefined = process.env.JIRA_HOST;
-
-export const jiraClient = new Version3Client({
-  host,
-  authentication: {
-    basic: {
-      email,
-      apiToken,
+export const createJiraClient = (domain: Domain) =>
+  new Version3Client({
+    host: `https://${domain.host}`,
+    authentication: {
+      basic: {
+        email: domain.email,
+        apiToken: domain.token,
+      },
     },
-  },
-  newErrorHandling: true,
-});
+    newErrorHandling: true,
+  });

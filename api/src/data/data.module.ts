@@ -1,8 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Module, Scope } from '@nestjs/common';
 import { cache } from './database';
 import { JsonDB } from 'node-json-db';
 import { Version3Client } from 'jira.js';
-import { jiraClient } from './jira-client';
+import { createJiraClient } from './jira-client';
+import { Request } from 'express';
+import { DomainsRepository } from './domains.repository';
+import { REQUEST } from '@nestjs/core';
 
 @Module({
   providers: [
@@ -11,10 +14,20 @@ import { jiraClient } from './jira-client';
       useValue: cache,
     },
     {
+      scope: Scope.REQUEST,
       provide: Version3Client,
-      useValue: jiraClient,
+      inject: [REQUEST, DomainsRepository],
+      useFactory: async (request: Request, domainsRepo: DomainsRepository) => {
+        console.info({ request, domainsRepo });
+        const domains = await domainsRepo.getDomains();
+        const domainId = request.query.domainId;
+        const domain = domains.find((domain) => domain.id === domainId);
+        console.info({ domains, domain });
+        return createJiraClient(domain);
+      },
     },
+    DomainsRepository,
   ],
-  exports: [JsonDB, Version3Client],
+  exports: [JsonDB, Version3Client, DomainsRepository],
 })
 export class DataModule {}

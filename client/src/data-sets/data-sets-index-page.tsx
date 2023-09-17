@@ -1,13 +1,11 @@
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, SyncOutlined } from "@ant-design/icons";
 import { Button, Space, Table } from "antd";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AddDataSetModal } from "./add-data-set-modal";
-import { useDataSets } from "../data/data-sets";
+import { useDataSets, useSyncDataSet } from "../data/data-sets";
 
 export const DataSetsIndexPage = () => {
-  const { domainId } = useParams();
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => setIsModalOpen(true);
@@ -19,6 +17,8 @@ export const DataSetsIndexPage = () => {
     key: dataSet.id,
     ...dataSet
   }));
+
+  const syncDataSet = useSyncDataSet();
 
   return <>
     <Button type="primary" icon={<PlusOutlined />} onClick={showModal} style={{ marginBottom: '16px' }}>
@@ -32,6 +32,7 @@ export const DataSetsIndexPage = () => {
         <Space size="large">
           <Link to={`/datasets/${dataSet.id}/metrics`}>Metrics</Link>
           <Link to={`/datasets/${dataSet.id}/issues`}>Issues</Link>
+          <Button icon={<SyncOutlined />} onClick={() => syncDataSet.mutate(dataSet.id)} disabled={syncDataSet.isLoading} loading={syncDataSet.isLoading}>Sync</Button>
         </Space>
       )}
     ]} />
