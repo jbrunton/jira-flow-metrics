@@ -7,12 +7,7 @@ import { ExportOutlined } from "@ant-design/icons";
 export const IssuesIndexPage = () => {
   const { dataSetId } = useParams();
   const { data: issues } = useIssues(dataSetId);
-
-  // const dataSource = issues?.map((issue) => ({
-  //   key: issue.key,
-  //   ...issue
-  // }));
-
+  
   const categoryColors = {
     "To Do": "grey",
     "In Progress": "blue",

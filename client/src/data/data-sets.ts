@@ -47,7 +47,7 @@ export const useDataSets = () => {
 }
 
 const syncDataSet = async (dataSetId: string): Promise<void> => {
-  await axios.put(`/issues/${dataSetId}/sync`);
+  await axios.put(`/datasets/${dataSetId}/sync`);
 }
 
 export const useSyncDataSet = () => {

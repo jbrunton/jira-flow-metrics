@@ -13,7 +13,7 @@ export type Issue = {
 const issuesQueryKey = 'issues';
 
 const getIssues = async (dataSetId?: string): Promise<Issue[]> => {
-  const response = await axios.get(`/issues/${dataSetId}`);
+  const response = await axios.get(`/datasets/${dataSetId}/issues`);
   return response.data;
 }
 
