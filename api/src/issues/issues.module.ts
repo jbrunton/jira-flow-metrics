@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { DataModule } from '../data/data.module';
-import { IssuesController } from './issues.controller';
 import { IssuesRepository } from './issues.repository';
 import { JiraIssuesRepository } from './jira-issues.repository';
 import { JiraFieldsRepository } from './jira-fields.repository';
@@ -16,6 +15,6 @@ import { DataSetsRepository } from 'src/data-sets/data-sets.repository';
     JiraStatusesRepository,
     DataSetsRepository,
   ],
-  controllers: [IssuesController],
+  controllers: [],
 })
 export class IssuesModule {}

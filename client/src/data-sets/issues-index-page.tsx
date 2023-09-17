@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { useIssues } from "../data/issues";
 import { Space, Table, Tag } from "antd";
@@ -7,7 +6,7 @@ import { ExportOutlined } from "@ant-design/icons";
 export const IssuesIndexPage = () => {
   const { dataSetId } = useParams();
   const { data: issues } = useIssues(dataSetId);
-  
+
   const categoryColors = {
     "To Do": "grey",
     "In Progress": "blue",
