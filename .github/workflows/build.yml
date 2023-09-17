@@ -3,7 +3,7 @@ on: push
 
 jobs:
 
-  build:
+  lint:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -17,3 +17,13 @@ jobs:
       - run: npm run lint
       - run: npm run build
   
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm ci
+      - run: npm run test
+      - run: npm run test:e2e

@@ -3,10 +3,10 @@ import { DataModule } from '../data/data.module';
 import { DataSetsController } from './data-sets.controller';
 import { DataSetsRepository } from './data-sets.repository';
 import { DataSourcesRepository } from './data-sources.repository';
-import { JiraIssuesRepository } from 'src/issues/jira-issues.repository';
-import { JiraFieldsRepository } from 'src/issues/jira-fields.repository';
-import { JiraStatusesRepository } from 'src/issues/jira-statuses.repository';
-import { IssuesRepository } from 'src/issues/issues.repository';
+import { JiraIssuesRepository } from '../issues/jira-issues.repository';
+import { JiraFieldsRepository } from '../issues/jira-fields.repository';
+import { JiraStatusesRepository } from '../issues/jira-statuses.repository';
+import { IssuesRepository } from '../issues/issues.repository';
 
 @Module({
   imports: [DataModule],

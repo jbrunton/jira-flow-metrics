@@ -1,5 +1,5 @@
 import { Version3Client } from 'jira.js';
-import { Domain } from 'src/domains/types';
+import { Domain } from '../domains/types';
 
 export const createJiraClient = (domain: Domain) =>
   new Version3Client({

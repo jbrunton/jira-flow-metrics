@@ -4,7 +4,7 @@ import { IssuesRepository } from './issues.repository';
 import { JiraIssuesRepository } from './jira-issues.repository';
 import { JiraFieldsRepository } from './jira-fields.repository';
 import { JiraStatusesRepository } from './jira-statuses.repository';
-import { DataSetsRepository } from 'src/data-sets/data-sets.repository';
+import { DataSetsRepository } from '../data-sets/data-sets.repository';
 
 @Module({
   imports: [DataModule],
