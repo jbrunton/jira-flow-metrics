@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { setDefaultDomainId } from "../data/config";
+import { client } from "../client";
+import { invalidateDataSourceQueries } from "../data/data-sets";
 
 export type DomainContextType = {
   domainId: string | null;
@@ -32,6 +34,7 @@ export const DomainProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (domainId) {
       setDefaultDomainId(domainId);
       localStorage.setItem('domainId', domainId);
+      invalidateDataSourceQueries();
     }
   }, [domainId]);
 

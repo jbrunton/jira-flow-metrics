@@ -10,14 +10,16 @@ export type Issue = {
   jiraUrl: string;
 }
 
+const issuesQueryKey = 'issues';
+
 const getIssues = async (dataSetId?: string): Promise<Issue[]> => {
-  const response = await axios.get(`http://localhost:3000/api/issues/${dataSetId}`);
+  const response = await axios.get(`/datasets/${dataSetId}/issues`);
   return response.data;
 }
 
 export const useIssues = (dataSetId?: string) => {
   return useQuery({
-    queryKey: ['issues', dataSetId],
+    queryKey: [issuesQueryKey, dataSetId],
     queryFn: () => getIssues(dataSetId),
     enabled: dataSetId !== undefined,
   });
