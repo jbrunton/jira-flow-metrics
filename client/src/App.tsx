@@ -4,8 +4,7 @@ import { DomainsPage } from './domains/domains-page';
 import { DataSetsIndexPage } from './data-sets/data-sets-index-page';
 import { IssuesIndexPage } from './data-sets/issues-index-page';
 import { DomainsDropdown } from './components/domains-dropdown';
-import { useState } from 'react';
-import { DomainContext, DomainProvider } from './domains/context';
+import { DomainProvider } from './domains/context/provider';
 import { configureDefaults } from './data/config';
 
 const { Header, Content } = Layout;
