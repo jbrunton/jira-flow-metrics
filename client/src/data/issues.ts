@@ -10,15 +10,15 @@ export type Issue = {
   jiraUrl: string;
 }
 
-const getIssues = async (domainId?: string, dataSetId?: string): Promise<Issue[]> => {
-  const response = await axios.get(`http://localhost:3000/api/issues/${domainId}/${dataSetId}`);
+const getIssues = async (dataSetId?: string): Promise<Issue[]> => {
+  const response = await axios.get(`http://localhost:3000/api/issues/${dataSetId}`);
   return response.data;
 }
 
-export const useIssues = (domainId?: string, dataSetId?: string) => {
+export const useIssues = (dataSetId?: string) => {
   return useQuery({
     queryKey: ['issues', dataSetId],
-    queryFn: () => getIssues(domainId, dataSetId),
-    enabled: domainId !== undefined && dataSetId !== undefined,
+    queryFn: () => getIssues(dataSetId),
+    enabled: dataSetId !== undefined,
   });
 }

@@ -11,7 +11,7 @@ class CreateDataSetBody {
   jql: string;
 }
 
-@Controller('datasets/:domainId')
+@Controller('datasets')
 export class DataSetsController {
   constructor(
     private readonly dataSets: DataSetsRepository,
@@ -19,7 +19,7 @@ export class DataSetsController {
   ) {}
 
   @Get()
-  async getDataSets(@Param('domainId') domainId: string) {
+  async getDataSets(@Query('domainId') domainId: string) {
     return this.dataSets.getDataSets(domainId);
   }
 
@@ -30,7 +30,7 @@ export class DataSetsController {
 
   @Post()
   async createDataSet(
-    @Param('domainId') domainId,
+    @Query('domainId') domainId,
     @Body() dataSet: CreateDataSetBody,
   ) {
     return await this.dataSets.addDataSet(domainId, dataSet);

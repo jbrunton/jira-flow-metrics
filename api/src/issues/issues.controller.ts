@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Put } from '@nestjs/common';
+import { Controller, Get, Param, Put, Query } from '@nestjs/common';
 import { IssuesRepository } from './issues.repository';
 import { JiraIssuesRepository } from './jira-issues.repository';
 import { DataSetsRepository } from 'src/data-sets/data-sets.repository';
@@ -14,7 +14,7 @@ import { JiraStatusesRepository } from './jira-statuses.repository';
 //   jql: string;
 // }
 
-@Controller('issues/:domainId')
+@Controller('issues')
 export class IssuesController {
   constructor(
     private readonly issues: IssuesRepository,
@@ -25,7 +25,10 @@ export class IssuesController {
   ) {}
 
   @Get(':dataset')
-  async getIssues(@Param('domainId') domainId: string, @Param('dataset') dataSetId: string) {
+  async getIssues(
+    @Query('domainId') domainId: string,
+    @Param('dataset') dataSetId: string,
+  ) {
     const issues = await this.issues.getIssues(domainId, dataSetId);
     return issues.map((issue) => ({
       jiraUrl: `${process.env.JIRA_HOST}/browse/${issue.key}`,
@@ -35,7 +38,7 @@ export class IssuesController {
 
   @Put(':dataset/sync')
   async sync(
-    @Param('domainId') domainId: string,
+    @Query('domainId') domainId: string,
     @Param('dataset') dataSetId: string,
   ) {
     const dataSet = await this.dataSets.getDataSet(domainId, dataSetId);

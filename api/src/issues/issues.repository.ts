@@ -31,7 +31,8 @@ export class IssuesRepository {
   }
 }
 
-const issuesPath = (domainId: string, dataSetId: string) => `/issues/${domainId}/${dataSetId}`;
+const issuesPath = (domainId: string, dataSetId: string) =>
+  `/issues/${domainId}/${dataSetId}`;
 
 // const issuePath = (dataSetId: string, issueKey: string) =>
 //   `${issuesPath(dataSetId)}/${issueKey}}`;

@@ -20,7 +20,7 @@ import { REQUEST } from '@nestjs/core';
       useFactory: async (request: Request, domainsRepo: DomainsRepository) => {
         console.info({ request, domainsRepo });
         const domains = await domainsRepo.getDomains();
-        const domainId = request.params.domainId;
+        const domainId = request.query.domainId;
         const domain = domains.find((domain) => domain.id === domainId);
         console.info({ domains, domain });
         return createJiraClient(domain);

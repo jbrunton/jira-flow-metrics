@@ -5,8 +5,8 @@ import { Space, Table, Tag } from "antd";
 import { ExportOutlined } from "@ant-design/icons";
 
 export const IssuesIndexPage = () => {
-  const { domainId, dataSetId } = useParams();
-  const { data: issues } = useIssues(domainId, dataSetId);
+  const { dataSetId } = useParams();
+  const { data: issues } = useIssues(dataSetId);
 
   // const dataSource = issues?.map((issue) => ({
   //   key: issue.key,

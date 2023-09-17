@@ -13,7 +13,7 @@ export const AddDataSetModal: React.FC<AddDataSetModalParams> = ({ isOpen, close
 
   const [dataSourceQuery, setDataSourceQuery] = useState<string>("");
 
-  const { data: dataSources } = useDataSources(domainId, dataSourceQuery);
+  const { data: dataSources } = useDataSources(dataSourceQuery);
 
   const [dataSource, setDataSource] = useState<DataSource>();
  

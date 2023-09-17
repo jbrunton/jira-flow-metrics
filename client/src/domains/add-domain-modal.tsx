@@ -16,7 +16,6 @@ export const AddDomainModal: React.FC<AddDomainModalParams> = ({ isOpen, close }
     try {
       const values = await form.validateFields();
       createDomain.mutate(values);
-      form.resetFields();
     } catch (e) {
       // validation failed
     }
@@ -24,9 +23,10 @@ export const AddDomainModal: React.FC<AddDomainModalParams> = ({ isOpen, close }
 
   useEffect(() => {
     if (createDomain.isSuccess) {
+      form.resetFields();
       close();
     }
-  }, [createDomain.isSuccess, close]);
+  }, [createDomain.isSuccess, close, form]);
 
 return <Modal title="Add Domain" open={isOpen} onOk={onSubmit} onCancel={close} confirmLoading={createDomain.isLoading}>
     <Form form={form} labelCol={{ span: 6 }} wrapperCol={{ span: 18 }}>

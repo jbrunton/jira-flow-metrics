@@ -26,9 +26,16 @@ export class DomainsController {
 
   @Post()
   async createDomain(@Body() domain: CreateDomainBody) {
-    const url = new URL(domain.host);
-    const host = url.host;
-    console.info({ host });
+    const host = normaliseHost(domain.host);
     return await this.repository.addDomain({ ...domain, host });
   }
 }
+
+const normaliseHost = (host: string): string => {
+  if (host.startsWith('https://') || host.startsWith('http://')) {
+    const url = new URL(host);
+    return url.host;
+  }
+
+  return host;
+};

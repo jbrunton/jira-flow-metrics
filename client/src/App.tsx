@@ -3,30 +3,40 @@ import { Col, Layout, Row } from 'antd'
 import { DomainsPage } from './domains/domains-page';
 import { DataSetsIndexPage } from './data-sets/data-sets-index-page';
 import { IssuesIndexPage } from './data-sets/issues-index-page';
+import { DomainsDropdown } from './components/domains-dropdown';
+import { useState } from 'react';
+import { DomainContext, DomainProvider } from './domains/context';
+import { configureDefaults } from './data/config';
 
 const { Header, Content } = Layout;
 
 const App = () => {
+  configureDefaults();
   return (
-    <Layout>
-      <Header>
-        <Row>
-          <Col flex="auto">
-            <span>Jira Flow Metrics</span>
-          </Col>
-        </Row>
-      </Header>
-      <Content style={{ margin: '0 50px' }}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/domains" element={<DomainsPage />} />
-            <Route path="/domains/:domainId" element={<DataSetsIndexPage />} />
-            <Route path="/datasets/:domainId/:dataSetId/issues" element={<IssuesIndexPage />} />
-            <Route path="*" element={<Navigate to="/domains" replace={true} />} />
-          </Routes>
-        </BrowserRouter>
-      </Content>
-    </Layout>
+    <DomainProvider>
+      <Layout>
+        <Header>
+          <Row>
+            <Col flex="auto">
+              <span>Jira Flow Metrics</span>
+            </Col>
+            <Col style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+              <DomainsDropdown />
+            </Col>
+          </Row>
+        </Header>
+        <Content style={{ margin: '0 50px' }}>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/domains" element={<DomainsPage />} />
+                <Route path="/datasets" element={<DataSetsIndexPage />} />
+                <Route path="/datasets/:dataSetId/issues" element={<IssuesIndexPage />} />
+                <Route path="*" element={<Navigate to="/domains" replace={true} />} />
+              </Routes>
+            </BrowserRouter>
+        </Content>
+      </Layout>
+    </DomainProvider>
   )
 }
 

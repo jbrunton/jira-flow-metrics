@@ -14,42 +14,51 @@ export type DataSet = {
   jql: string;
 }
 
-const getDataSources = async (domainId: string | undefined, query: string): Promise<DataSource[]> => {
+const getDataSources = async (query: string): Promise<DataSource[]> => {
   if (query.trim().length === 0) {
     return [];
   }
 
-  const response = await axios.get(`http://localhost:3000/api/datasets/${domainId}/sources?query=${encodeURI(query)}`);
+  const response = await axios.get(`/api/datasets/sources?query=${encodeURI(query)}`);
   return response.data;
 }
 
-export const useDataSources = (domainId: string | undefined, query: string) => {
+export const useDataSources = (query: string) => {
   return useQuery({
-    queryKey: ['datasources', domainId, query],
-    queryFn: () => getDataSources(domainId, query),
-    enabled: domainId !== undefined,
+    queryKey: ['datasources', query],
+    queryFn: () => getDataSources(query),
   });
 }
 
-const getDataSets = async (domainId?: string): Promise<DataSet[]> => {
-  const response = await axios.get(`http://localhost:3000/api/datasets/${domainId}`);
+const getDataSets = async (): Promise<DataSet[]> => {
+  const response = await axios.get(`/api/datasets`);
   return response.data;
 }
 
-export const useDataSets = (domainId?: string) => {
+export const useDataSets = () => {
   return useQuery({
-    queryKey: ['datasets', domainId],
-    queryFn: () => getDataSets(domainId),
-    enabled: domainId !== undefined,
+    queryKey: ['datasets'],
+    queryFn: () => getDataSets(),
   });
+}
+
+const syncDataSet = async (dataSetId: string): Promise<void> => {
+  await axios.put(`/api/issues/${dataSetId}/sync`);
+}
+
+export const useSyncDataSet = () => {
+  return useMutation({
+    mutationFn: syncDataSet,
+    onSuccess: () => client.invalidateQueries(['issues'])
+  })
 }
 
 export type CreateDataSetParams = Omit<DataSet, "id"> & {
   domainId: string;
 }
 
-const createDataSet = async ({ domainId, ...dataSet }: CreateDataSetParams): Promise<DataSet> => {
-  const response = await axios.post(`http://localhost:3000/api/datasets/${domainId}`, dataSet);
+const createDataSet = async (dataSet: CreateDataSetParams): Promise<DataSet> => {
+  const response = await axios.post(`/api/datasets`, dataSet);
   return response.data;
 }
 
