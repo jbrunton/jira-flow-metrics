@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DataError, JsonDB } from 'node-json-db';
-import { Domain } from './types';
+import { Domain } from '../domains/types';
 import { createHash } from 'crypto';
 
 export type CreateDomainParams = Omit<Domain, 'id'>;

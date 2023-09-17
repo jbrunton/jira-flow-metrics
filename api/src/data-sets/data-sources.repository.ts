@@ -1,6 +1,8 @@
 import { Version3Client } from 'jira.js';
 import { DataSource } from './types';
+import { Injectable, Scope } from '@nestjs/common';
 
+@Injectable({ scope: Scope.REQUEST })
 export class DataSourcesRepository {
   constructor(private readonly client: Version3Client) {}
 
@@ -25,6 +27,8 @@ export class DataSourcesRepository {
       jql: filter.jql,
       type: 'filter',
     }));
+
+    console.info({ filters, projects });
 
     return [...projects, ...filters];
   }

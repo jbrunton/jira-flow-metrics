@@ -6,10 +6,10 @@ import { Issue } from './types';
 export class IssuesRepository {
   constructor(private readonly cache: JsonDB) {}
 
-  async getIssues(dataSetId: string): Promise<Issue[]> {
+  async getIssues(domainId: string, dataSetId: string): Promise<Issue[]> {
     try {
       const issues = await this.cache.getObject<Record<string, Issue>>(
-        issuesPath(dataSetId),
+        issuesPath(domainId, dataSetId),
       );
       return Object.values(issues);
     } catch (e) {
@@ -20,10 +20,10 @@ export class IssuesRepository {
     }
   }
 
-  async setIssues(dataSetId: string, issues: Issue[]) {
-    await this.cache.delete(issuesPath(dataSetId));
+  async setIssues(domainId: string, dataSetId: string, issues: Issue[]) {
+    await this.cache.delete(issuesPath(domainId, dataSetId));
     await this.cache.push(
-      issuesPath(dataSetId),
+      issuesPath(domainId, dataSetId),
       Object.fromEntries(issues.map((issue) => [issue.key, issue])),
     );
     // await this.cache.push(`/dataSets/${id}`, dataSet);
@@ -31,7 +31,7 @@ export class IssuesRepository {
   }
 }
 
-const issuesPath = (dataSetId: string) => `/issues/${dataSetId}`;
+const issuesPath = (domainId: string, dataSetId: string) => `/issues/${domainId}/${dataSetId}`;
 
 // const issuePath = (dataSetId: string, issueKey: string) =>
 //   `${issuesPath(dataSetId)}/${issueKey}}`;

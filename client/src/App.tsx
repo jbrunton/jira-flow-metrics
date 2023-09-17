@@ -21,7 +21,7 @@ const App = () => {
           <Routes>
             <Route path="/domains" element={<DomainsPage />} />
             <Route path="/domains/:domainId" element={<DataSetsIndexPage />} />
-            <Route path="/datasets/:dataSetId/issues" element={<IssuesIndexPage />} />
+            <Route path="/datasets/:domainId/:dataSetId/issues" element={<IssuesIndexPage />} />
             <Route path="*" element={<Navigate to="/domains" replace={true} />} />
           </Routes>
         </BrowserRouter>

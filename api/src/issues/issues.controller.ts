@@ -14,7 +14,7 @@ import { JiraStatusesRepository } from './jira-statuses.repository';
 //   jql: string;
 // }
 
-@Controller('issues')
+@Controller('issues/:domainId')
 export class IssuesController {
   constructor(
     private readonly issues: IssuesRepository,
@@ -25,8 +25,8 @@ export class IssuesController {
   ) {}
 
   @Get(':dataset')
-  async getIssues(@Param('dataset') dataSetId: string) {
-    const issues = await this.issues.getIssues(dataSetId);
+  async getIssues(@Param('domainId') domainId: string, @Param('dataset') dataSetId: string) {
+    const issues = await this.issues.getIssues(domainId, dataSetId);
     return issues.map((issue) => ({
       jiraUrl: `${process.env.JIRA_HOST}/browse/${issue.key}`,
       ...issue,
@@ -34,8 +34,11 @@ export class IssuesController {
   }
 
   @Put(':dataset/sync')
-  async sync(@Param('dataset') dataSetId: string) {
-    const dataSet = await this.dataSets.getDataSet(dataSetId);
+  async sync(
+    @Param('domainId') domainId: string,
+    @Param('dataset') dataSetId: string,
+  ) {
+    const dataSet = await this.dataSets.getDataSet(domainId, dataSetId);
     const fields = await this.fieldsRepo.getFields();
     const statuses = await this.statusesRepo.getStatuses();
     const builder = new JiraIssueBuilder(fields, statuses);
@@ -44,7 +47,7 @@ export class IssuesController {
       onProgress: () => {},
       builder,
     });
-    await this.issues.setIssues(dataSetId, issues);
+    await this.issues.setIssues(domainId, dataSetId, issues);
     return issues;
   }
 

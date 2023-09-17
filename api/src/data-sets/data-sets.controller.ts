@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { DataSetsRepository } from './data-sets.repository';
 import { ApiProperty } from '@nestjs/swagger';
 import { DataSourcesRepository } from './data-sources.repository';
@@ -11,7 +11,7 @@ class CreateDataSetBody {
   jql: string;
 }
 
-@Controller('datasets')
+@Controller('datasets/:domainId')
 export class DataSetsController {
   constructor(
     private readonly dataSets: DataSetsRepository,
@@ -19,8 +19,8 @@ export class DataSetsController {
   ) {}
 
   @Get()
-  async getDataSets() {
-    return this.dataSets.getDataSets();
+  async getDataSets(@Param('domainId') domainId: string) {
+    return this.dataSets.getDataSets(domainId);
   }
 
   @Get('sources')
@@ -29,7 +29,10 @@ export class DataSetsController {
   }
 
   @Post()
-  async createDataSet(@Body() dataSet: CreateDataSetBody) {
-    return await this.dataSets.addDataSet(dataSet);
+  async createDataSet(
+    @Param('domainId') domainId,
+    @Body() dataSet: CreateDataSetBody,
+  ) {
+    return await this.dataSets.addDataSet(domainId, dataSet);
   }
 }
