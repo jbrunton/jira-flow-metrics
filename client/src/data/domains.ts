@@ -9,23 +9,25 @@ export type Domain = {
   token: string;
 }
 
+const domainsQueryKey = 'domains';
+
 const getDomains = async (): Promise<Domain[]> => {
-  const response = await axios.get('http://localhost:3000/api/domains');
+  const response = await axios.get('/domains');
   return response.data;
 }
 
 export const useDomains = () => {
-  return useQuery({ queryKey: ['domains'], queryFn: getDomains });
+  return useQuery({ queryKey: [domainsQueryKey], queryFn: getDomains });
 }
 
 const createDomain = async (domain: Omit<Domain, "id">): Promise<Domain> => {
-  const response = await axios.post('http://localhost:3000/api/domains', domain);
+  const response = await axios.post('/domains', domain);
   return response.data;
 }
 
 export const useCreateDomain = () => {
   return useMutation({
     mutationFn: createDomain,
-    onSuccess: () => client.invalidateQueries(['domains'])
+    onSuccess: () => client.invalidateQueries([domainsQueryKey])
   });
 }

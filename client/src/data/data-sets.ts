@@ -14,36 +14,40 @@ export type DataSet = {
   jql: string;
 }
 
+const dataSetsQueryKey = 'datasets';
+
+export const invalidateDataSourceQueries = () => client.invalidateQueries([dataSetsQueryKey]);
+
 const getDataSources = async (query: string): Promise<DataSource[]> => {
   if (query.trim().length === 0) {
     return [];
   }
 
-  const response = await axios.get(`/api/datasets/sources?query=${encodeURI(query)}`);
+  const response = await axios.get(`/datasets/sources?query=${encodeURI(query)}`);
   return response.data;
 }
 
 export const useDataSources = (query: string) => {
   return useQuery({
-    queryKey: ['datasources', query],
+    queryKey: [dataSetsQueryKey, query],
     queryFn: () => getDataSources(query),
   });
 }
 
 const getDataSets = async (): Promise<DataSet[]> => {
-  const response = await axios.get(`/api/datasets`);
+  const response = await axios.get(`/datasets`);
   return response.data;
 }
 
 export const useDataSets = () => {
   return useQuery({
-    queryKey: ['datasets'],
+    queryKey: [dataSetsQueryKey],
     queryFn: () => getDataSets(),
   });
 }
 
 const syncDataSet = async (dataSetId: string): Promise<void> => {
-  await axios.put(`/api/issues/${dataSetId}/sync`);
+  await axios.put(`/issues/${dataSetId}/sync`);
 }
 
 export const useSyncDataSet = () => {
@@ -58,13 +62,13 @@ export type CreateDataSetParams = Omit<DataSet, "id"> & {
 }
 
 const createDataSet = async (dataSet: CreateDataSetParams): Promise<DataSet> => {
-  const response = await axios.post(`/api/datasets`, dataSet);
+  const response = await axios.post(`/datasets`, dataSet);
   return response.data;
 }
 
 export const useCreateDataSet = () => {
   return useMutation({
     mutationFn: createDataSet,
-    onSuccess: () => client.invalidateQueries(['datasets'])
+    onSuccess: () => client.invalidateQueries([dataSetsQueryKey])
   });
 }
