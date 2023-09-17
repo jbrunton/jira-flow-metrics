@@ -23,7 +23,7 @@ export class DataSetsRepository {
     const id = createHash('md5')
       .update(JSON.stringify(params))
       .digest('base64url');
-    const dataSet = { id, ...params };
+    const dataSet = { ...params, id };
     await this.cache.push(`/dataSets/${id}`, dataSet);
     return dataSet;
   }

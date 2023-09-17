@@ -1,13 +1,11 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Space, Table } from "antd";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AddDataSetModal } from "./add-data-set-modal";
 import { useDataSets } from "../data/data-sets";
 
 export const DataSetsIndexPage = () => {
-  const { domainId } = useParams();
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => setIsModalOpen(true);

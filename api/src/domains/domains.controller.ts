@@ -1,10 +1,14 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { DomainsRepository } from './domains.repository';
 import { ApiProperty } from '@nestjs/swagger';
+import { URL } from 'url';
 
 class CreateDomainBody {
   @ApiProperty()
   host: string;
+
+  @ApiProperty()
+  email: string;
 
   @ApiProperty()
   token: string;
@@ -22,6 +26,9 @@ export class DomainsController {
 
   @Post()
   async createDomain(@Body() domain: CreateDomainBody) {
-    return await this.repository.addDomain(domain);
+    const url = new URL(domain.host);
+    const host = url.host;
+    console.info({ host });
+    return await this.repository.addDomain({ ...domain, host });
   }
 }
