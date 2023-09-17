@@ -2,11 +2,11 @@ import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { DataSetsRepository } from './data-sets.repository';
 import { ApiProperty } from '@nestjs/swagger';
 import { DataSourcesRepository } from './data-sources.repository';
-import { JiraIssuesRepository } from 'src/issues/jira-issues.repository';
-import { JiraFieldsRepository } from 'src/issues/jira-fields.repository';
-import { JiraStatusesRepository } from 'src/issues/jira-statuses.repository';
-import { IssuesRepository } from 'src/issues/issues.repository';
-import { JiraIssueBuilder } from 'src/issues/issue_builder';
+import { JiraIssuesRepository } from '../issues/jira-issues.repository';
+import { JiraFieldsRepository } from '../issues/jira-fields.repository';
+import { JiraStatusesRepository } from '../issues/jira-statuses.repository';
+import { IssuesRepository } from '../issues/issues.repository';
+import { JiraIssueBuilder } from '../issues/issue_builder';
 
 class CreateDataSetBody {
   @ApiProperty()
