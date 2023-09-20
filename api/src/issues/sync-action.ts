@@ -5,6 +5,7 @@ import { IssuesRepository } from './issues.repository';
 import { JiraIssueBuilder } from './issue_builder';
 import { JiraIssuesRepository } from './jira-issues.repository';
 import { Injectable } from '@nestjs/common';
+import { CycleTimesUseCase } from './cycle-times-use-case';
 
 @Injectable()
 export class SyncAction {
@@ -14,6 +15,7 @@ export class SyncAction {
     private readonly jiraFields: JiraFieldsRepository,
     private readonly jiraStatuses: JiraStatusesRepository,
     private readonly jiraIssues: JiraIssuesRepository,
+    private readonly cycleTimesUseCase: CycleTimesUseCase,
   ) {}
 
   async exec(domainId: string, dataSetId: string) {
@@ -26,7 +28,10 @@ export class SyncAction {
       onProgress: () => {},
       builder,
     });
-    await this.issues.setIssues(domainId, dataSetId, issues);
-    return issues;
+
+    const estimatedIssues = this.cycleTimesUseCase.exec(issues);
+
+    await this.issues.setIssues(domainId, dataSetId, estimatedIssues);
+    return estimatedIssues;
   }
 }

@@ -3,7 +3,8 @@ import { DataSetsRepository } from './data-sets.repository';
 import { ApiProperty } from '@nestjs/swagger';
 import { DataSourcesRepository } from './data-sources.repository';
 import { IssuesRepository } from '../issues/issues.repository';
-import { SyncAction } from 'src/issues/sync-action';
+import { SyncAction } from '../issues/sync-action';
+import { DomainsRepository } from '../data/domains.repository';
 
 class CreateDataSetBody {
   @ApiProperty()
@@ -20,6 +21,7 @@ export class DataSetsController {
     private readonly dataSources: DataSourcesRepository,
     private readonly issues: IssuesRepository,
     private readonly syncAction: SyncAction,
+    private readonly domains: DomainsRepository,
   ) {}
 
   @Get()
@@ -53,9 +55,11 @@ export class DataSetsController {
     @Query('domainId') domainId: string,
     @Param('dataset') dataSetId: string,
   ) {
+    const domains = await this.domains.getDomains();
+    const domain = domains.find((domain) => domain.id === domainId);
     const issues = await this.issues.getIssues(domainId, dataSetId);
     return issues.map((issue) => ({
-      jiraUrl: `${process.env.JIRA_HOST}/browse/${issue.key}`,
+      jiraUrl: `https://${domain.host}/browse/${issue.key}`,
       ...issue,
     }));
   }

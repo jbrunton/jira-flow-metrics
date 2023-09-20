@@ -6,6 +6,7 @@ import { JiraFieldsRepository } from './jira-fields.repository';
 import { JiraStatusesRepository } from './jira-statuses.repository';
 import { DataSetsRepository } from '../data-sets/data-sets.repository';
 import { SyncAction } from './sync-action';
+import { CycleTimesUseCase } from './cycle-times-use-case';
 
 @Module({
   imports: [DataModule],
@@ -16,6 +17,7 @@ import { SyncAction } from './sync-action';
     JiraStatusesRepository,
     DataSetsRepository,
     SyncAction,
+    CycleTimesUseCase,
   ],
   controllers: [],
   exports: [SyncAction, IssuesRepository],

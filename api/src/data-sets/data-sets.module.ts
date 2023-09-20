@@ -3,7 +3,7 @@ import { DataModule } from '../data/data.module';
 import { DataSetsController } from './data-sets.controller';
 import { DataSetsRepository } from './data-sets.repository';
 import { DataSourcesRepository } from './data-sources.repository';
-import { IssuesModule } from 'src/issues/issues.module';
+import { IssuesModule } from '../issues/issues.module';
 
 @Module({
   imports: [DataModule, IssuesModule],
