@@ -2,11 +2,8 @@ import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { DataSetsRepository } from './data-sets.repository';
 import { ApiProperty } from '@nestjs/swagger';
 import { DataSourcesRepository } from './data-sources.repository';
-import { JiraIssuesRepository } from '../issues/jira-issues.repository';
-import { JiraFieldsRepository } from '../issues/jira-fields.repository';
-import { JiraStatusesRepository } from '../issues/jira-statuses.repository';
 import { IssuesRepository } from '../issues/issues.repository';
-import { JiraIssueBuilder } from '../issues/issue_builder';
+import { SyncAction } from 'src/issues/sync-action';
 
 class CreateDataSetBody {
   @ApiProperty()
@@ -21,10 +18,8 @@ export class DataSetsController {
   constructor(
     private readonly dataSets: DataSetsRepository,
     private readonly dataSources: DataSourcesRepository,
-    private readonly jiraIssues: JiraIssuesRepository,
-    private readonly fieldsRepo: JiraFieldsRepository,
-    private readonly statusesRepo: JiraStatusesRepository,
     private readonly issues: IssuesRepository,
+    private readonly syncAction: SyncAction,
   ) {}
 
   @Get()
@@ -50,17 +45,7 @@ export class DataSetsController {
     @Query('domainId') domainId: string,
     @Param('dataset') dataSetId: string,
   ) {
-    const dataSet = await this.dataSets.getDataSet(domainId, dataSetId);
-    const fields = await this.fieldsRepo.getFields();
-    const statuses = await this.statusesRepo.getStatuses();
-    const builder = new JiraIssueBuilder(fields, statuses);
-    const issues = await this.jiraIssues.search({
-      jql: dataSet.jql,
-      onProgress: () => {},
-      builder,
-    });
-    await this.issues.setIssues(domainId, dataSetId, issues);
-    return issues;
+    return this.syncAction.exec(domainId, dataSetId);
   }
 
   @Get(':dataset/issues')

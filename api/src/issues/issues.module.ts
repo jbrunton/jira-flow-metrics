@@ -5,6 +5,7 @@ import { JiraIssuesRepository } from './jira-issues.repository';
 import { JiraFieldsRepository } from './jira-fields.repository';
 import { JiraStatusesRepository } from './jira-statuses.repository';
 import { DataSetsRepository } from '../data-sets/data-sets.repository';
+import { SyncAction } from './sync-action';
 
 @Module({
   imports: [DataModule],
@@ -14,7 +15,9 @@ import { DataSetsRepository } from '../data-sets/data-sets.repository';
     JiraFieldsRepository,
     JiraStatusesRepository,
     DataSetsRepository,
+    SyncAction,
   ],
   controllers: [],
+  exports: [SyncAction, IssuesRepository],
 })
 export class IssuesModule {}
