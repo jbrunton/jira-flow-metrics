@@ -28,8 +28,6 @@ export class DataSourcesRepository {
       type: 'filter',
     }));
 
-    console.info({ filters, projects });
-
     return [...projects, ...filters];
   }
 }
