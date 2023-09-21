@@ -1,4 +1,4 @@
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { DataSet, useDataSets } from "../data/data-sets";
 import { Domain, useDomains } from "../data/domains";
 import { useDomainContext } from "../domains/context";
@@ -13,6 +13,7 @@ export type NavigationContext = DomainContextType & {
 
 export const useNavigationContext = (): NavigationContext => {
   const { pathname: path } = useLocation();
+  const navigate = useNavigate();
   const { dataSetId } = useParams();
 
   const { domainId, setDomainId } = useDomainContext();
@@ -24,7 +25,10 @@ export const useNavigationContext = (): NavigationContext => {
 
   return {
     domainId,
-    setDomainId,
+    setDomainId: (domainId: string) => {
+      setDomainId(domainId);
+      navigate("/datasets");
+    },
     path,
     domains,
     domain,
