@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { Issue } from "../../data/issues";
+import { CompleteIssue } from "../../data/issues";
 import { ChartOptions } from "chart.js";
 import { Scatter } from "react-chartjs-2";
 import { Chart as ChartJS, LineController, LineElement, PointElement, LinearScale, TimeScale, Tooltip, Title } from 'chart.js';
@@ -8,22 +8,13 @@ import 'chartjs-adapter-date-fns';
 ChartJS.register(LineController, LineElement, PointElement, LinearScale, Title, TimeScale, Tooltip);
 
 type ScatterplotProps = {
-  issues: Issue[];
+  issues: CompleteIssue[];
 };
 
-type CompleteIssue = Issue & {
-  completed: Date;
-  cycleTime: number;
-}
-
-const isCompleted = (issue: Issue): issue is CompleteIssue => {
-  return issue.completed !== undefined && issue.cycleTime !== undefined;
-}
-
 const Scatterplot = ({ issues }: ScatterplotProps): ReactElement => {
-  const filteredIssues = issues.filter(isCompleted);
+ // const filteredIssues = issues.filter(isCompleted);
 
-  const data = filteredIssues.map((issue) => ({
+  const data = issues.map((issue) => ({
     // x: issue.metrics.completed,
     // y: issue.metrics.cycleTime,
     x: issue.completed,
@@ -43,7 +34,7 @@ const Scatterplot = ({ issues }: ScatterplotProps): ReactElement => {
       tooltip: {
         callbacks: {
           label: (ctx) => {
-            const issue = filteredIssues[ctx.dataIndex];
+            const issue = issues[ctx.dataIndex];
             return `${issue.key}: ${issue.cycleTime?.toFixed(1)}`;
           }
         },
