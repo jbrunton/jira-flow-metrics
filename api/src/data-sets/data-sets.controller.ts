@@ -2,11 +2,9 @@ import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { DataSetsRepository } from './data-sets.repository';
 import { ApiProperty } from '@nestjs/swagger';
 import { DataSourcesRepository } from './data-sources.repository';
-import { JiraIssuesRepository } from '../issues/jira-issues.repository';
-import { JiraFieldsRepository } from '../issues/jira-fields.repository';
-import { JiraStatusesRepository } from '../issues/jira-statuses.repository';
 import { IssuesRepository } from '../issues/issues.repository';
-import { JiraIssueBuilder } from '../issues/issue_builder';
+import { SyncAction } from '../issues/sync-action';
+import { DomainsRepository } from '../data/domains.repository';
 
 class CreateDataSetBody {
   @ApiProperty()
@@ -21,10 +19,9 @@ export class DataSetsController {
   constructor(
     private readonly dataSets: DataSetsRepository,
     private readonly dataSources: DataSourcesRepository,
-    private readonly jiraIssues: JiraIssuesRepository,
-    private readonly fieldsRepo: JiraFieldsRepository,
-    private readonly statusesRepo: JiraStatusesRepository,
     private readonly issues: IssuesRepository,
+    private readonly syncAction: SyncAction,
+    private readonly domains: DomainsRepository,
   ) {}
 
   @Get()
@@ -50,17 +47,7 @@ export class DataSetsController {
     @Query('domainId') domainId: string,
     @Param('dataset') dataSetId: string,
   ) {
-    const dataSet = await this.dataSets.getDataSet(domainId, dataSetId);
-    const fields = await this.fieldsRepo.getFields();
-    const statuses = await this.statusesRepo.getStatuses();
-    const builder = new JiraIssueBuilder(fields, statuses);
-    const issues = await this.jiraIssues.search({
-      jql: dataSet.jql,
-      onProgress: () => {},
-      builder,
-    });
-    await this.issues.setIssues(domainId, dataSetId, issues);
-    return issues;
+    return this.syncAction.exec(domainId, dataSetId);
   }
 
   @Get(':dataset/issues')
@@ -68,9 +55,11 @@ export class DataSetsController {
     @Query('domainId') domainId: string,
     @Param('dataset') dataSetId: string,
   ) {
+    const domains = await this.domains.getDomains();
+    const domain = domains.find((domain) => domain.id === domainId);
     const issues = await this.issues.getIssues(domainId, dataSetId);
     return issues.map((issue) => ({
-      jiraUrl: `${process.env.JIRA_HOST}/browse/${issue.key}`,
+      jiraUrl: `https://${domain.host}/browse/${issue.key}`,
       ...issue,
     }));
   }

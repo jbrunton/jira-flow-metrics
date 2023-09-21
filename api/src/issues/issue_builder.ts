@@ -14,10 +14,7 @@ export class JiraIssueBuilder {
   private readonly epicLinkFieldId?: string;
   private readonly parentFieldId?: string;
 
-  constructor(
-    private readonly fields: Field[],
-    statuses: Status[],
-  ) {
+  constructor(fields: Field[], statuses: Status[]) {
     for (const status of statuses) {
       this.statusCategories[status.jiraId] = status.category;
     }

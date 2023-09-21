@@ -30,7 +30,7 @@ const rootHandle: BreadcrumbHandle = {
   }
 }
 
-export const appRoutes = [
+export const appRoutes = (
   <Route
     path="/"
     element={<AppLayout />}
@@ -40,4 +40,4 @@ export const appRoutes = [
     {domainRoutes}
     {dataSetRoutes}
   </Route>
-];
+);

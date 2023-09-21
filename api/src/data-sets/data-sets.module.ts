@@ -3,21 +3,11 @@ import { DataModule } from '../data/data.module';
 import { DataSetsController } from './data-sets.controller';
 import { DataSetsRepository } from './data-sets.repository';
 import { DataSourcesRepository } from './data-sources.repository';
-import { JiraIssuesRepository } from '../issues/jira-issues.repository';
-import { JiraFieldsRepository } from '../issues/jira-fields.repository';
-import { JiraStatusesRepository } from '../issues/jira-statuses.repository';
-import { IssuesRepository } from '../issues/issues.repository';
+import { IssuesModule } from '../issues/issues.module';
 
 @Module({
-  imports: [DataModule],
-  providers: [
-    DataSetsRepository,
-    DataSourcesRepository,
-    JiraIssuesRepository,
-    JiraFieldsRepository,
-    JiraStatusesRepository,
-    IssuesRepository,
-  ],
+  imports: [DataModule, IssuesModule],
+  providers: [DataSetsRepository, DataSourcesRepository],
   controllers: [DataSetsController],
 })
 export class DataSetsModule {}

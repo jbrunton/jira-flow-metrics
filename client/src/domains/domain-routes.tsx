@@ -6,9 +6,9 @@ const domainsHandle: BreadcrumbHandle = {
   crumb: () => ({ title: 'Domains' })
 };
 
-export const domainRoutes = [
+export const domainRoutes = (
   <Route
     path="/domains"
     element={<DomainsPage />}
     handle={domainsHandle} />
-]
+);

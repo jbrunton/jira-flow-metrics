@@ -15,7 +15,7 @@ const dataSetsHandle: BreadcrumbHandle = {
   }
 };
 
-export const dataSetRoutes = [
+export const dataSetRoutes = (
   <Route
     path="/datasets"
     handle={dataSetsHandle}
@@ -39,4 +39,4 @@ export const dataSetRoutes = [
         }} />
     </Route>
   </Route>
-]
+);
