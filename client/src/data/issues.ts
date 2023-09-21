@@ -1,16 +1,31 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
+export enum HierarchyLevel {
+  Story = "Story",
+  Epic = "Epic",
+}
+
 export type Issue = {
   key: string;
   summary: string;
   status: string;
   resolution: string;
   statusCategory: "To Do" | "In Progress" | "Done";
+  hierarchyLevel: HierarchyLevel;
   jiraUrl: string;
   started?: Date;
   completed?: Date;
   cycleTime?: number;
+}
+
+export type CompleteIssue = Issue & {
+  completed: Date;
+  cycleTime: number;
+}
+
+export const isCompleted = (issue: Issue): issue is CompleteIssue => {
+  return issue.completed !== undefined && issue.cycleTime !== undefined;
 }
 
 const issuesQueryKey = 'issues';
