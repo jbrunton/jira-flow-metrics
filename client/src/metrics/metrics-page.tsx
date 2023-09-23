@@ -1,4 +1,4 @@
-import { Col, Form, Row, Select, SelectProps } from "antd";
+import { Col, Drawer, Form, Row, Select, SelectProps } from "antd";
 import { CompleteIssue, HierarchyLevel, Issue, isCompleted, useIssues } from "../data/issues"
 import { useNavigationContext } from "../navigation/context";
 import Scatterplot from "./components/scatterplot";
@@ -7,6 +7,7 @@ import { endOfDay, startOfDay, subDays } from "date-fns";
 import { RangeType } from "./components/date-picker";
 import { isNil, map, pipe, reject, uniq } from "rambda";
 import { DateSelector } from "./components/date-selector";
+import { IssueDetails } from "./components/issue-details";
 
 export const MetricsPage = () => {
   const { dataSet } = useNavigationContext();
@@ -59,6 +60,10 @@ export const MetricsPage = () => {
     setFilteredIssues(filteredIssues ?? []);
   }, [issues, hierarchyLevel, dates, selectedResolutions]);
 
+  const [selectedIssues, setSelectedIssues] = useState<Issue[]>([]);
+
+  console.info(selectedIssues);
+
   return <>
     <Form layout="vertical">
       <Row gutter={[8, 8]}>
@@ -87,6 +92,17 @@ export const MetricsPage = () => {
         </Col>
       </Row>
     </Form>
-    <Scatterplot issues={filteredIssues} range={dates} />
+    <Scatterplot issues={filteredIssues} range={dates} setSelectedIssues={setSelectedIssues} />
+    <Drawer
+        placement="right"
+        width="30%"
+        closable={false}
+        onClose={() => setSelectedIssues([])}
+        open={selectedIssues.length > 0}
+      >
+        {selectedIssues.map((issue) => (
+          <IssueDetails key={issue.key} issue={issue} />
+        ))}
+      </Drawer>
   </>;
 }
