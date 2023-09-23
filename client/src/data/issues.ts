@@ -26,12 +26,12 @@ export type Issue = {
   cycleTime?: number;
 }
 
-export type CompleteIssue = Issue & {
+export type CompletedIssue = Issue & {
   completed: Date;
   cycleTime: number;
 }
 
-export const isCompleted = (issue: Issue): issue is CompleteIssue => {
+export const isCompleted = (issue: Issue): issue is CompletedIssue => {
   return issue.completed !== undefined && issue.cycleTime !== undefined;
 }
 
@@ -62,4 +62,48 @@ export const useIssues = (dataSetId?: string) => {
     queryFn: () => getIssues(dataSetId),
     enabled: dataSetId !== undefined,
   });
+}
+
+export type DateRange = null | [Date | null, Date | null];
+
+export type IssueFilter = {
+  hierarchyLevel?: HierarchyLevel;
+  resolutions?: string[];
+  dates?: DateRange;
+}
+
+export const filterIssues = (issues: Issue[], filter: IssueFilter): Issue[] => {
+  return issues.filter(issue => {
+    if (filter.hierarchyLevel) {
+      if (issue.hierarchyLevel !== filter.hierarchyLevel) {
+        return false;
+      }
+    }
+
+    if (filter.resolutions && filter.resolutions.length > 0) {
+      if (!filter.resolutions.includes(issue.resolution)) {
+        return false;
+      }
+    }
+
+    if (filter.dates) {
+      if (!issue.completed) {
+        return false;
+      }
+
+      if (filter.dates[0] && issue.completed < filter.dates[0]) {
+        return false;
+      }
+
+      if (filter.dates[1] && issue.completed > filter.dates[1]) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+}
+
+export const filterCompletedIssues = (issues: Issue[], filter: IssueFilter): CompletedIssue[] => {
+  return filterIssues(issues, filter).filter(isCompleted);
 }
