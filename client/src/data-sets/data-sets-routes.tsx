@@ -5,6 +5,7 @@ import { IssuesIndexPage } from "./issues-index-page";
 import { ScatterplotPage } from "./metrics/scatterplot-page";
 import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
 import { NavigationContext } from "../navigation/context";
+import { ThroughputPage } from "./metrics/throughput-page";
 
 const dataSetsHandle: BreadcrumbHandle = {
   crumb({ dataSet }) {
@@ -55,15 +56,22 @@ export const dataSetRoutes = (
         handle={{
           crumb: ({ dataSet }: NavigationContext) => reportsCrumb(dataSet?.id, "scatterplot")
         }} />
+      <Route
+        path="throughput"
+        element={<ThroughputPage />}
+        handle={{
+          crumb: ({ dataSet }: NavigationContext) => reportsCrumb(dataSet?.id, "throughput")
+        }} />
       <Route index element={<Navigate to="scatterplot" />} />
     </Route>
   </Route>
 );
 
-const reportsCrumb = (datasetId: string | undefined, reportKey: "issues" | "scatterplot"): ItemType => {
+const reportsCrumb = (datasetId: string | undefined, reportKey: "issues" | "scatterplot" | "throughput"): ItemType => {
   const reports = [
     { key: 'issues', label: <Link to={`/datasets/${datasetId}/issues`}>Issues</Link> },
     { key: 'scatterplot', label: <Link to={`/datasets/${datasetId}/scatterplot`}>Scatterplot</Link> },
+    { key: 'throughput', label: <Link to={`/datasets/${datasetId}/throughput`}>Throughput</Link> },
   ];
   const currentReport = reports.find(report => report.key === reportKey);
   return {

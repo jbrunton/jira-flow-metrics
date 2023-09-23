@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { CompleteIssue, Issue } from "../../../data/issues";
+import { CompletedIssue, Issue } from "../../../data/issues";
 import { ChartOptions } from "chart.js";
 import { Scatter } from "react-chartjs-2";
 import { Chart as ChartJS, LineController, LineElement, PointElement, LinearScale, TimeScale, Tooltip, Title } from 'chart.js';
@@ -12,12 +12,12 @@ import { sort, uniqBy } from "rambda";
 ChartJS.register(LineController, LineElement, PointElement, LinearScale, Title, TimeScale, Tooltip);
 
 type ScatterplotProps = {
-  issues: CompleteIssue[];
+  issues: CompletedIssue[];
   range: RangeType;
   setSelectedIssues: (issues: Issue[]) => void;
 };
 
-const Scatterplot = ({ issues, range, setSelectedIssues }: ScatterplotProps): ReactElement => {
+export const Scatterplot = ({ issues, range, setSelectedIssues }: ScatterplotProps): ReactElement => {
   const data = issues.map((issue) => ({
     // x: issue.metrics.completed,
     // y: issue.metrics.cycleTime,
@@ -82,5 +82,3 @@ const Scatterplot = ({ issues, range, setSelectedIssues }: ScatterplotProps): Re
 
   return <Scatter data={{ datasets }} options={options} />
 };
-
-export default Scatterplot;
