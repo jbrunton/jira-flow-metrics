@@ -87,6 +87,6 @@ export const MetricsPage = () => {
         </Col>
       </Row>
     </Form>
-    <Scatterplot issues={filteredIssues} />
+    <Scatterplot issues={filteredIssues} range={dates} />
   </>;
 }
