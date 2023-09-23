@@ -1,4 +1,4 @@
-import { map, pipe, pluck, sort } from 'rambda';
+import { map, pipe, pluck, reverse, sort } from 'rambda';
 import {
   HierarchyLevel,
   Issue,
@@ -41,13 +41,11 @@ const getStartedDate = (transitions: Array<Transition>): Date | undefined => {
 };
 
 const getCompletedDate = (transitions: Array<Transition>): Date | undefined => {
-  const lastTransition = transitions
-    .reverse()
-    .find(
-      (transition) =>
-        transition.toStatus.category === StatusCategory.Done &&
-        transition.fromStatus.category !== StatusCategory.Done,
-    );
+  const lastTransition = reverse(transitions).find(
+    (transition) =>
+      transition.toStatus.category === StatusCategory.Done &&
+      transition.fromStatus.category !== StatusCategory.Done,
+  );
 
   return lastTransition?.date;
 };
