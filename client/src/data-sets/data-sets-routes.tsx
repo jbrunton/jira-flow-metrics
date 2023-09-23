@@ -1,7 +1,6 @@
-import { Link, Route } from "react-router-dom";
+import { Link, Navigate, Route } from "react-router-dom";
 import { BreadcrumbHandle } from "../navigation/breadcrumbs"
 import { DataSetsIndexPage } from "./data-sets-index-page";
-import { NavigationContext } from "../navigation/context";
 import { IssuesIndexPage } from "./issues-index-page";
 import { MetricsPage } from "../metrics/metrics-page";
 
@@ -15,6 +14,23 @@ const dataSetsHandle: BreadcrumbHandle = {
   }
 };
 
+const dataSetHandle: BreadcrumbHandle = {
+  crumb({ dataSet, dataSets }) {
+    if (!dataSets) {
+      return { title: 'Loading' };
+    }
+
+    const items = dataSets?.map(dataSet => ({
+      key: dataSet.id,
+      label: <Link to={`/datasets/${dataSet.id}`}>{dataSet.name}</Link>
+    }));
+    
+    const selectedKeys = dataSet ? [dataSet.id] : [];
+    
+    return { title: dataSet?.name, menu: { items, selectedKeys } };
+  },
+}
+
 export const dataSetRoutes = (
   <Route
     path="/datasets"
@@ -23,7 +39,7 @@ export const dataSetRoutes = (
     <Route index element={<DataSetsIndexPage />} />
     <Route
       path=":dataSetId"
-      handle={{ crumb: ({ dataSet }: NavigationContext) => ({ title: dataSet?.name })}}
+      handle={dataSetHandle}
     >
       <Route
         path="issues"
@@ -37,6 +53,7 @@ export const dataSetRoutes = (
         handle={{
           crumb: () => ({ title: 'Metrics' })
         }} />
+      <Route index element={<Navigate to="metrics" />} />
     </Route>
   </Route>
 );

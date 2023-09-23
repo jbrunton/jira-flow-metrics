@@ -25,7 +25,10 @@ const rootHandle: BreadcrumbHandle = {
         { key: 'domains', label: <Link to="/domains">Manage Domains</Link> }
       ];
 
-      return { title: domain.host, menu: { items: [...domainOptions, ...genericOptions] } };
+      const items = [...domainOptions, ...genericOptions];
+      const selectedKeys = domain ? [domain.id] : [];
+
+      return { title: domain.host, menu: { items, selectedKeys } };
     }      
   }
 }

@@ -9,6 +9,7 @@ export type NavigationContext = DomainContextType & {
   domains?: Domain[];
   domain?: Domain;
   dataSet?: DataSet;
+  dataSets?: DataSet[];
 }
 
 export const useNavigationContext = (): NavigationContext => {
@@ -33,5 +34,6 @@ export const useNavigationContext = (): NavigationContext => {
     domains,
     domain,
     dataSet,
+    dataSets,
   }
 }
