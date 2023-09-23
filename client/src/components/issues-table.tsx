@@ -81,6 +81,7 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({ issues }) => {
       title: 'Cycle Time', dataIndex: 'cycleTime', key: 'cycleTime', render: (cycleTime) => {
         return formatNumber(cycleTime);
       },
+      defaultSortOrder: 'descend',
       sorter: (a, b, sortOrder) => compareNumbers(a.cycleTime, b.cycleTime, sortOrder),
     },
     { key: 'actions', render: (_, issue) => {
