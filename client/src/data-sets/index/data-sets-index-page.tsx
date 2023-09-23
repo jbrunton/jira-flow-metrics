@@ -3,7 +3,7 @@ import { Button, Space, Table } from "antd";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AddDataSetModal } from "./add-data-set-modal";
-import { DataSet, useDataSets, useSyncDataSet } from "../data/data-sets";
+import { DataSet, useDataSets, useSyncDataSet } from "../../data/data-sets";
 
 export const DataSetsIndexPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

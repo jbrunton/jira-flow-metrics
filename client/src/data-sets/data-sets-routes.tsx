@@ -1,8 +1,8 @@
 import { Link, Navigate, Route } from "react-router-dom";
 import { BreadcrumbHandle } from "../navigation/breadcrumbs"
-import { DataSetsIndexPage } from "./data-sets-index-page";
+import { DataSetsIndexPage } from "./index/data-sets-index-page";
 import { IssuesIndexPage } from "./issues-index-page";
-import { MetricsPage } from "../metrics/metrics-page";
+import { ScatterplotPage } from "./metrics/scatterplot-page";
 
 const dataSetsHandle: BreadcrumbHandle = {
   crumb({ dataSet }) {
@@ -49,7 +49,7 @@ export const dataSetRoutes = (
         }} />
       <Route
         path="metrics"
-        element={<MetricsPage />}
+        element={<ScatterplotPage />}
         handle={{
           crumb: () => ({ title: 'Metrics' })
         }} />

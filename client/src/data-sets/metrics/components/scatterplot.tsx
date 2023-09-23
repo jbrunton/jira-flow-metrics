@@ -1,11 +1,11 @@
 import { ReactElement } from "react";
-import { CompleteIssue, Issue } from "../../data/issues";
+import { CompleteIssue, Issue } from "../../../data/issues";
 import { ChartOptions } from "chart.js";
 import { Scatter } from "react-chartjs-2";
 import { Chart as ChartJS, LineController, LineElement, PointElement, LinearScale, TimeScale, Tooltip, Title } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { RangeType } from "./date-picker";
-import { formatDate } from "../../lib/format";
+import { formatDate } from "../../../lib/format";
 import { compareAsc, startOfDay } from "date-fns";
 import { sort, uniqBy } from "rambda";
 // TODO: do we need all of these?
