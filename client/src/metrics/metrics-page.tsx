@@ -8,6 +8,7 @@ import { RangeType } from "./components/date-picker";
 import { isNil, map, pipe, reject, uniq } from "rambda";
 import { DateSelector } from "./components/date-selector";
 import { IssueDetails } from "./components/issue-details";
+import { IssuesTable } from "../components/issues-table";
 
 export const MetricsPage = () => {
   const { dataSet } = useNavigationContext();
@@ -93,6 +94,7 @@ export const MetricsPage = () => {
       </Row>
     </Form>
     <Scatterplot issues={filteredIssues} range={dates} setSelectedIssues={setSelectedIssues} />
+    <IssuesTable issues={filteredIssues} />
     <Drawer
         placement="right"
         width="30%"
