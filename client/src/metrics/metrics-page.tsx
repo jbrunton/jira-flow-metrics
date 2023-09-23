@@ -4,8 +4,9 @@ import { useNavigationContext } from "../navigation/context";
 import Scatterplot from "./components/scatterplot";
 import { useEffect, useState } from "react";
 import { endOfDay, startOfDay, subDays } from "date-fns";
-import { DatePicker, RangeType } from "./components/date-picker";
+import { RangeType } from "./components/date-picker";
 import { isNil, map, pipe, reject, uniq } from "rambda";
+import { DateSelector } from "./components/date-selector";
 
 export const MetricsPage = () => {
   const { dataSet } = useNavigationContext();
@@ -63,12 +64,7 @@ export const MetricsPage = () => {
       <Row gutter={[8, 8]}>
         <Col span={6}>
           <Form.Item label="Dates">
-            <DatePicker.RangePicker
-              style={{ width: '100%' }}
-              allowClear={false}
-              value={dates}
-              onChange={setDates}
-            />
+            <DateSelector dates={dates} onChange={setDates} />
           </Form.Item>
         </Col>
         <Col span={4}>
