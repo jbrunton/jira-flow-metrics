@@ -1,7 +1,7 @@
 import { Card, Descriptions, Tag, Timeline } from "antd";
 import { ReactElement } from "react";
-import { Issue, IssueStatus } from "../../data/issues";
-import { formatTime } from "../../lib/format";
+import { Issue, IssueStatus } from "../../../data/issues";
+import { formatTime } from "../../../lib/format";
 
 const categoryColors = {
   "To Do": "grey",

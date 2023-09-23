@@ -1,8 +1,10 @@
 import { Link, Navigate, Route } from "react-router-dom";
 import { BreadcrumbHandle } from "../navigation/breadcrumbs"
-import { DataSetsIndexPage } from "./data-sets-index-page";
+import { DataSetsIndexPage } from "./index/data-sets-index-page";
 import { IssuesIndexPage } from "./issues-index-page";
-import { MetricsPage } from "../metrics/metrics-page";
+import { ScatterplotPage } from "./metrics/scatterplot-page";
+import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
+import { NavigationContext } from "../navigation/context";
 
 const dataSetsHandle: BreadcrumbHandle = {
   crumb({ dataSet }) {
@@ -45,15 +47,27 @@ export const dataSetRoutes = (
         path="issues"
         element={<IssuesIndexPage />}
         handle={{
-          crumb: () => ({ title: 'Issues' })
+          crumb: ({ dataSet }: NavigationContext) => reportsCrumb(dataSet?.id, "issues")
         }} />
       <Route
-        path="metrics"
-        element={<MetricsPage />}
+        path="scatterplot"
+        element={<ScatterplotPage />}
         handle={{
-          crumb: () => ({ title: 'Metrics' })
+          crumb: ({ dataSet }: NavigationContext) => reportsCrumb(dataSet?.id, "scatterplot")
         }} />
-      <Route index element={<Navigate to="metrics" />} />
+      <Route index element={<Navigate to="scatterplot" />} />
     </Route>
   </Route>
 );
+
+const reportsCrumb = (datasetId: string | undefined, reportKey: "issues" | "scatterplot"): ItemType => {
+  const reports = [
+    { key: 'issues', label: <Link to={`/datasets/${datasetId}/issues`}>Issues</Link> },
+    { key: 'scatterplot', label: <Link to={`/datasets/${datasetId}/scatterplot`}>Scatterplot</Link> },
+  ];
+  const currentReport = reports.find(report => report.key === reportKey);
+  return {
+    title: currentReport?.label,
+    menu: { items: reports, selectedKeys: [reportKey] },
+  };
+}

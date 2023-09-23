@@ -1,6 +1,6 @@
 import { Col, Drawer, Form, Row, Select, SelectProps } from "antd";
-import { CompleteIssue, HierarchyLevel, Issue, isCompleted, useIssues } from "../data/issues"
-import { useNavigationContext } from "../navigation/context";
+import { CompleteIssue, HierarchyLevel, Issue, isCompleted, useIssues } from "../../data/issues"
+import { useNavigationContext } from "../../navigation/context";
 import Scatterplot from "./components/scatterplot";
 import { useEffect, useState } from "react";
 import { endOfDay, startOfDay, subDays } from "date-fns";
@@ -8,9 +8,9 @@ import { RangeType } from "./components/date-picker";
 import { isNil, map, pipe, reject, uniq } from "rambda";
 import { DateSelector } from "./components/date-selector";
 import { IssueDetails } from "./components/issue-details";
-import { IssuesTable } from "../components/issues-table";
+import { IssuesTable } from "../../components/issues-table";
 
-export const MetricsPage = () => {
+export const ScatterplotPage = () => {
   const { dataSet } = useNavigationContext();
   const { data: issues } = useIssues(dataSet?.id);
 

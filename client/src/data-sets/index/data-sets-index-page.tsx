@@ -3,7 +3,7 @@ import { Button, Space, Table } from "antd";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AddDataSetModal } from "./add-data-set-modal";
-import { DataSet, useDataSets, useSyncDataSet } from "../data/data-sets";
+import { DataSet, useDataSets, useSyncDataSet } from "../../data/data-sets";
 
 export const DataSetsIndexPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,7 +43,7 @@ export const DataSetsIndexPage = () => {
       {
         key: 'actions', render: (_, dataSet) => (
           <Space size="large">
-            <Link to={`/datasets/${dataSet.id}/metrics`}>Metrics</Link>
+            <Link to={`/datasets/${dataSet.id}/scatterplot`}>Scatterplot</Link>
             <Link to={`/datasets/${dataSet.id}/issues`}>Issues</Link>
             <Button
               icon={<SyncOutlined />}
