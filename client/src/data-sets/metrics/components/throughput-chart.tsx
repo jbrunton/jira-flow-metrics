@@ -44,7 +44,6 @@ export const ThroughputChart = ({ result, timeUnit, setSelectedIssues }: Through
   };
 
   const onClick: ChartOptions<"line">["onClick"] = (_, elements) => {
-    console.info(elements);
     if (elements.length === 1) {
       const selectedIssues = elements.map((el) => result[el.index].issues)[0];
       console.info(selectedIssues)
@@ -52,10 +51,6 @@ export const ThroughputChart = ({ result, timeUnit, setSelectedIssues }: Through
     } else {
       setSelectedIssues([]);
     }
-    // if (elements.length) {
-    //   const selectedIssues = elements.map((el) => issues[el.index]);
-    //   setSelectedIssues(selectedIssues);
-    // }
   };
 
   const options: ChartOptions<"line"> = {
