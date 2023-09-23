@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { CompletedIssue, IssueFilter, filterCompletedIssues, useIssues } from "../../data/issues";
+import { CompletedIssue, Issue, IssueFilter, filterCompletedIssues, useIssues } from "../../data/issues";
 import { useNavigationContext } from "../../navigation/context";
 import { FilterForm } from "./components/filter-form"
 import { Interval, TimeUnit } from "../../lib/intervals";
 import { ThroughputChart } from "./components/throughput-chart";
 import { Col, Form, Select } from "antd";
 import { ThroughputResult, calculateThroughput } from "../../lib/throughput";
+import { IssuesTable } from "../../components/issues-table";
 
 export const ThroughputPage = () => {
   const { dataSet } = useNavigationContext();
@@ -16,6 +17,8 @@ export const ThroughputPage = () => {
   const [timeUnit, setTimeUnit] = useState<TimeUnit>(TimeUnit.Week);
 
   const [filteredIssues, setFilteredIssues] = useState<CompletedIssue[]>([]);
+
+  const [selectedIssues, setSelectedIssues] = useState<Issue[]>([]);
 
   useEffect(() => {
     if (filter && issues) {
@@ -51,7 +54,14 @@ export const ThroughputPage = () => {
         </Form.Item>
       </Col>
     } />
-    {throughputResult ? <ThroughputChart result={throughputResult} timeUnit={TimeUnit.Week} /> : null}
+    {throughputResult ? (
+      <ThroughputChart
+        result={throughputResult}
+        timeUnit={TimeUnit.Week}
+        setSelectedIssues={setSelectedIssues}
+      />
+    ) : null}
+    <IssuesTable issues={selectedIssues} />
     </>
   )
 }
