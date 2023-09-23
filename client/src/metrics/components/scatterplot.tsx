@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { CompleteIssue } from "../../data/issues";
+import { CompleteIssue, Issue } from "../../data/issues";
 import { ChartOptions } from "chart.js";
 import { Scatter } from "react-chartjs-2";
 import { Chart as ChartJS, LineController, LineElement, PointElement, LinearScale, TimeScale, Tooltip, Title } from 'chart.js';
@@ -14,15 +14,23 @@ ChartJS.register(LineController, LineElement, PointElement, LinearScale, Title, 
 type ScatterplotProps = {
   issues: CompleteIssue[];
   range: RangeType;
+  setSelectedIssues: (issues: Issue[]) => void;
 };
 
-const Scatterplot = ({ issues, range }: ScatterplotProps): ReactElement => {
+const Scatterplot = ({ issues, range, setSelectedIssues }: ScatterplotProps): ReactElement => {
   const data = issues.map((issue) => ({
     // x: issue.metrics.completed,
     // y: issue.metrics.cycleTime,
     x: issue.completed,
-    y: Math.max(issue.cycleTime, 0), // TODO: check the cycle time math
+    y: issue.cycleTime,
   }));
+
+  const onClick: ChartOptions<"scatter">["onClick"] = (_event, elements) => {
+    if (elements.length) {
+      const selectedIssues = elements.map((el) => issues[el.index]);
+      setSelectedIssues(selectedIssues);
+    }
+  };
 
   const datasets = [
     {
@@ -36,6 +44,7 @@ const Scatterplot = ({ issues, range }: ScatterplotProps): ReactElement => {
   const maxDate = range?.[1]?.toISOString();
 
   const options: ChartOptions<"scatter"> = {
+    onClick,
     plugins: {
       tooltip: {
         callbacks: {

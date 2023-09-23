@@ -1,7 +1,7 @@
 import { CalendarOutlined, DownOutlined } from "@ant-design/icons"
 import { Button, Dropdown, Form, Space } from "antd"
 import { DatePicker, RangeType } from "./date-picker"
-import { addDays, addMonths, addWeeks, addYears, startOfMonth, startOfWeek } from "date-fns";
+import { addDays, addMonths, addWeeks, startOfMonth, startOfWeek } from "date-fns";
 import { useState } from "react";
 
 export type DateSelectorProps = {
@@ -58,14 +58,13 @@ type DateRangeMenuOptions = {
 
 const getRelativeDateRange = (
   count: number,
-  unit: "day" | "year",
   now: Date
 ): DateRangeOption => {
-  const start = unit === "day" ? addDays(now, -count) : addYears(now, -count);
-  const label = `Last ${count} ${count === 1 ? unit : `${unit}s`}`;
+  const start = addDays(now, -count);
+  const label = `Last ${count} ${count === 1 ? 'day' : 'days'}`;
   return {
     label,
-    key: `relative_${count}_${unit}`,
+    key: `relative_${count}_days`,
     range: [start, now],
   };
 };
@@ -98,10 +97,9 @@ const getDateRanges = (): DateRangeMenuOptions => {
   const now = new Date();
 
   const relativeItems = [
-    ...[7, 14, 30, 90, 80].map((count) =>
-      getRelativeDateRange(count, "day", now)
+    ...[7, 14, 30, 90].map((count) =>
+      getRelativeDateRange(count, now)
     ),
-    ...[1, 2].map((count) => getRelativeDateRange(count, "year", now)),
   ];
 
   const calendarWeekItems = [

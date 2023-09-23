@@ -44,6 +44,7 @@ export class JiraIssueBuilder {
       ?.name as StatusCategory;
     const issueType = json.fields.issuetype?.name;
     const resolution = json.fields.resolution?.name;
+    const created = new Date(json.fields.created);
     const hierarchyLevel =
       issueType === 'Epic' ? HierarchyLevel.Epic : HierarchyLevel.Story;
 
@@ -67,6 +68,7 @@ export class JiraIssueBuilder {
       hierarchyLevel,
       status,
       statusCategory,
+      created,
       parentKey: epicKey ?? parentKey,
       transitions,
       started: startedDate,

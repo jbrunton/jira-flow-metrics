@@ -11,3 +11,9 @@ export const formatDate = (date?: Date): string | undefined => {
     return format(date, 'd MMM yyyy');
   }
 };
+
+export const formatTime = (date?: Date): string | undefined => {
+  if (date) {
+    return format(date, "PPp");
+  }
+};

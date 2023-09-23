@@ -54,6 +54,7 @@ export type Issue = {
   statusCategory: StatusCategory;
   resolution: string;
   parentKey?: string;
+  created?: Date;
   started?: Date;
   completed?: Date;
   cycleTime?: number;
