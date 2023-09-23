@@ -43,7 +43,7 @@ export const DataSetsIndexPage = () => {
       {
         key: 'actions', render: (_, dataSet) => (
           <Space size="large">
-            <Link to={`/datasets/${dataSet.id}/metrics`}>Metrics</Link>
+            <Link to={`/datasets/${dataSet.id}/scatterplot`}>Scatterplot</Link>
             <Link to={`/datasets/${dataSet.id}/issues`}>Issues</Link>
             <Button
               icon={<SyncOutlined />}
