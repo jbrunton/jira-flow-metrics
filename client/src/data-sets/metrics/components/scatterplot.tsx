@@ -25,7 +25,7 @@ export const Scatterplot = ({ issues, range, setSelectedIssues }: ScatterplotPro
     y: issue.cycleTime,
   }));
 
-  const onClick: ChartOptions<"scatter">["onClick"] = (_event, elements) => {
+  const onClick: ChartOptions<"scatter">["onClick"] = (_, elements) => {
     if (elements.length) {
       const selectedIssues = elements.map((el) => issues[el.index]);
       setSelectedIssues(selectedIssues);

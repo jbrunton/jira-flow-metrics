@@ -53,9 +53,6 @@ export class JiraIssueBuilder {
     }
 
     const transitions = this.buildTransitions(json);
-    const startedDate = getStartedDate(transitions);
-    const completedDate = getCompletedDate(transitions);
-    const cycleTime = getCycleTime(startedDate, completedDate);
 
     const epicKey = json['fields'][this.epicLinkFieldId] as string;
     const parentKey = json['fields'][this.parentFieldId]?.key as string;
@@ -71,15 +68,11 @@ export class JiraIssueBuilder {
       created,
       parentKey: epicKey ?? parentKey,
       transitions,
-      started: startedDate,
-      completed: completedDate,
-      cycleTime,
     };
     return issue;
   }
 
   buildTransitions(json: Version3Models.Issue): Transition[] {
-    //console.log("buildTransitions", json);
     const transitions: Transition[] = reject(isNil)(
       json.changelog?.histories?.map((event) => {
         const statusChange = event.items?.find(
@@ -112,7 +105,6 @@ export class JiraIssueBuilder {
           //   `Could not find status with id ${statusChange.to} (${statusChange.toString})`
           // );
         }
-        //console.log(event.created);
         return {
           date: new Date(Date.parse(event.created ?? '')),
           fromStatus,
@@ -124,38 +116,3 @@ export class JiraIssueBuilder {
     return transitions.sort((t1, t2) => t1.date.getTime() - t2.date.getTime());
   }
 }
-
-const getStartedDate = (transitions: Array<Transition>): Date | undefined => {
-  const startedTransition = transitions.find(
-    (transition) => transition.toStatus.category === StatusCategory.InProgress,
-  );
-
-  return startedTransition?.date;
-};
-
-const getCompletedDate = (transitions: Array<Transition>): Date | undefined => {
-  const lastTransition = transitions
-    .reverse()
-    .find(
-      (transition) =>
-        transition.toStatus.category === StatusCategory.Done &&
-        transition.fromStatus.category !== StatusCategory.Done,
-    );
-
-  return lastTransition?.date;
-};
-
-export const getCycleTime = (
-  started?: Date,
-  completed?: Date,
-): number | undefined => {
-  if (!completed) {
-    return undefined;
-  }
-
-  if (!started) {
-    return 0;
-  }
-
-  return (completed.getTime() - started.getTime()) / (1_000 * 60 * 60 * 24);
-};
