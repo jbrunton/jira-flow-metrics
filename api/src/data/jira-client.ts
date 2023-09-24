@@ -1,5 +1,5 @@
 import { Version3Client } from 'jira.js';
-import { Domain } from '../domains/types';
+import { Domain } from '../domain/entities/domains';
 import { Logger } from '@nestjs/common';
 
 const logger = new Logger('jira-client');

@@ -1,4 +1,4 @@
-import { Field, Status } from '../../src/issues/types';
+import { Field, Status } from '../../src/domain/entities/issues';
 import { Version3Models } from 'jira.js';
 
 export const exampleIssue: Version3Models.Issue = {
