@@ -1,5 +1,5 @@
 import { Version3Client } from 'jira.js';
-import { Field } from '../../domain/entities/issues';
+import { Field } from '@entities/issues';
 import { isNil, reject } from 'rambda';
 import { Injectable } from '@nestjs/common';
 
