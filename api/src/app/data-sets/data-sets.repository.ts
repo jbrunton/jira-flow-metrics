@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { DataSet } from '../domain/entities/datasets';
+import { DataSet } from '../../domain/entities/datasets';
 import { createHash } from 'crypto';
 import { DataError } from 'node-json-db';
-import { LocalCache } from '../data/database';
+import { LocalCache } from '../../data/database';
 
 export type CreateDataSetParams = Omit<DataSet, 'id'>;
 

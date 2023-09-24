@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Version3Client } from 'jira.js';
-import { Status, StatusCategory } from '../domain/entities/issues';
+import { Status, StatusCategory } from '../../domain/entities/issues';
 import { isNil, reject } from 'rambda';
 
 @Injectable()

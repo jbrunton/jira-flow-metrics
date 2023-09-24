@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataError } from 'node-json-db';
-import { Issue } from '../domain/entities/issues';
-import { LocalCache } from '../data/database';
+import { Issue } from '../../domain/entities/issues';
+import { LocalCache } from '../../data/database';
 
 @Injectable()
 export class IssuesRepository {
