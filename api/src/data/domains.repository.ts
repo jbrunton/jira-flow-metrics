@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DataError } from 'node-json-db';
-import { Domain } from '../domain/entities/domains';
+import { Domain } from '@entities/domains';
 import { createHash } from 'crypto';
 import { DomainsCache } from './database';
 

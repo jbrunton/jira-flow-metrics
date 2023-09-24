@@ -7,7 +7,7 @@ import {
   Status,
   StatusCategory,
   Transition,
-} from '../../domain/entities/issues';
+} from '@entities/issues';
 
 export class JiraIssueBuilder {
   private readonly statusCategories: { [externalId: string]: string } = {};

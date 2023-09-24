@@ -1,5 +1,5 @@
 import { Version3Client } from 'jira.js';
-import { DataSource } from '../../domain/entities/datasets';
+import { DataSource } from '@entities/datasets';
 import { Injectable, Scope } from '@nestjs/common';
 
 @Injectable({ scope: Scope.REQUEST })
