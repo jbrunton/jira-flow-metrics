@@ -21,7 +21,14 @@ export class DomainsController {
   @Get()
   async getDomains() {
     const domains = await this.repository.getDomains();
-    return domains;
+    return domains.map(({ id, host, email, token }) => {
+      const tokenSuffix = token.substring(token.length - 3, token.length);
+      return {
+        id,
+        host,
+        credentials: `${email} (***${tokenSuffix})`,
+      };
+    });
   }
 
   @Post()

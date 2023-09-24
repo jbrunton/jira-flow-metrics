@@ -37,10 +37,7 @@ export const AddDataSetModal: React.FC<AddDataSetModalParams> = ({ isOpen, close
     const dataSource = dataSources[parseInt(value, 10)];
     setDataSource(dataSource);
 
-    const name = form.getFieldValue('name');
-    if (!name || name.trim().length === 0) {
-      form.setFieldValue('name', dataSource.name)
-    }
+    form.setFieldValue('name', dataSource.name)
   };
 
   useEffect(() => {

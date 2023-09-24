@@ -25,17 +25,12 @@ export const DomainsPage = () => {
     </Button>
     <Table dataSource={dataSource} columns={[
       { title: 'Host', dataIndex: 'host', key: 'host' },
-      { title: 'Credentials', key: 'credentials', render: (_, domain) => <Credentials domain={domain} /> },
+      { title: 'Credentials', dataIndex: 'credentials', key: 'credentials' },
       { key: 'actions', render: (_, domain) => <SelectDomain domain={domain} />}
     ]} />
     <AddDomainModal isOpen={isModalOpen} close={hideModal} />
   </>
 }
-
-const Credentials: React.FC<{ domain: Domain }> = ({ domain: { email, token } }) => {
-  const tokenSuffix = token.substring(token.length - 3, token.length);
-  return <span>{email} (***{tokenSuffix})</span>;
-};
 
 const SelectDomain: React.FC<{ domain: Domain }> = ({ domain }) => {
   const { setDomainId } = useDomainContext();
