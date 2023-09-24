@@ -1,8 +1,12 @@
 import { Version3Client } from 'jira.js';
 import { Domain } from '../domains/types';
+import { Logger } from '@nestjs/common';
 
-export const createJiraClient = (domain: Domain) =>
-  new Version3Client({
+const logger = new Logger('jira-client');
+
+export const createJiraClient = (domain: Domain) => {
+  logger.log(`Creating Jira client for host ${domain.host}`);
+  return new Version3Client({
     host: `https://${domain.host}`,
     authentication: {
       basic: {
@@ -12,3 +16,4 @@ export const createJiraClient = (domain: Domain) =>
     },
     newErrorHandling: true,
   });
+};

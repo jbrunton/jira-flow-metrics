@@ -1,6 +1,5 @@
 import { Module, Scope } from '@nestjs/common';
-import { cache } from './database';
-import { JsonDB } from 'node-json-db';
+import { DomainsCache, LocalCache } from './database';
 import { Version3Client } from 'jira.js';
 import { createJiraClient } from './jira-client';
 import { Request } from 'express';
@@ -9,10 +8,8 @@ import { REQUEST } from '@nestjs/core';
 
 @Module({
   providers: [
-    {
-      provide: JsonDB,
-      useValue: cache,
-    },
+    DomainsCache,
+    LocalCache,
     {
       scope: Scope.REQUEST,
       provide: Version3Client,
@@ -26,6 +23,6 @@ import { REQUEST } from '@nestjs/core';
     },
     DomainsRepository,
   ],
-  exports: [JsonDB, Version3Client, DomainsRepository],
+  exports: [LocalCache, Version3Client, DomainsRepository],
 })
 export class DataModule {}

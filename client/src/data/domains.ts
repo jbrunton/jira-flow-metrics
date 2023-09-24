@@ -5,8 +5,7 @@ import { client } from "../client";
 export type Domain = {
   id: string;
   host: string;
-  email: string;
-  token: string;
+  credentials: string;
 }
 
 const domainsQueryKey = 'domains';

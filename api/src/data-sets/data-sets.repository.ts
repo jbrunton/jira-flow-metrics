@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { DataSet } from './types';
 import { createHash } from 'crypto';
-import { DataError, JsonDB } from 'node-json-db';
+import { DataError } from 'node-json-db';
+import { LocalCache } from '../data/database';
 
 export type CreateDataSetParams = Omit<DataSet, 'id'>;
 
 @Injectable()
 export class DataSetsRepository {
-  constructor(private readonly cache: JsonDB) {}
+  constructor(private readonly cache: LocalCache) {}
 
   async getDataSets(domainId: string): Promise<DataSet[]> {
     try {

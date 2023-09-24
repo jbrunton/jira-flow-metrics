@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { DataError, JsonDB } from 'node-json-db';
+import { DataError } from 'node-json-db';
 import { Domain } from '../domains/types';
 import { createHash } from 'crypto';
+import { DomainsCache } from './database';
 
 export type CreateDomainParams = Omit<Domain, 'id'>;
 
 @Injectable()
 export class DomainsRepository {
-  constructor(private readonly cache: JsonDB) {}
+  constructor(private readonly cache: DomainsCache) {}
 
   async getDomains() {
     try {

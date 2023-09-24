@@ -1,3 +1,13 @@
 import { Config, JsonDB } from 'node-json-db';
 
-export const cache = new JsonDB(new Config(`./cache/db.json`, true, true));
+export class DomainsCache extends JsonDB {
+  constructor() {
+    super(new Config('./cache/domains.json', true, true));
+  }
+}
+
+export class LocalCache extends JsonDB {
+  constructor() {
+    super(new Config('./cache/data.json', true, true));
+  }
+}
