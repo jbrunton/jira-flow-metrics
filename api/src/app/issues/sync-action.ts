@@ -5,7 +5,7 @@ import { IssuesRepository } from './issues.repository';
 import { JiraIssueBuilder } from './issue_builder';
 import { JiraIssuesRepository } from './jira-issues.repository';
 import { Injectable } from '@nestjs/common';
-import { CycleTimesUseCase } from './cycle-times-use-case';
+import { CycleTimesUseCase } from '../../domain/usecases/cycle-times-use-case';
 
 @Injectable()
 export class SyncAction {

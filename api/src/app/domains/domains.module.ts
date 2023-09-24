@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { DomainsController } from './domains.controller';
 //import { DomainsRepository } from '../data/domains.repository';
-import { DataModule } from '../data/data.module';
+import { DataModule } from '../../data/data.module';
 
 @Module({
   imports: [DataModule],

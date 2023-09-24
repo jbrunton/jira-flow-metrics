@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { DataSourcesRepository } from './data-sources.repository';
 import { IssuesRepository } from '../issues/issues.repository';
 import { SyncAction } from '../issues/sync-action';
-import { DomainsRepository } from '../data/domains.repository';
+import { DomainsRepository } from '../../data/domains.repository';
 
 class CreateDataSetBody {
   @ApiProperty()

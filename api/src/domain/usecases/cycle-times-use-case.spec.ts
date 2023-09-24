@@ -2,9 +2,9 @@ import {
   exampleFields,
   exampleIssue,
   exampleStatuses,
-} from '../../test/fixtures/example-json';
+} from '../../../test/fixtures/example-json';
 import { CycleTimesUseCase } from './cycle-times-use-case';
-import { JiraIssueBuilder } from './issue_builder';
+import { JiraIssueBuilder } from '../../app/issues/issue_builder';
 
 describe('CycleTimesUseCase', () => {
   it('computes cycle time metrics', () => {
