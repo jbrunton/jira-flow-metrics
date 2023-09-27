@@ -6,7 +6,7 @@ import {
   Transition,
   isCompleted,
   isStarted,
-} from '../entities/issues';
+} from '@entities/issues';
 import { compareAsc, compareDesc } from 'date-fns';
 
 export class CycleTimesUseCase {

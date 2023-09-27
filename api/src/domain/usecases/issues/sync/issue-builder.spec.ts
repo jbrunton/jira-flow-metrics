@@ -3,7 +3,7 @@ import {
   exampleFields,
   exampleIssue,
   exampleStatuses,
-} from '../../../test/fixtures/example-json';
+} from '../../../../../test/fixtures/example-json';
 
 describe('JiraIssueBuilder', () => {
   it('builds the issue and transition history with the given statuses', () => {

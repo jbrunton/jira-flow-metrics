@@ -1,16 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { DataError } from 'node-json-db';
-import { Domain } from '@entities/domains';
+import {
+  CreateDomainParams,
+  Domain,
+  DomainsRepository,
+} from '@entities/domains';
 import { createHash } from 'crypto';
-import { DomainsCache } from './database';
-
-export type CreateDomainParams = Omit<Domain, 'id'>;
+import { DomainsCache } from '../database';
 
 @Injectable()
-export class DomainsRepository {
-  constructor(private readonly cache: DomainsCache) {}
+export class LocalDomainsRepository extends DomainsRepository {
+  constructor(private readonly cache: DomainsCache) {
+    super();
+  }
 
-  async getDomains() {
+  async getDomains(): Promise<Domain[]> {
     try {
       const domains = await this.cache.getObject<Domain[]>('/domains');
       return Object.values(domains);
@@ -22,7 +26,7 @@ export class DomainsRepository {
     }
   }
 
-  async addDomain(params: CreateDomainParams) {
+  async addDomain(params: CreateDomainParams): Promise<Domain> {
     const id = createHash('md5')
       .update(JSON.stringify(params))
       .digest('base64url');

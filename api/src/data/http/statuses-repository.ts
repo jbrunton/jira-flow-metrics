@@ -4,7 +4,7 @@ import { Status, StatusCategory } from '@entities/issues';
 import { isNil, reject } from 'rambda';
 
 @Injectable()
-export class JiraStatusesRepository {
+export class HttpJiraStatusesRepository {
   constructor(private readonly client: Version3Client) {}
 
   async getStatuses(): Promise<Status[]> {

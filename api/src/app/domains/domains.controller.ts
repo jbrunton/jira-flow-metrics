@@ -1,5 +1,5 @@
+import { DomainsRepository } from '@entities/domains';
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { DomainsRepository } from '@data/domains.repository';
 import { ApiProperty } from '@nestjs/swagger';
 import { URL } from 'url';
 

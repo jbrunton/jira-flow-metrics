@@ -4,7 +4,7 @@ import {
   exampleStatuses,
 } from '../../../test/fixtures/example-json';
 import { CycleTimesUseCase } from './cycle-times-use-case';
-import { JiraIssueBuilder } from '../../app/issues/issue_builder';
+import { JiraIssueBuilder } from './issues/sync/issue_builder';
 
 describe('CycleTimesUseCase', () => {
   it('computes cycle time metrics', () => {

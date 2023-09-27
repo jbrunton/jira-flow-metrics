@@ -73,3 +73,12 @@ export const isStarted = (issue: Issue): issue is StartedIssue =>
   issue.started !== undefined;
 export const isCompleted = (issue: Issue): issue is CompletedIssue =>
   issue.completed !== undefined;
+
+export abstract class IssuesRepository {
+  abstract getIssues(domainId: string, datasetId: string): Promise<Issue[]>;
+  abstract setIssues(
+    domainId: string,
+    datasetId: string,
+    issues: Issue[],
+  ): Promise<void>;
+}

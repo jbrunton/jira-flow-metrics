@@ -2,10 +2,13 @@ import { Version3Client } from 'jira.js';
 import { Field } from '@entities/issues';
 import { isNil, reject } from 'rambda';
 import { Injectable } from '@nestjs/common';
+import { JiraFieldsRepository } from '@usecases/issues/sync/jira-fields-repository';
 
 @Injectable()
-export class JiraFieldsRepository {
-  constructor(private readonly client: Version3Client) {}
+export class HttpJiraFieldsRepository extends JiraFieldsRepository {
+  constructor(private readonly client: Version3Client) {
+    super();
+  }
 
   async getFields(): Promise<Field[]> {
     const jiraFields = await this.client.issueFields.getFields();

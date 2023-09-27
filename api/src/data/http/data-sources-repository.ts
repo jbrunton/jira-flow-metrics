@@ -1,10 +1,12 @@
 import { Version3Client } from 'jira.js';
-import { DataSource } from '@entities/datasets';
+import { DataSource, DataSourcesRepository } from '@entities/datasets';
 import { Injectable, Scope } from '@nestjs/common';
 
 @Injectable({ scope: Scope.REQUEST })
-export class DataSourcesRepository {
-  constructor(private readonly client: Version3Client) {}
+export class HttpJiraDataSourcesRepository extends DataSourcesRepository {
+  constructor(private readonly client: Version3Client) {
+    super();
+  }
 
   async getDataSources(query: string): Promise<DataSource[]> {
     const projectsPage = await this.client.projects.searchProjects({

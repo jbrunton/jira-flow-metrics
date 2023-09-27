@@ -1,13 +1,10 @@
 import { Module } from '@nestjs/common';
-import { DataModule } from '@data/data.module';
 import { DataSetsController } from './data-sets.controller';
-import { DataSetsRepository } from './data-sets.repository';
-import { DataSourcesRepository } from './data-sources.repository';
-import { IssuesModule } from '../issues/issues.module';
+import { SyncUseCase } from '@usecases/issues/sync/sync-use-case';
+import { CycleTimesUseCase } from '@usecases/cycle-times-use-case';
 
 @Module({
-  imports: [DataModule, IssuesModule],
-  providers: [DataSetsRepository, DataSourcesRepository],
+  providers: [SyncUseCase, CycleTimesUseCase],
   controllers: [DataSetsController],
 })
 export class DataSetsModule {}
