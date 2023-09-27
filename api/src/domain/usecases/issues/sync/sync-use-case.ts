@@ -1,16 +1,16 @@
-import { JiraFieldsRepository } from './jira-fields.repository';
-import { DataSetsRepository } from '../data-sets/data-sets.repository';
-import { JiraStatusesRepository } from './jira-statuses.repository';
-import { IssuesRepository } from './issues.repository';
-import { JiraIssueBuilder } from './issue_builder';
-import { JiraIssuesRepository } from './jira-issues.repository';
+import { DatasetsRepository } from '@entities/datasets';
+import { IssuesRepository } from '@entities/issues';
 import { Injectable } from '@nestjs/common';
 import { CycleTimesUseCase } from '@usecases/cycle-times-use-case';
+import { JiraFieldsRepository } from './jira-fields-repository';
+import { JiraStatusesRepository } from './jira-statuses-repository';
+import { JiraIssuesRepository } from './jira-issues-repository';
+import { JiraIssueBuilder } from './issue_builder';
 
 @Injectable()
-export class SyncAction {
+export class SyncUseCase {
   constructor(
-    private readonly dataSets: DataSetsRepository,
+    private readonly dataSets: DatasetsRepository,
     private readonly issues: IssuesRepository,
     private readonly jiraFields: JiraFieldsRepository,
     private readonly jiraStatuses: JiraStatusesRepository,
@@ -19,7 +19,7 @@ export class SyncAction {
   ) {}
 
   async exec(domainId: string, dataSetId: string) {
-    const dataSet = await this.dataSets.getDataSet(domainId, dataSetId);
+    const dataSet = await this.dataSets.getDataset(domainId, dataSetId);
     const fields = await this.jiraFields.getFields();
     const statuses = await this.jiraStatuses.getStatuses();
     const builder = new JiraIssueBuilder(fields, statuses);

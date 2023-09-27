@@ -2,8 +2,9 @@ import { Version3Client } from 'jira.js';
 import { mapLimit } from 'async';
 import { range } from 'rambda';
 import { Injectable } from '@nestjs/common';
-import { JiraIssueBuilder } from './issue_builder';
 import { Issue } from '@entities/issues';
+import { JiraIssuesRepository } from '@usecases/issues/sync/jira-issues-repository';
+import { JiraIssueBuilder } from '@usecases/issues/sync/issue_builder';
 
 export type SearchParams = {
   jql: string;
@@ -12,8 +13,10 @@ export type SearchParams = {
 };
 
 @Injectable()
-export class JiraIssuesRepository {
-  constructor(private readonly client: Version3Client) {}
+export class HttpJiraIssuesRepository extends JiraIssuesRepository {
+  constructor(private readonly client: Version3Client) {
+    super();
+  }
 
   async search({ jql, onProgress, builder }: SearchParams): Promise<Issue[]> {
     const searchParams = {

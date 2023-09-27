@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { DataError } from 'node-json-db';
-import { Issue } from '@entities/issues';
+import { Issue, IssuesRepository } from '@entities/issues';
 import { LocalCache } from '@data/database';
 
 @Injectable()
-export class IssuesRepository {
-  constructor(private readonly cache: LocalCache) {}
+export class LocalIssuesRepository extends IssuesRepository {
+  constructor(private readonly cache: LocalCache) {
+    super();
+  }
 
   async getIssues(domainId: string, dataSetId: string): Promise<Issue[]> {
     try {

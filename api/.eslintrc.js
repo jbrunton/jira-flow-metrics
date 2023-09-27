@@ -37,7 +37,7 @@ module.exports = {
           },
           {
             from: 'data',
-            allow: ['entities', 'data'],
+            allow: ['entities', 'usecases', 'data'],
           },
           {
             from: 'app',
@@ -76,7 +76,7 @@ module.exports = {
       },
       {
         type: 'main',
-        pattern: ['src/main.ts'],
+        pattern: ['src/main.ts', 'src/main-module.ts'],
         mode: 'file',
       },
     ],
