@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { DataError } from 'node-json-db';
-import { Issue, IssuesRepository } from '@entities/issues';
-import { LocalCache } from '@data/database';
+import { Injectable } from "@nestjs/common";
+import { DataError } from "node-json-db";
+import { Issue, IssuesRepository } from "@entities/issues";
+import { LocalCache } from "@data/database";
 
 @Injectable()
 export class LocalIssuesRepository extends IssuesRepository {

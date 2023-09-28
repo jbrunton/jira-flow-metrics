@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { JiraIssueBuilder } from './issue_builder';
-import { Issue } from '@entities/issues';
+import { Injectable } from "@nestjs/common";
+import { JiraIssueBuilder } from "./issue_builder";
+import { Issue } from "@entities/issues";
 
 export type SearchParams = {
   jql: string;

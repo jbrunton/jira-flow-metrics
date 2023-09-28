@@ -1,4 +1,4 @@
-import { map, pipe, pluck, reverse, sort } from 'rambda';
+import { map, pipe, pluck, reverse, sort } from "rambda";
 import {
   HierarchyLevel,
   Issue,
@@ -6,8 +6,8 @@ import {
   Transition,
   isCompleted,
   isStarted,
-} from '@entities/issues';
-import { compareAsc, compareDesc } from 'date-fns';
+} from "@entities/issues";
+import { compareAsc, compareDesc } from "date-fns";
 
 export class CycleTimesUseCase {
   exec(issues: Issue[]): Issue[] {
@@ -71,14 +71,14 @@ const estimateEpicCycleTimes = (epic: Issue, issues: Issue[]): Issue => {
   const completedChildren = children.filter(isCompleted);
 
   const startedDates = pipe(
-    pluck('started'),
+    pluck("started"),
     sort(compareAsc),
     map((x) => new Date(x)),
   )(startedChildren);
   const started = startedDates[0];
 
   const completedDates = pipe(
-    pluck('completed'),
+    pluck("completed"),
     sort(compareDesc),
     map((x) => new Date(x)),
   )(completedChildren);

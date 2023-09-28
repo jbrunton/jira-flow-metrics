@@ -1,10 +1,10 @@
-import { Version3Client } from 'jira.js';
-import { mapLimit } from 'async';
-import { range } from 'rambda';
-import { Injectable } from '@nestjs/common';
-import { Issue } from '@entities/issues';
-import { JiraIssuesRepository } from '@usecases/datasets/sync/jira-issues-repository';
-import { JiraIssueBuilder } from '@usecases/datasets/sync/issue_builder';
+import { Version3Client } from "jira.js";
+import { mapLimit } from "async";
+import { range } from "rambda";
+import { Injectable } from "@nestjs/common";
+import { Issue } from "@entities/issues";
+import { JiraIssuesRepository } from "@usecases/datasets/sync/jira-issues-repository";
+import { JiraIssueBuilder } from "@usecases/datasets/sync/issue_builder";
 
 export type SearchParams = {
   jql: string;
@@ -21,7 +21,7 @@ export class HttpJiraIssuesRepository extends JiraIssuesRepository {
   async search({ jql, onProgress, builder }: SearchParams): Promise<Issue[]> {
     const searchParams = {
       jql,
-      expand: ['changelog'],
+      expand: ["changelog"],
       fields: builder.getRequiredFields(),
     };
 
