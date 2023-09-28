@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { DataSetsController } from './data-sets.controller';
-import { SyncUseCase } from '@usecases/issues/sync/sync-use-case';
+import { SyncUseCase } from '@usecases/datasets/sync/sync-use-case';
 import { CycleTimesUseCase } from '@usecases/cycle-times-use-case';
 
 @Module({

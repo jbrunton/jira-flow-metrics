@@ -86,7 +86,7 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({ issues }) => {
     },
     { key: 'actions', render: (_, issue) => {
       return <Space>
-        <Link to={issue.jiraUrl} target="_blank"><ExportOutlined /></Link>
+        <Link to={issue.externalUrl} target="_blank"><ExportOutlined /></Link>
       </Space>
     }}
   ]

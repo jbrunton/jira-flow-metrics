@@ -26,6 +26,11 @@ export class LocalDomainsRepository extends DomainsRepository {
     }
   }
 
+  async getDomain(domainId: string): Promise<Domain> {
+    const domain = await this.cache.getObject<Domain>(`/domains/${domainId}`);
+    return domain;
+  }
+
   async addDomain(params: CreateDomainParams): Promise<Domain> {
     const id = createHash('md5')
       .update(JSON.stringify(params))

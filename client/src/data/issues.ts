@@ -8,6 +8,7 @@ export enum HierarchyLevel {
 
 export type Issue = {
   key: string;
+  externalUrl: string;
   summary: string;
   status: string;
   resolution: string;
@@ -20,7 +21,6 @@ export type Issue = {
     fromStatus: IssueStatus;
     toStatus: IssueStatus;
   }[];
-  jiraUrl: string;
   started?: Date;
   completed?: Date;
   cycleTime?: number;

@@ -14,7 +14,11 @@ export class JiraIssueBuilder {
   private readonly epicLinkFieldId?: string;
   private readonly parentFieldId?: string;
 
-  constructor(fields: Field[], statuses: Status[]) {
+  constructor(
+    fields: Field[],
+    statuses: Status[],
+    private readonly host: string,
+  ) {
     for (const status of statuses) {
       this.statusCategories[status.jiraId] = status.category;
     }
@@ -39,6 +43,7 @@ export class JiraIssueBuilder {
   }
 
   build(json: Version3Models.Issue) {
+    const key = json.key;
     const status = json.fields.status.name;
     const statusCategory = json.fields.status.statusCategory
       ?.name as StatusCategory;
@@ -58,7 +63,8 @@ export class JiraIssueBuilder {
     const parentKey = json['fields'][this.parentFieldId]?.key as string;
 
     const issue: Issue = {
-      key: json.key,
+      key,
+      externalUrl: `https://${this.host}/browse/${key}`,
       summary: json.fields.summary,
       issueType,
       resolution,

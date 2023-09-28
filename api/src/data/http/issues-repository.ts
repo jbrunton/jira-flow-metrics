@@ -3,8 +3,8 @@ import { mapLimit } from 'async';
 import { range } from 'rambda';
 import { Injectable } from '@nestjs/common';
 import { Issue } from '@entities/issues';
-import { JiraIssuesRepository } from '@usecases/issues/sync/jira-issues-repository';
-import { JiraIssueBuilder } from '@usecases/issues/sync/issue_builder';
+import { JiraIssuesRepository } from '@usecases/datasets/sync/jira-issues-repository';
+import { JiraIssueBuilder } from '@usecases/datasets/sync/issue_builder';
 
 export type SearchParams = {
   jql: string;
