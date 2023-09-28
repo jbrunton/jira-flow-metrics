@@ -9,13 +9,13 @@ import { LocalDatasetsRepository } from './local/datasets-repository';
 import { DomainsRepository } from '@entities/domains';
 import { LocalDomainsRepository } from './local/domains-repository';
 import { HttpJiraDataSourcesRepository } from './http/data-sources-repository';
-import { JiraFieldsRepository } from '@usecases/issues/sync/jira-fields-repository';
+import { JiraFieldsRepository } from '@usecases/datasets/sync/jira-fields-repository';
 import { HttpJiraFieldsRepository } from './http/fields-repository';
-import { JiraStatusesRepository } from '@usecases/issues/sync/jira-statuses-repository';
+import { JiraStatusesRepository } from '@usecases/datasets/sync/jira-statuses-repository';
 import { HttpJiraStatusesRepository } from './http/statuses-repository';
 import { IssuesRepository } from '@entities/issues';
 import { LocalIssuesRepository } from './local/issues-repository';
-import { JiraIssuesRepository } from '@usecases/issues/sync/jira-issues-repository';
+import { JiraIssuesRepository } from '@usecases/datasets/sync/jira-issues-repository';
 import { HttpJiraIssuesRepository } from './http/issues-repository';
 
 @Global()

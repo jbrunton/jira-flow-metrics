@@ -6,12 +6,14 @@ import { JiraFieldsRepository } from './jira-fields-repository';
 import { JiraStatusesRepository } from './jira-statuses-repository';
 import { JiraIssuesRepository } from './jira-issues-repository';
 import { JiraIssueBuilder } from './issue_builder';
+import { DomainsRepository } from '@entities/domains';
 
 @Injectable()
 export class SyncUseCase {
   constructor(
     private readonly dataSets: DatasetsRepository,
     private readonly issues: IssuesRepository,
+    private readonly domains: DomainsRepository,
     private readonly jiraFields: JiraFieldsRepository,
     private readonly jiraStatuses: JiraStatusesRepository,
     private readonly jiraIssues: JiraIssuesRepository,
@@ -19,12 +21,16 @@ export class SyncUseCase {
   ) {}
 
   async exec(domainId: string, dataSetId: string) {
-    const dataSet = await this.dataSets.getDataset(domainId, dataSetId);
-    const fields = await this.jiraFields.getFields();
-    const statuses = await this.jiraStatuses.getStatuses();
-    const builder = new JiraIssueBuilder(fields, statuses);
+    const [domain, dataset, fields, statuses] = await Promise.all([
+      this.domains.getDomain(domainId),
+      this.dataSets.getDataset(domainId, dataSetId),
+      this.jiraFields.getFields(),
+      this.jiraStatuses.getStatuses(),
+    ]);
+
+    const builder = new JiraIssueBuilder(fields, statuses, domain.host);
     const issues = await this.jiraIssues.search({
-      jql: dataSet.jql,
+      jql: dataset.jql,
       onProgress: () => {},
       builder,
     });

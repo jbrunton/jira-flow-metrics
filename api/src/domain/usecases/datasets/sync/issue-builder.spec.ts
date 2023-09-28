@@ -7,12 +7,17 @@ import {
 
 describe('JiraIssueBuilder', () => {
   it('builds the issue and transition history with the given statuses', () => {
-    const builder = new JiraIssueBuilder(exampleFields, exampleStatuses);
+    const builder = new JiraIssueBuilder(
+      exampleFields,
+      exampleStatuses,
+      'example.atlassian.net',
+    );
 
     const result = builder.build(exampleIssue);
 
     expect(result).toEqual({
       created: new Date('2023-09-04T10:03:25.333Z'),
+      externalUrl: 'https://example.atlassian.net/browse/TEST-101',
       hierarchyLevel: 'Story',
       issueType: 'Task',
       key: 'TEST-101',

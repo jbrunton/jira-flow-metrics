@@ -47,6 +47,7 @@ export type JiraProject = {
 
 export type Issue = {
   key: string;
+  externalUrl: string;
   summary: string;
   issueType?: string;
   hierarchyLevel: HierarchyLevel;
