@@ -6,11 +6,11 @@ export type DataSet = {
 
 export type DataSource = {
   name: string;
-  type: 'filter' | 'project';
+  type: "filter" | "project";
   jql: string;
 };
 
-export type CreateDataSetParams = Omit<DataSet, 'id'>;
+export type CreateDataSetParams = Omit<DataSet, "id">;
 
 export abstract class DatasetsRepository {
   abstract getDatasets(domainId: string): Promise<DataSet[]>;

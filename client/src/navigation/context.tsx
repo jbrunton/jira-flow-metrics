@@ -10,7 +10,7 @@ export type NavigationContext = DomainContextType & {
   domain?: Domain;
   dataSet?: DataSet;
   dataSets?: DataSet[];
-}
+};
 
 export const useNavigationContext = (): NavigationContext => {
   const { pathname: path } = useLocation();
@@ -22,7 +22,7 @@ export const useNavigationContext = (): NavigationContext => {
   const domain = domains?.find((domain) => domain.id === domainId);
 
   const { data: dataSets } = useDataSets();
-  const dataSet = dataSets?.find(dataSet => dataSet.id === dataSetId);
+  const dataSet = dataSets?.find((dataSet) => dataSet.id === dataSetId);
 
   return {
     domainId,
@@ -35,5 +35,5 @@ export const useNavigationContext = (): NavigationContext => {
     domain,
     dataSet,
     dataSets,
-  }
-}
+  };
+};

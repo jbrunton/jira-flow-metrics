@@ -1,8 +1,8 @@
-import { Version3Client } from 'jira.js';
-import { Field } from '@entities/issues';
-import { isNil, reject } from 'rambda';
-import { Injectable } from '@nestjs/common';
-import { JiraFieldsRepository } from '@usecases/datasets/sync/jira-fields-repository';
+import { Version3Client } from "jira.js";
+import { Field } from "@entities/issues";
+import { isNil, reject } from "rambda";
+import { Injectable } from "@nestjs/common";
+import { JiraFieldsRepository } from "@usecases/datasets/sync/jira-fields-repository";
 
 @Injectable()
 export class HttpJiraFieldsRepository extends JiraFieldsRepository {

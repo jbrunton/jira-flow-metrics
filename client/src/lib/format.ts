@@ -8,7 +8,7 @@ export const formatNumber = (x?: number): string | undefined => {
 
 export const formatDate = (date?: Date): string | undefined => {
   if (date) {
-    return format(date, 'd MMM yyyy');
+    return format(date, "d MMM yyyy");
   }
 };
 

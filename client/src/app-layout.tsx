@@ -11,7 +11,7 @@ export const AppLayout = () => (
         </Col>
       </Row>
     </Layout.Header>
-    <Layout.Content style={{ margin: '0 50px' }}>
+    <Layout.Content style={{ margin: "0 50px" }}>
       <Outlet />
     </Layout.Content>
   </Layout>

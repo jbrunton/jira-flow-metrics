@@ -1,6 +1,6 @@
-import { Version3Client } from 'jira.js';
-import { DataSource, DataSourcesRepository } from '@entities/datasets';
-import { Injectable, Scope } from '@nestjs/common';
+import { Version3Client } from "jira.js";
+import { DataSource, DataSourcesRepository } from "@entities/datasets";
+import { Injectable, Scope } from "@nestjs/common";
 
 @Injectable({ scope: Scope.REQUEST })
 export class HttpJiraDataSourcesRepository extends DataSourcesRepository {
@@ -15,19 +15,19 @@ export class HttpJiraDataSourcesRepository extends DataSourcesRepository {
 
     const filtersPage = await this.client.filters.getFiltersPaginated({
       filterName: query,
-      expand: 'jql',
+      expand: "jql",
     });
 
     const projects: DataSource[] = projectsPage.values.map((project) => ({
       name: `${project.name} (${project.key})`,
       jql: `project=${project.key}`,
-      type: 'project',
+      type: "project",
     }));
 
     const filters: DataSource[] = filtersPage.values.map((filter) => ({
       name: filter.name,
       jql: filter.jql,
-      type: 'filter',
+      type: "filter",
     }));
 
     return [...projects, ...filters];

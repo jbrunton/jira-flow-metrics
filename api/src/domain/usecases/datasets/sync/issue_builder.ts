@@ -1,5 +1,5 @@
-import { Version3Models } from 'jira.js';
-import { reject, isNil } from 'rambda';
+import { Version3Models } from "jira.js";
+import { reject, isNil } from "rambda";
 import {
   Field,
   HierarchyLevel,
@@ -7,7 +7,7 @@ import {
   Status,
   StatusCategory,
   Transition,
-} from '@entities/issues';
+} from "@entities/issues";
 
 export class JiraIssueBuilder {
   private readonly statusCategories: { [externalId: string]: string } = {};
@@ -23,20 +23,20 @@ export class JiraIssueBuilder {
       this.statusCategories[status.jiraId] = status.category;
     }
 
-    this.epicLinkFieldId = fields.find((field) => field.name === 'Epic Link')
+    this.epicLinkFieldId = fields.find((field) => field.name === "Epic Link")
       ?.jiraId;
-    this.parentFieldId = fields.find((field) => field.name === 'Parent')
+    this.parentFieldId = fields.find((field) => field.name === "Parent")
       ?.jiraId;
   }
 
   getRequiredFields(): string[] {
     return [
-      'key',
-      'summary',
-      'issuetype',
-      'status',
-      'resolution',
-      'created',
+      "key",
+      "summary",
+      "issuetype",
+      "status",
+      "resolution",
+      "created",
       this.epicLinkFieldId,
       this.parentFieldId,
     ];
@@ -51,7 +51,7 @@ export class JiraIssueBuilder {
     const resolution = json.fields.resolution?.name;
     const created = new Date(json.fields.created);
     const hierarchyLevel =
-      issueType === 'Epic' ? HierarchyLevel.Epic : HierarchyLevel.Story;
+      issueType === "Epic" ? HierarchyLevel.Epic : HierarchyLevel.Story;
 
     if (!statusCategory) {
       throw new Error(`Status category for issue ${json.key} is undefined`);
@@ -59,8 +59,8 @@ export class JiraIssueBuilder {
 
     const transitions = this.buildTransitions(json);
 
-    const epicKey = json['fields'][this.epicLinkFieldId] as string;
-    const parentKey = json['fields'][this.parentFieldId]?.key as string;
+    const epicKey = json["fields"][this.epicLinkFieldId] as string;
+    const parentKey = json["fields"][this.parentFieldId]?.key as string;
 
     const issue: Issue = {
       key,
@@ -82,7 +82,7 @@ export class JiraIssueBuilder {
     const transitions: Transition[] = reject(isNil)(
       json.changelog?.histories?.map((event) => {
         const statusChange = event.items?.find(
-          (item) => item.field == 'status',
+          (item) => item.field == "status",
         );
         if (!statusChange) {
           return null;
@@ -91,14 +91,14 @@ export class JiraIssueBuilder {
         const fromStatus = {
           name: statusChange.fromString,
           category: this.statusCategories[
-            statusChange.from ?? ''
+            statusChange.from ?? ""
           ] as StatusCategory,
         };
 
         const toStatus = {
           name: statusChange.toString,
           category: this.statusCategories[
-            statusChange.to ?? ''
+            statusChange.to ?? ""
           ] as StatusCategory,
         };
         if (!fromStatus.category) {
@@ -112,7 +112,7 @@ export class JiraIssueBuilder {
           // );
         }
         return {
-          date: new Date(Date.parse(event.created ?? '')),
+          date: new Date(Date.parse(event.created ?? "")),
           fromStatus,
           toStatus,
         };

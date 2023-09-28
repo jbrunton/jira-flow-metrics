@@ -1,12 +1,12 @@
 export enum StatusCategory {
-  ToDo = 'To Do',
-  InProgress = 'In Progress',
-  Done = 'Done',
+  ToDo = "To Do",
+  InProgress = "In Progress",
+  Done = "Done",
 }
 
 export enum HierarchyLevel {
-  Story = 'Story',
-  Epic = 'Epic',
+  Story = "Story",
+  Epic = "Epic",
 }
 
 export type Status = {

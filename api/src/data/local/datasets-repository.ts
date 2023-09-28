@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { DataSet, DatasetsRepository } from '@entities/datasets';
-import { createHash } from 'crypto';
-import { DataError } from 'node-json-db';
-import { LocalCache } from '@data/database';
+import { Injectable } from "@nestjs/common";
+import { DataSet, DatasetsRepository } from "@entities/datasets";
+import { createHash } from "crypto";
+import { DataError } from "node-json-db";
+import { LocalCache } from "@data/database";
 
-export type CreateDataSetParams = Omit<DataSet, 'id'>;
+export type CreateDataSetParams = Omit<DataSet, "id">;
 
 @Injectable()
 export class LocalDatasetsRepository extends DatasetsRepository {
@@ -31,9 +31,9 @@ export class LocalDatasetsRepository extends DatasetsRepository {
   }
 
   async addDataset(domainId: string, params: CreateDataSetParams) {
-    const id = createHash('md5')
+    const id = createHash("md5")
       .update(JSON.stringify(params))
-      .digest('base64url');
+      .digest("base64url");
     const dataSet = { ...params, id };
     await this.cache.push(`/dataSets/${domainId}/${id}`, dataSet);
     return dataSet;

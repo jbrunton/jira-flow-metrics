@@ -1,8 +1,8 @@
-import { Version3Client } from 'jira.js';
-import { Domain } from '@entities/domains';
-import { Logger } from '@nestjs/common';
+import { Version3Client } from "jira.js";
+import { Domain } from "@entities/domains";
+import { Logger } from "@nestjs/common";
 
-const logger = new Logger('jira-client');
+const logger = new Logger("jira-client");
 
 export const createJiraClient = (domain: Domain) => {
   logger.log(`Creating Jira client for host ${domain.host}`);

@@ -5,7 +5,7 @@ export type Domain = {
   token: string;
 };
 
-export type CreateDomainParams = Omit<Domain, 'id'>;
+export type CreateDomainParams = Omit<Domain, "id">;
 
 export abstract class DomainsRepository {
   abstract getDomains(): Promise<Domain[]>;

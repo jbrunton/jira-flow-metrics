@@ -1,5 +1,5 @@
-import { Module } from '@nestjs/common';
-import { DomainsController } from './domains.controller';
+import { Module } from "@nestjs/common";
+import { DomainsController } from "./domains.controller";
 
 @Module({
   imports: [],

@@ -10,7 +10,7 @@ import { isNil, reject, uniq } from "rambda";
 
 export type IssuesTableProps = {
   issues: Issue[];
-}
+};
 
 export const IssuesTable: React.FC<IssuesTableProps> = ({ issues }) => {
   const categoryColors = {
@@ -19,98 +19,128 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({ issues }) => {
     Done: "green",
   };
 
-  const [issueTypeFilters, setIssueTypeFilters] = useState<ColumnType<Issue>["filters"]>([]);
-  const [statusFilters, setStatusFilters] = useState<ColumnType<Issue>["filters"]>([]);
-  const [resolutionFilters, setResolutionFilters] = useState<ColumnType<Issue>["filters"]>([]);
+  const [issueTypeFilters, setIssueTypeFilters] = useState<
+    ColumnType<Issue>["filters"]
+  >([]);
+  const [statusFilters, setStatusFilters] = useState<
+    ColumnType<Issue>["filters"]
+  >([]);
+  const [resolutionFilters, setResolutionFilters] = useState<
+    ColumnType<Issue>["filters"]
+  >([]);
 
   useEffect(() => {
-    const issueTypes = uniq(issues.map(issue => issue.issueType));
+    const issueTypes = uniq(issues.map((issue) => issue.issueType));
     setIssueTypeFilters(makeFilters(issueTypes));
 
-    const statuses = uniq(issues.map(issue => issue.status));
+    const statuses = uniq(issues.map((issue) => issue.status));
     setStatusFilters(makeFilters(statuses));
 
-    const resolutions = uniq(issues.map(issue => issue.resolution));
+    const resolutions = uniq(issues.map((issue) => issue.resolution));
     setResolutionFilters(makeFilters(resolutions));
   }, [issues]);
 
   const columns: ColumnsType<Issue> = [
-    { title: 'Key', dataIndex: 'key', key: 'key' },
-    { title: 'Summary', dataIndex: 'summary', key: 'summary' },
+    { title: "Key", dataIndex: "key", key: "key" },
+    { title: "Summary", dataIndex: "summary", key: "summary" },
     {
-      title: 'Issue Type', dataIndex: 'issueType', key: 'issueType',
-      sorter: (a, b, sortOrder) => compareStrings(a.issueType, b.issueType, sortOrder),
+      title: "Issue Type",
+      dataIndex: "issueType",
+      key: "issueType",
+      sorter: (a, b, sortOrder) =>
+        compareStrings(a.issueType, b.issueType, sortOrder),
       filters: issueTypeFilters,
-      onFilter: (issueType, issue) => issue.issueType === issueType
+      onFilter: (issueType, issue) => issue.issueType === issueType,
     },
     {
-      title: 'Status', dataIndex: 'status', key: 'status',
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
       render: (status, issue) => {
-        return (
-          <Tag color={categoryColors[issue.statusCategory]}>
-            {status}
-          </Tag>
-        );
+        return <Tag color={categoryColors[issue.statusCategory]}>{status}</Tag>;
       },
-      sorter: (a, b, sortOrder) => compareStrings(a.status, b.status, sortOrder),
+      sorter: (a, b, sortOrder) =>
+        compareStrings(a.status, b.status, sortOrder),
       filters: statusFilters,
       onFilter: (status, issue) => issue.status === status,
     },
     {
-      title: 'Resolution', dataIndex: 'resolution', key: 'resolution',
+      title: "Resolution",
+      dataIndex: "resolution",
+      key: "resolution",
       render: (resolution) => {
-        return resolution === undefined ? null : <Tag color="green">{resolution}</Tag>
+        return resolution === undefined ? null : (
+          <Tag color="green">{resolution}</Tag>
+        );
       },
-      sorter: (a, b, sortOrder) => compareStrings(a.resolution, b.resolution, sortOrder),
+      sorter: (a, b, sortOrder) =>
+        compareStrings(a.resolution, b.resolution, sortOrder),
       filters: resolutionFilters,
       onFilter: (resolution, issue) => issue.resolution === resolution,
     },
     {
-      title: 'Started', dataIndex: 'started', key: 'started', render: (date) => {
+      title: "Started",
+      dataIndex: "started",
+      key: "started",
+      render: (date) => {
         return formatDate(date);
       },
-      sorter: (a, b, sortOrder) => compareDates(a.started, b.started, sortOrder),
+      sorter: (a, b, sortOrder) =>
+        compareDates(a.started, b.started, sortOrder),
     },
     {
-      title: 'Completed', dataIndex: 'completed', key: 'completed', render: (date) => {
+      title: "Completed",
+      dataIndex: "completed",
+      key: "completed",
+      render: (date) => {
         return formatDate(date);
       },
-      sorter: (a, b, sortOrder) => compareDates(a.completed, b.completed, sortOrder),
+      sorter: (a, b, sortOrder) =>
+        compareDates(a.completed, b.completed, sortOrder),
     },
     {
-      title: 'Cycle Time', dataIndex: 'cycleTime', key: 'cycleTime', render: (cycleTime) => {
+      title: "Cycle Time",
+      dataIndex: "cycleTime",
+      key: "cycleTime",
+      render: (cycleTime) => {
         return formatNumber(cycleTime);
       },
-      defaultSortOrder: 'descend',
-      sorter: (a, b, sortOrder) => compareNumbers(a.cycleTime, b.cycleTime, sortOrder),
+      defaultSortOrder: "descend",
+      sorter: (a, b, sortOrder) =>
+        compareNumbers(a.cycleTime, b.cycleTime, sortOrder),
     },
-    { key: 'actions', render: (_, issue) => {
-      return <Space>
-        <Link to={issue.externalUrl} target="_blank"><ExportOutlined /></Link>
-      </Space>
-    }}
-  ]
+    {
+      key: "actions",
+      render: (_, issue) => {
+        return (
+          <Space>
+            <Link to={issue.externalUrl} target="_blank">
+              <ExportOutlined />
+            </Link>
+          </Space>
+        );
+      },
+    },
+  ];
 
-  return (
-    <Table
-      dataSource={issues}
-      size="small"
-      columns={columns}
-    />
-  );
-}
+  return <Table dataSource={issues} size="small" columns={columns} />;
+};
 
 const makeFilters = (options: string[]): ColumnType<Issue>["filters"] => {
   return reject(isNil)(
-    options.map(option => {
+    options.map((option) => {
       if (option !== undefined) {
         return { text: option, value: option };
       }
-    })
+    }),
   );
-}
+};
 
-const compareStrings = (left: string | undefined, right: string | undefined, sortOrder: SortOrder | undefined) => {
+const compareStrings = (
+  left: string | undefined,
+  right: string | undefined,
+  sortOrder: SortOrder | undefined,
+) => {
   if (left && right) {
     return left.localeCompare(right);
   }
@@ -124,9 +154,13 @@ const compareStrings = (left: string | undefined, right: string | undefined, sor
   }
 
   return 0;
-}
+};
 
-const compareDates = (left: Date | undefined, right: Date | undefined, sortOrder: SortOrder | undefined) => {
+const compareDates = (
+  left: Date | undefined,
+  right: Date | undefined,
+  sortOrder: SortOrder | undefined,
+) => {
   if (left && right) {
     return compareAsc(left, right);
   }
@@ -140,9 +174,13 @@ const compareDates = (left: Date | undefined, right: Date | undefined, sortOrder
   }
 
   return 0;
-}
+};
 
-const compareNumbers = (left: number | undefined, right: number | undefined, sortOrder: SortOrder | undefined) => {
+const compareNumbers = (
+  left: number | undefined,
+  right: number | undefined,
+  sortOrder: SortOrder | undefined,
+) => {
   if (left !== undefined && right !== undefined) {
     return left - right;
   }
@@ -156,4 +194,4 @@ const compareNumbers = (left: number | undefined, right: number | undefined, sor
   }
 
   return 0;
-}
+};

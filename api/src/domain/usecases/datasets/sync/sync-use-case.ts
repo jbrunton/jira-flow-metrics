@@ -1,12 +1,12 @@
-import { DatasetsRepository } from '@entities/datasets';
-import { IssuesRepository } from '@entities/issues';
-import { Injectable } from '@nestjs/common';
-import { CycleTimesUseCase } from '@usecases/cycle-times-use-case';
-import { JiraFieldsRepository } from './jira-fields-repository';
-import { JiraStatusesRepository } from './jira-statuses-repository';
-import { JiraIssuesRepository } from './jira-issues-repository';
-import { JiraIssueBuilder } from './issue_builder';
-import { DomainsRepository } from '@entities/domains';
+import { DatasetsRepository } from "@entities/datasets";
+import { IssuesRepository } from "@entities/issues";
+import { Injectable } from "@nestjs/common";
+import { CycleTimesUseCase } from "@usecases/cycle-times-use-case";
+import { JiraFieldsRepository } from "./jira-fields-repository";
+import { JiraStatusesRepository } from "./jira-statuses-repository";
+import { JiraIssuesRepository } from "./jira-issues-repository";
+import { JiraIssueBuilder } from "./issue_builder";
+import { DomainsRepository } from "@entities/domains";
 
 @Injectable()
 export class SyncUseCase {

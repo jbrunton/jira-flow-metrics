@@ -1,7 +1,7 @@
-import { DomainsRepository } from '@entities/domains';
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { ApiProperty } from '@nestjs/swagger';
-import { URL } from 'url';
+import { DomainsRepository } from "@entities/domains";
+import { Body, Controller, Get, Post } from "@nestjs/common";
+import { ApiProperty } from "@nestjs/swagger";
+import { URL } from "url";
 
 class CreateDomainBody {
   @ApiProperty()
@@ -14,7 +14,7 @@ class CreateDomainBody {
   token: string;
 }
 
-@Controller('domains')
+@Controller("domains")
 export class DomainsController {
   constructor(private readonly repository: DomainsRepository) {}
 
@@ -39,7 +39,7 @@ export class DomainsController {
 }
 
 const normaliseHost = (host: string): string => {
-  if (host.startsWith('https://') || host.startsWith('http://')) {
+  if (host.startsWith("https://") || host.startsWith("http://")) {
     const url = new URL(host);
     return url.host;
   }
