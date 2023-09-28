@@ -11,34 +11,32 @@ const rootHandle: BreadcrumbHandle = {
     }
 
     if (!domains) {
-      return { title: 'Loading' };
+      return { title: "Loading" };
     }
 
     if (path !== "/domains" && domain) {
       const domainOptions = domains.map((domain) => ({
         key: domain.id,
-        label: <span onClick={() => setDomainId(domain.id)}>{domain.host}</span>,
+        label: (
+          <span onClick={() => setDomainId(domain.id)}>{domain.host}</span>
+        ),
       }));
 
       const genericOptions = [
-        { type: 'divider' },
-        { key: 'domains', label: <Link to="/domains">Manage Domains</Link> }
+        { type: "divider" },
+        { key: "domains", label: <Link to="/domains">Manage Domains</Link> },
       ];
 
       const items = [...domainOptions, ...genericOptions];
       const selectedKeys = domain ? [domain.id] : [];
 
       return { title: domain.host, menu: { items, selectedKeys } };
-    }      
-  }
-}
+    }
+  },
+};
 
 export const appRoutes = (
-  <Route
-    path="/"
-    element={<AppLayout />}
-    handle={rootHandle}
-  >
+  <Route path="/" element={<AppLayout />} handle={rootHandle}>
     <Route index element={<Navigate to="/domains" />} />
     {domainRoutes}
     {dataSetRoutes}

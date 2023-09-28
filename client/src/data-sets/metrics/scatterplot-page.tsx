@@ -1,5 +1,11 @@
 import { Drawer } from "antd";
-import { CompletedIssue, Issue, IssueFilter, filterCompletedIssues, useIssues } from "../../data/issues"
+import {
+  CompletedIssue,
+  Issue,
+  IssueFilter,
+  filterCompletedIssues,
+  useIssues,
+} from "../../data/issues";
 import { useNavigationContext } from "../../navigation/context";
 import { Scatterplot } from "./components/scatterplot";
 import { useEffect, useState } from "react";
@@ -18,17 +24,22 @@ export const ScatterplotPage = () => {
   useEffect(() => {
     if (filter && issues) {
       const filteredIssues = filterCompletedIssues(issues, filter);
-      setFilteredIssues(filteredIssues);  
+      setFilteredIssues(filteredIssues);
     }
   }, [issues, filter, setFilteredIssues]);
 
   const [selectedIssues, setSelectedIssues] = useState<Issue[]>([]);
 
-  return <>
-    <FilterForm issues={issues ?? []} onFilterChanged={setFilter} />
-    <Scatterplot issues={filteredIssues} range={filter?.dates ?? null} setSelectedIssues={setSelectedIssues} />
-    <IssuesTable issues={filteredIssues} />
-    <Drawer
+  return (
+    <>
+      <FilterForm issues={issues ?? []} onFilterChanged={setFilter} />
+      <Scatterplot
+        issues={filteredIssues}
+        range={filter?.dates ?? null}
+        setSelectedIssues={setSelectedIssues}
+      />
+      <IssuesTable issues={filteredIssues} />
+      <Drawer
         placement="right"
         width="30%"
         closable={false}
@@ -39,5 +50,6 @@ export const ScatterplotPage = () => {
           <IssueDetails key={issue.key} issue={issue} />
         ))}
       </Drawer>
-  </>;
-}
+    </>
+  );
+};

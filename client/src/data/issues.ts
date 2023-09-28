@@ -24,23 +24,23 @@ export type Issue = {
   started?: Date;
   completed?: Date;
   cycleTime?: number;
-}
+};
 
 export type CompletedIssue = Issue & {
   completed: Date;
   cycleTime: number;
-}
+};
 
 export const isCompleted = (issue: Issue): issue is CompletedIssue => {
   return issue.completed !== undefined && issue.cycleTime !== undefined;
-}
+};
 
 export type IssueStatus = {
   name: string;
   category: Issue["statusCategory"];
 };
 
-const issuesQueryKey = 'issues';
+const issuesQueryKey = "issues";
 
 const getIssues = async (dataSetId?: string): Promise<Issue[]> => {
   const response = await axios.get(`/datasets/${dataSetId}/issues`);
@@ -49,12 +49,14 @@ const getIssues = async (dataSetId?: string): Promise<Issue[]> => {
     created: issue.created ? new Date(issue.created) : undefined,
     started: issue.started ? new Date(issue.started) : undefined,
     completed: issue.completed ? new Date(issue.completed) : undefined,
-    transitions: issue.transitions ? issue.transitions.map(transition => ({
-      ...transition,
-      date: new Date(transition.date),
-    })) : undefined,
+    transitions: issue.transitions
+      ? issue.transitions.map((transition) => ({
+          ...transition,
+          date: new Date(transition.date),
+        }))
+      : undefined,
   }));
-}
+};
 
 export const useIssues = (dataSetId?: string) => {
   return useQuery({
@@ -62,7 +64,7 @@ export const useIssues = (dataSetId?: string) => {
     queryFn: () => getIssues(dataSetId),
     enabled: dataSetId !== undefined,
   });
-}
+};
 
 export type DateRange = null | [Date | null, Date | null];
 
@@ -70,10 +72,10 @@ export type IssueFilter = {
   hierarchyLevel?: HierarchyLevel;
   resolutions?: string[];
   dates?: DateRange;
-}
+};
 
 export const filterIssues = (issues: Issue[], filter: IssueFilter): Issue[] => {
-  return issues.filter(issue => {
+  return issues.filter((issue) => {
     if (filter.hierarchyLevel) {
       if (issue.hierarchyLevel !== filter.hierarchyLevel) {
         return false;
@@ -102,8 +104,11 @@ export const filterIssues = (issues: Issue[], filter: IssueFilter): Issue[] => {
 
     return true;
   });
-}
+};
 
-export const filterCompletedIssues = (issues: Issue[], filter: IssueFilter): CompletedIssue[] => {
+export const filterCompletedIssues = (
+  issues: Issue[],
+  filter: IssueFilter,
+): CompletedIssue[] => {
   return filterIssues(issues, filter).filter(isCompleted);
-}
+};

@@ -1,5 +1,5 @@
 import { Col, Form, Row, Select, SelectProps } from "antd";
-import { HierarchyLevel, Issue } from "../../../data/issues"
+import { HierarchyLevel, Issue } from "../../../data/issues";
 import { useEffect, useState } from "react";
 import { endOfDay, startOfDay, subDays } from "date-fns";
 import { RangeType } from "./date-picker";
@@ -10,11 +10,17 @@ import { IssueFilter } from "../../../data/issues";
 export type FilterFormProps = {
   issues: Issue[];
   onFilterChanged: (filter: IssueFilter) => void;
-  additionalOptions?: React.ReactNode,
-}
+  additionalOptions?: React.ReactNode;
+};
 
-export const FilterForm: React.FC<FilterFormProps> = ({ issues, onFilterChanged, additionalOptions }) => {
-  const [hierarchyLevel, setHierarchyLevel] = useState<HierarchyLevel>(HierarchyLevel.Story);
+export const FilterForm: React.FC<FilterFormProps> = ({
+  issues,
+  onFilterChanged,
+  additionalOptions,
+}) => {
+  const [hierarchyLevel, setHierarchyLevel] = useState<HierarchyLevel>(
+    HierarchyLevel.Story,
+  );
   const [resolutions, setResoutions] = useState<SelectProps["options"]>();
 
   useEffect(() => {
@@ -25,14 +31,14 @@ export const FilterForm: React.FC<FilterFormProps> = ({ issues, onFilterChanged,
     const resolutions = pipe(
       map((issue: Issue) => issue.resolution),
       reject(isNil),
-      uniq
+      uniq,
     )(issues);
 
     setResoutions(
-      resolutions.map(resolution => ({
+      resolutions.map((resolution) => ({
         label: resolution,
         value: resolution,
-      }))
+      })),
     );
   }, [issues]);
 
@@ -50,7 +56,7 @@ export const FilterForm: React.FC<FilterFormProps> = ({ issues, onFilterChanged,
       hierarchyLevel,
       dates,
       resolutions: selectedResolutions,
-    })
+    });
   }, [onFilterChanged, hierarchyLevel, dates, selectedResolutions]);
 
   return (
@@ -83,4 +89,4 @@ export const FilterForm: React.FC<FilterFormProps> = ({ issues, onFilterChanged,
       </Row>
     </Form>
   );
-}
+};

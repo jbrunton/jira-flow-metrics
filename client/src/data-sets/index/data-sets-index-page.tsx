@@ -14,9 +14,9 @@ export const DataSetsIndexPage = () => {
 
   const { data: dataSets } = useDataSets();
 
-  const dataSource = dataSets?.map(dataSet => ({
+  const dataSource = dataSets?.map((dataSet) => ({
     key: dataSet.id,
-    ...dataSet
+    ...dataSet,
   }));
 
   const syncDataSet = useSyncDataSet();
@@ -32,32 +32,47 @@ export const DataSetsIndexPage = () => {
     }
   }, [syncDataSet.isLoading, setLoadingDataSetId]);
 
-  return <>
-    <Button type="primary" icon={<PlusOutlined />} onClick={showModal} style={{ marginBottom: '16px' }}>
-      Add Data Set
-    </Button>
+  return (
+    <>
+      <Button
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={showModal}
+        style={{ marginBottom: "16px" }}
+      >
+        Add Data Set
+      </Button>
 
-    <Table dataSource={dataSource} columns={[
-      { title: 'Name', dataIndex: 'name', key: 'name' },
-      { title: 'JQL', dataIndex: 'jql', key: 'jql' },
-      {
-        key: 'actions', render: (_, dataSet) => (
-          <Space size="large">
-            <Link to={`/datasets/${dataSet.id}/scatterplot`}>Scatterplot</Link>
-            <Link to={`/datasets/${dataSet.id}/issues`}>Issues</Link>
-            <Button
-              icon={<SyncOutlined />}
-              onClick={() => syncSelectedDataSet(dataSet)}
-              disabled={syncDataSet.isLoading}
-              loading={syncDataSet.isLoading && dataSet.id === loadingDataSetId}
-            >
-              Sync
-            </Button>
-          </Space>
-        )
-      }
-    ]} />
+      <Table
+        dataSource={dataSource}
+        columns={[
+          { title: "Name", dataIndex: "name", key: "name" },
+          { title: "JQL", dataIndex: "jql", key: "jql" },
+          {
+            key: "actions",
+            render: (_, dataSet) => (
+              <Space size="large">
+                <Link to={`/datasets/${dataSet.id}/scatterplot`}>
+                  Scatterplot
+                </Link>
+                <Link to={`/datasets/${dataSet.id}/issues`}>Issues</Link>
+                <Button
+                  icon={<SyncOutlined />}
+                  onClick={() => syncSelectedDataSet(dataSet)}
+                  disabled={syncDataSet.isLoading}
+                  loading={
+                    syncDataSet.isLoading && dataSet.id === loadingDataSetId
+                  }
+                >
+                  Sync
+                </Button>
+              </Space>
+            ),
+          },
+        ]}
+      />
 
-    <AddDataSetModal isOpen={isModalOpen} close={hideModal} />
-  </>
-}
+      <AddDataSetModal isOpen={isModalOpen} close={hideModal} />
+    </>
+  );
+};

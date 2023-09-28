@@ -1,6 +1,13 @@
 import { range } from "rambda";
 import { CompletedIssue } from "../data/issues";
-import { Interval, TimeUnit, addTime, difference, endOf, startOf } from "./intervals";
+import {
+  Interval,
+  TimeUnit,
+  addTime,
+  difference,
+  endOf,
+  startOf,
+} from "./intervals";
 
 export type CalculateThroughputParams = {
   issues: CompletedIssue[];
@@ -8,7 +15,11 @@ export type CalculateThroughputParams = {
   timeUnit: TimeUnit;
 };
 
-export type ThroughputResult = { date: Date; count: number; issues: CompletedIssue[] }[];
+export type ThroughputResult = {
+  date: Date;
+  count: number;
+  issues: CompletedIssue[];
+}[];
 
 export const calculateThroughput = ({
   issues,
@@ -26,8 +37,8 @@ export const calculateThroughput = ({
   );
 
   const result = intervals.map(({ start, end }) => {
-    const intervalIssues = issues.filter(issue =>
-      start <= issue.completed && issue.completed < end
+    const intervalIssues = issues.filter(
+      (issue) => start <= issue.completed && issue.completed < end,
     );
 
     return {

@@ -14,25 +14,46 @@ export const DomainsPage = () => {
   const showModal = () => setIsModalOpen(true);
   const hideModal = () => setIsModalOpen(false);
 
-  const dataSource = domains?.map(domain => ({
+  const dataSource = domains?.map((domain) => ({
     key: domain.id,
-    ...domain
+    ...domain,
   }));
 
-  return <>
-    <Button type="primary" icon={<PlusOutlined />} onClick={showModal} style={{ marginBottom: '16px' }}>
-      Add Domain
-    </Button>
-    <Table dataSource={dataSource} columns={[
-      { title: 'Host', dataIndex: 'host', key: 'host' },
-      { title: 'Credentials', dataIndex: 'credentials', key: 'credentials' },
-      { key: 'actions', render: (_, domain) => <SelectDomain domain={domain} />}
-    ]} />
-    <AddDomainModal isOpen={isModalOpen} close={hideModal} />
-  </>
-}
+  return (
+    <>
+      <Button
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={showModal}
+        style={{ marginBottom: "16px" }}
+      >
+        Add Domain
+      </Button>
+      <Table
+        dataSource={dataSource}
+        columns={[
+          { title: "Host", dataIndex: "host", key: "host" },
+          {
+            title: "Credentials",
+            dataIndex: "credentials",
+            key: "credentials",
+          },
+          {
+            key: "actions",
+            render: (_, domain) => <SelectDomain domain={domain} />,
+          },
+        ]}
+      />
+      <AddDomainModal isOpen={isModalOpen} close={hideModal} />
+    </>
+  );
+};
 
 const SelectDomain: React.FC<{ domain: Domain }> = ({ domain }) => {
   const { setDomainId } = useDomainContext();
-  return <Link to='/datasets' onClick={() => setDomainId(domain.id)}>Data Sets</Link>;
-}
+  return (
+    <Link to="/datasets" onClick={() => setDomainId(domain.id)}>
+      Data Sets
+    </Link>
+  );
+};

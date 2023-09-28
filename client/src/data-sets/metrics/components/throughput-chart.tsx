@@ -1,12 +1,30 @@
 import { ReactElement } from "react";
 import { Line } from "react-chartjs-2";
-import { Chart as ChartJS, LineController, LineElement, PointElement, LinearScale, TimeScale, Tooltip, Title, ChartOptions } from 'chart.js';
-import 'chartjs-adapter-date-fns';
+import {
+  Chart as ChartJS,
+  LineController,
+  LineElement,
+  PointElement,
+  LinearScale,
+  TimeScale,
+  Tooltip,
+  Title,
+  ChartOptions,
+} from "chart.js";
+import "chartjs-adapter-date-fns";
 import { ThroughputResult } from "../../../lib/throughput";
 import { TimeUnit } from "../../../lib/intervals";
 import { Issue } from "../../../data/issues";
 // TODO: do we need all of these?
-ChartJS.register(LineController, LineElement, PointElement, LinearScale, Title, TimeScale, Tooltip);
+ChartJS.register(
+  LineController,
+  LineElement,
+  PointElement,
+  LinearScale,
+  Title,
+  TimeScale,
+  Tooltip,
+);
 
 type ThroughputChartProps = {
   result: ThroughputResult;
@@ -14,7 +32,11 @@ type ThroughputChartProps = {
   setSelectedIssues: (issues: Issue[]) => void;
 };
 
-export const ThroughputChart = ({ result, timeUnit, setSelectedIssues }: ThroughputChartProps): ReactElement => {
+export const ThroughputChart = ({
+  result,
+  timeUnit,
+  setSelectedIssues,
+}: ThroughputChartProps): ReactElement => {
   const labels = result.map(({ date }) => date.toISOString());
 
   const data = {
@@ -46,7 +68,7 @@ export const ThroughputChart = ({ result, timeUnit, setSelectedIssues }: Through
   const onClick: ChartOptions<"line">["onClick"] = (_, elements) => {
     if (elements.length === 1) {
       const selectedIssues = elements.map((el) => result[el.index].issues)[0];
-      console.info(selectedIssues)
+      console.info(selectedIssues);
       setSelectedIssues(selectedIssues);
     } else {
       setSelectedIssues([]);
@@ -55,8 +77,8 @@ export const ThroughputChart = ({ result, timeUnit, setSelectedIssues }: Through
 
   const options: ChartOptions<"line"> = {
     onClick,
-    scales
+    scales,
   };
 
-  return <Line data={data} options={options} />
+  return <Line data={data} options={options} />;
 };
