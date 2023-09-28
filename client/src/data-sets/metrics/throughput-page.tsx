@@ -71,7 +71,7 @@ export const ThroughputPage = () => {
       {throughputResult ? (
         <ThroughputChart
           result={throughputResult}
-          timeUnit={TimeUnit.Week}
+          timeUnit={timeUnit}
           setSelectedIssues={setSelectedIssues}
         />
       ) : null}

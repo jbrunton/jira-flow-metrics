@@ -3,7 +3,7 @@ import { Breadcrumbs } from "./navigation/breadcrumbs";
 import { Col, Layout, Row } from "antd";
 
 export const AppLayout = () => (
-  <Layout>
+  <Layout style={{ maxWidth: "1440px", margin: "auto" }}>
     <Layout.Header>
       <Row>
         <Col flex="auto">
