@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   CompletedIssue,
   Issue,
-  IssueFilter,
   filterCompletedIssues,
   useIssues,
 } from "../../data/issues";
@@ -13,12 +12,13 @@ import { ThroughputChart } from "./components/throughput-chart";
 import { Col, Form, Select } from "antd";
 import { ThroughputResult, calculateThroughput } from "../../lib/throughput";
 import { IssuesTable } from "../../components/issues-table";
+import { useFilterContext } from "../../filter/context";
 
 export const ThroughputPage = () => {
   const { dataSet } = useNavigationContext();
   const { data: issues } = useIssues(dataSet?.id);
 
-  const [filter, setFilter] = useState<IssueFilter>();
+  const { filter, setFilter } = useFilterContext();
 
   const [timeUnit, setTimeUnit] = useState<TimeUnit>(TimeUnit.Day);
 
@@ -55,6 +55,7 @@ export const ThroughputPage = () => {
     <>
       <FilterForm
         issues={filteredIssues}
+        filter={filter}
         onFilterChanged={setFilter}
         additionalOptions={
           <Col span={4}>

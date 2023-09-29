@@ -2,7 +2,6 @@ import { Drawer } from "antd";
 import {
   CompletedIssue,
   Issue,
-  IssueFilter,
   filterCompletedIssues,
   useIssues,
 } from "../../data/issues";
@@ -12,12 +11,13 @@ import { useEffect, useState } from "react";
 import { IssueDetails } from "./components/issue-details";
 import { IssuesTable } from "../../components/issues-table";
 import { FilterForm } from "./components/filter-form";
+import { useFilterContext } from "../../filter/context";
 
 export const ScatterplotPage = () => {
   const { dataSet } = useNavigationContext();
   const { data: issues } = useIssues(dataSet?.id);
 
-  const [filter, setFilter] = useState<IssueFilter>();
+  const { filter, setFilter } = useFilterContext();
 
   const [filteredIssues, setFilteredIssues] = useState<CompletedIssue[]>([]);
 
@@ -32,7 +32,11 @@ export const ScatterplotPage = () => {
 
   return (
     <>
-      <FilterForm issues={issues ?? []} onFilterChanged={setFilter} />
+      <FilterForm
+        filter={filter}
+        issues={issues ?? []}
+        onFilterChanged={setFilter}
+      />
       <Scatterplot
         issues={filteredIssues}
         range={filter?.dates ?? null}
