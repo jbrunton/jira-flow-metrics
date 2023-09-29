@@ -14,6 +14,7 @@ export class CycleTimesUseCase {
     const stories = issues.filter(
       (issue) => issue.hierarchyLevel === HierarchyLevel.Story,
     );
+
     const epics = issues.filter(
       (issue) => issue.hierarchyLevel === HierarchyLevel.Epic,
     );
@@ -65,7 +66,7 @@ export const getCycleTime = (
   return (completed.getTime() - started.getTime()) / (1_000 * 60 * 60 * 24);
 };
 
-const estimateEpicCycleTimes = (epic: Issue, issues: Issue[]): Issue => {
+const estimateEpicCycleTimes = (epic: Issue, issues: Issue[]) => {
   const children = issues.filter((child) => child.parentKey === epic.key);
   const startedChildren = children.filter(isStarted);
   const completedChildren = children.filter(isCompleted);
@@ -88,10 +89,7 @@ const estimateEpicCycleTimes = (epic: Issue, issues: Issue[]): Issue => {
 
   const cycleTime = getCycleTime(started, completed);
 
-  return {
-    ...epic,
-    started,
-    completed,
-    cycleTime,
-  };
+  epic.started = started;
+  epic.completed = completed;
+  epic.cycleTime = cycleTime;
 };
