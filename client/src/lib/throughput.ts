@@ -38,7 +38,8 @@ export const calculateThroughput = ({
 
   const result = intervals.map(({ start, end }) => {
     const intervalIssues = issues.filter(
-      (issue) => start <= issue.completed && issue.completed < end,
+      (issue) =>
+        start <= issue.metrics.completed && issue.metrics.completed < end,
     );
 
     return {

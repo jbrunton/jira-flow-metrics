@@ -40,10 +40,8 @@ export const Scatterplot = ({
   setSelectedIssues,
 }: ScatterplotProps): ReactElement => {
   const data = issues.map((issue) => ({
-    // x: issue.metrics.completed,
-    // y: issue.metrics.cycleTime,
-    x: issue.completed,
-    y: issue.cycleTime,
+    x: issue.metrics.completed,
+    y: issue.metrics.cycleTime,
   }));
 
   const onClick: ChartOptions<"scatter">["onClick"] = (_, elements) => {
@@ -71,7 +69,7 @@ export const Scatterplot = ({
         callbacks: {
           title: (ctx) => {
             const dates = ctx.map(({ dataIndex }) =>
-              startOfDay(issues[dataIndex].completed),
+              startOfDay(issues[dataIndex].metrics.completed),
             );
             const uniqDates = sort(
               compareAsc,
@@ -86,7 +84,7 @@ export const Scatterplot = ({
           },
           label: (ctx) => {
             const issue = issues[ctx.dataIndex];
-            return `${issue.key}: ${issue.cycleTime?.toFixed(1)}`;
+            return `${issue.key}: ${issue.metrics.cycleTime?.toFixed(1)}`;
           },
         },
       },

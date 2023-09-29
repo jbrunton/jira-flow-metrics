@@ -1,7 +1,8 @@
-import { map, pipe, pluck, reverse, sort } from "rambda";
+import { map, path, pipe, reverse, sort } from "rambda";
 import {
   HierarchyLevel,
   Issue,
+  IssueFlowMetrics,
   StatusCategory,
   Transition,
   isCompleted,
@@ -20,13 +21,11 @@ export class CycleTimesUseCase {
     );
 
     for (const story of stories) {
-      story.started = getStartedDate(story.transitions);
-      story.completed = getCompletedDate(story.transitions);
-      story.cycleTime = getCycleTime(story.started, story.completed);
+      story.metrics = getStoryFlowMetrics(story);
     }
 
     for (const epic of epics) {
-      estimateEpicCycleTimes(epic, issues);
+      epic.metrics = estimateEpicFlowMetrics(epic, issues);
     }
 
     return [...epics, ...issues];
@@ -66,20 +65,34 @@ export const getCycleTime = (
   return (completed.getTime() - started.getTime()) / (1_000 * 60 * 60 * 24);
 };
 
-const estimateEpicCycleTimes = (epic: Issue, issues: Issue[]) => {
+const getStoryFlowMetrics = (story: Issue): IssueFlowMetrics => {
+  const started = getStartedDate(story.transitions);
+  const completed = getCompletedDate(story.transitions);
+  const cycleTime = getCycleTime(started, completed);
+  return {
+    started,
+    completed,
+    cycleTime,
+  };
+};
+
+const estimateEpicFlowMetrics = (
+  epic: Issue,
+  issues: Issue[],
+): IssueFlowMetrics => {
   const children = issues.filter((child) => child.parentKey === epic.key);
   const startedChildren = children.filter(isStarted);
   const completedChildren = children.filter(isCompleted);
 
   const startedDates = pipe(
-    pluck("started"),
+    map(path(["metrics", "started"])),
     sort(compareAsc),
     map((x) => new Date(x)),
   )(startedChildren);
   const started = startedDates[0];
 
   const completedDates = pipe(
-    pluck("completed"),
+    map(path(["metrics", "started"])),
     sort(compareDesc),
     map((x) => new Date(x)),
   )(completedChildren);
@@ -89,7 +102,9 @@ const estimateEpicCycleTimes = (epic: Issue, issues: Issue[]) => {
 
   const cycleTime = getCycleTime(started, completed);
 
-  epic.started = started;
-  epic.completed = completed;
-  epic.cycleTime = cycleTime;
+  return {
+    started,
+    completed,
+    cycleTime,
+  };
 };
