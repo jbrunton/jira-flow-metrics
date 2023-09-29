@@ -7,12 +7,15 @@ import { compareAsc } from "date-fns";
 import { ColumnType, ColumnsType, SortOrder } from "antd/es/table/interface";
 import { useEffect, useState } from "react";
 import { isNil, reject, uniq } from "rambda";
+import { useNavigationContext } from "../navigation/context";
 
 export type IssuesTableProps = {
   issues: Issue[];
 };
 
 export const IssuesTable: React.FC<IssuesTableProps> = ({ issues }) => {
+  const { dataSetId } = useNavigationContext();
+
   const categoryColors = {
     "To Do": "grey",
     "In Progress": "blue",
@@ -41,7 +44,14 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({ issues }) => {
   }, [issues]);
 
   const columns: ColumnsType<Issue> = [
-    { title: "Key", dataIndex: "key", key: "key" },
+    {
+      title: "Key",
+      dataIndex: "key",
+      key: "key",
+      render: (key) => (
+        <Link to={`/datasets/${dataSetId}/issues/${key}`}>{key}</Link>
+      ),
+    },
     { title: "Summary", dataIndex: "summary", key: "summary" },
     {
       title: "Issue Type",
