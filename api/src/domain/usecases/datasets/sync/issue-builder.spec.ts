@@ -26,6 +26,7 @@ describe("JiraIssueBuilder", () => {
       status: "Done",
       statusCategory: "Done",
       summary: "My test issue",
+      metrics: {},
       transitions: [
         {
           date: new Date("2023-09-04T13:37:24.303Z"),

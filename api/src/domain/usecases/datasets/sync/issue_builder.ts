@@ -74,6 +74,7 @@ export class JiraIssueBuilder {
       created,
       parentKey: epicKey ?? parentKey,
       transitions,
+      metrics: {},
     };
     return issue;
   }

@@ -45,6 +45,21 @@ export type JiraProject = {
   key: string;
 };
 
+export type IssueFlowMetrics = {
+  started?: Date;
+  completed?: Date;
+  cycleTime?: number;
+};
+
+export type StartedFlowMetrics = IssueFlowMetrics & {
+  started: Date;
+};
+
+export type CompletedFlowMetrics = IssueFlowMetrics & {
+  completed: Date;
+  cycleTime: number;
+};
+
 export type Issue = {
   key: string;
   externalUrl: string;
@@ -56,24 +71,24 @@ export type Issue = {
   resolution: string;
   parentKey?: string;
   created?: Date;
-  started?: Date;
-  completed?: Date;
-  cycleTime?: number;
   transitions: Transition[];
+  metrics: IssueFlowMetrics;
 };
 
 export type StartedIssue = Issue & {
-  started: Date;
+  metrics: StartedFlowMetrics;
 };
 
 export type CompletedIssue = Issue & {
-  completed: Date;
+  metrics: CompletedFlowMetrics;
 };
 
 export const isStarted = (issue: Issue): issue is StartedIssue =>
-  issue.started !== undefined;
+  issue.metrics.started !== undefined;
+
 export const isCompleted = (issue: Issue): issue is CompletedIssue =>
-  issue.completed !== undefined;
+  issue.metrics.completed !== undefined &&
+  issue.metrics.cycleTime !== undefined;
 
 export abstract class IssuesRepository {
   abstract getIssues(domainId: string, datasetId: string): Promise<Issue[]>;

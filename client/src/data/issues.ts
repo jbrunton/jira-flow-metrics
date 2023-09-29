@@ -6,6 +6,17 @@ export enum HierarchyLevel {
   Epic = "Epic",
 }
 
+export type IssueFlowMetrics = {
+  started?: Date;
+  completed?: Date;
+  cycleTime?: number;
+};
+
+export type CompletedIssueMetrics = IssueFlowMetrics & {
+  completed: Date;
+  cycleTime: number;
+};
+
 export type Issue = {
   key: string;
   externalUrl: string;
@@ -21,19 +32,16 @@ export type Issue = {
     fromStatus: IssueStatus;
     toStatus: IssueStatus;
   }[];
-  started?: Date;
-  completed?: Date;
-  cycleTime?: number;
+  metrics: IssueFlowMetrics;
 };
 
 export type CompletedIssue = Issue & {
-  completed: Date;
-  cycleTime: number;
+  metrics: CompletedIssueMetrics;
 };
 
-export const isCompleted = (issue: Issue): issue is CompletedIssue => {
-  return issue.completed !== undefined && issue.cycleTime !== undefined;
-};
+export const isCompleted = (issue: Issue): issue is CompletedIssue =>
+  issue.metrics.completed !== undefined &&
+  issue.metrics.cycleTime !== undefined;
 
 export type IssueStatus = {
   name: string;
@@ -44,18 +52,28 @@ const issuesQueryKey = "issues";
 
 const getIssues = async (dataSetId?: string): Promise<Issue[]> => {
   const response = await axios.get(`/datasets/${dataSetId}/issues`);
-  return response.data.map((issue: Issue) => ({
-    ...issue,
-    created: issue.created ? new Date(issue.created) : undefined,
-    started: issue.started ? new Date(issue.started) : undefined,
-    completed: issue.completed ? new Date(issue.completed) : undefined,
-    transitions: issue.transitions
-      ? issue.transitions.map((transition) => ({
-          ...transition,
-          date: new Date(transition.date),
-        }))
-      : undefined,
-  }));
+  return response.data.map((issue: Issue) => {
+    const metrics: IssueFlowMetrics = {
+      started: parseDate(issue.metrics.started),
+      completed: parseDate(issue.metrics.completed),
+      cycleTime: issue.metrics.cycleTime,
+    };
+    return {
+      ...issue,
+      metrics,
+      created: parseDate(issue.created),
+      transitions: issue.transitions
+        ? issue.transitions.map((transition) => ({
+            ...transition,
+            date: new Date(transition.date),
+          }))
+        : undefined,
+    };
+  });
+};
+
+const parseDate = (date: string | Date | undefined): Date | undefined => {
+  return date ? new Date(date) : undefined;
 };
 
 export const useIssues = (dataSetId?: string) => {
@@ -89,15 +107,15 @@ export const filterIssues = (issues: Issue[], filter: IssueFilter): Issue[] => {
     }
 
     if (filter.dates) {
-      if (!issue.completed) {
+      if (!issue.metrics.completed) {
         return false;
       }
 
-      if (filter.dates[0] && issue.completed < filter.dates[0]) {
+      if (filter.dates[0] && issue.metrics.completed < filter.dates[0]) {
         return false;
       }
 
-      if (filter.dates[1] && issue.completed > filter.dates[1]) {
+      if (filter.dates[1] && issue.metrics.completed > filter.dates[1]) {
         return false;
       }
     }

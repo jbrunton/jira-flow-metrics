@@ -18,12 +18,10 @@ describe("CycleTimesUseCase", () => {
 
     const [result] = cycleTimes.exec([issue]);
 
-    expect(result).toEqual(
-      expect.objectContaining({
-        cycleTime: 0.8824751736111112,
-        started: new Date("2023-09-05T14:22:32.068Z"),
-        completed: new Date("2023-09-06T11:33:17.923Z"),
-      }),
-    );
+    expect(result.metrics).toEqual({
+      cycleTime: 0.8824751736111112,
+      started: new Date("2023-09-05T14:22:32.068Z"),
+      completed: new Date("2023-09-06T11:33:17.923Z"),
+    });
   });
 });

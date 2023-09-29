@@ -80,34 +80,34 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({ issues }) => {
     },
     {
       title: "Started",
-      dataIndex: "started",
+      dataIndex: ["metrics", "started"],
       key: "started",
       render: (date) => {
         return formatDate(date);
       },
       sorter: (a, b, sortOrder) =>
-        compareDates(a.started, b.started, sortOrder),
+        compareDates(a.metrics.started, b.metrics.started, sortOrder),
     },
     {
       title: "Completed",
-      dataIndex: "completed",
+      dataIndex: ["metrics", "completed"],
       key: "completed",
       render: (date) => {
         return formatDate(date);
       },
       sorter: (a, b, sortOrder) =>
-        compareDates(a.completed, b.completed, sortOrder),
+        compareDates(a.metrics.completed, b.metrics.completed, sortOrder),
     },
     {
       title: "Cycle Time",
-      dataIndex: "cycleTime",
+      dataIndex: ["metrics", "cycleTime"],
       key: "cycleTime",
       render: (cycleTime) => {
         return formatNumber(cycleTime);
       },
       defaultSortOrder: "descend",
       sorter: (a, b, sortOrder) =>
-        compareNumbers(a.cycleTime, b.cycleTime, sortOrder),
+        compareNumbers(a.metrics.cycleTime, b.metrics.cycleTime, sortOrder),
     },
     {
       key: "actions",

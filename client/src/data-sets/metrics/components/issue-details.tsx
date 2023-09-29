@@ -1,7 +1,7 @@
 import { Card, Descriptions, Tag, Timeline } from "antd";
 import { ReactElement } from "react";
 import { Issue, IssueStatus } from "../../../data/issues";
-import { formatTime } from "../../../lib/format";
+import { formatNumber, formatTime } from "../../../lib/format";
 
 const categoryColors = {
   "To Do": "grey",
@@ -57,13 +57,13 @@ export const IssueDetails = ({ issue }: { issue: Issue }): ReactElement => {
           labelStyle={{ width: "35%", fontWeight: 500 }}
         >
           <Descriptions.Item label="Started">
-            {formatTime(issue.started)}
+            {formatTime(issue.metrics.started)}
           </Descriptions.Item>
           <Descriptions.Item label="Completed">
-            {formatTime(issue.completed)}
+            {formatTime(issue.metrics.completed)}
           </Descriptions.Item>
           <Descriptions.Item label="Cycle Time">
-            {issue.cycleTime?.toFixed(1)}
+            {formatNumber(issue.metrics.cycleTime)}
           </Descriptions.Item>
         </Descriptions>
       </Card>
