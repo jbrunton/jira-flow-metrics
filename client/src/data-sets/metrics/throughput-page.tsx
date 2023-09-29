@@ -20,7 +20,7 @@ export const ThroughputPage = () => {
 
   const [filter, setFilter] = useState<IssueFilter>();
 
-  const [timeUnit, setTimeUnit] = useState<TimeUnit>(TimeUnit.Week);
+  const [timeUnit, setTimeUnit] = useState<TimeUnit>(TimeUnit.Day);
 
   const [filteredIssues, setFilteredIssues] = useState<CompletedIssue[]>([]);
 

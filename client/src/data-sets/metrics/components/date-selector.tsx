@@ -5,8 +5,10 @@ import {
   addDays,
   addMonths,
   addWeeks,
+  endOfDay,
   startOfMonth,
   startOfWeek,
+  subDays,
 } from "date-fns";
 import { useState } from "react";
 
@@ -43,7 +45,14 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
           style={{ width: "100%" }}
           allowClear={false}
           value={dates}
-          onChange={onChange}
+          onChange={(range) => {
+            if (range) {
+              const [start, end] = range;
+              if (start && end) {
+                onChange([start, endOfDay(end)]);
+              }
+            }
+          }}
         />
       </Form.Item>
     </Space.Compact>
@@ -75,7 +84,7 @@ const getRelativeDateRange = (count: number, now: Date): DateRangeOption => {
   return {
     label,
     key: `relative_${count}_days`,
-    range: [start, now],
+    range: [start, endOfDay(now)],
   };
 };
 
@@ -88,8 +97,8 @@ const getCalendarRange = (
   const addUnits = unit === "week" ? addWeeks : addMonths;
   const range: [Date, Date] =
     prevCount === 0
-      ? [startOfUnit, now]
-      : [addUnits(startOfUnit, -prevCount), startOfUnit];
+      ? [startOfUnit, endOfDay(now)]
+      : [addUnits(startOfUnit, -prevCount), endOfDay(subDays(startOfUnit, 1))];
   const label =
     prevCount === 0
       ? `This ${unit}`
