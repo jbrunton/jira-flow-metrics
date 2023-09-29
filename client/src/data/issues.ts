@@ -84,7 +84,7 @@ export const useIssues = (dataSetId?: string) => {
   });
 };
 
-export type DateRange = null | [Date | null, Date | null];
+export type DateRange = null | [Date, Date];
 
 export type IssueFilter = {
   hierarchyLevel?: HierarchyLevel;

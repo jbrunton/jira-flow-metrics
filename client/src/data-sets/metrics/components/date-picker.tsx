@@ -5,4 +5,4 @@ export const DatePicker = AntDatePicker.generatePicker<Date>(
   dateFnsGenerateConfig,
 );
 
-export type RangeType = [Date | null, Date | null] | null;
+export type RangeType = [Date, Date] | null;
