@@ -8,6 +8,7 @@ import { ColumnType, ColumnsType, SortOrder } from "antd/es/table/interface";
 import { useEffect, useState } from "react";
 import { isNil, reject, uniq } from "rambda";
 import { useNavigationContext } from "../navigation/context";
+import { issueDetailsPath } from "../navigation/paths";
 
 export type IssuesTableProps = {
   issues: Issue[];
@@ -48,8 +49,8 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({ issues }) => {
       title: "Key",
       dataIndex: "key",
       key: "key",
-      render: (key) => (
-        <Link to={`/datasets/${dataSetId}/issues/${key}`}>{key}</Link>
+      render: (issueKey) => (
+        <Link to={issueDetailsPath({ dataSetId, issueKey })}>{issueKey}</Link>
       ),
     },
     { title: "Summary", dataIndex: "summary", key: "summary" },

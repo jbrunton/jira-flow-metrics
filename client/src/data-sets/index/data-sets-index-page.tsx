@@ -4,6 +4,11 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AddDataSetModal } from "./add-data-set-modal";
 import { DataSet, useDataSets, useSyncDataSet } from "../../data/data-sets";
+import {
+  issuesIndexPath,
+  scatterplotPath,
+  throughputPath,
+} from "../../navigation/paths";
 
 export const DataSetsIndexPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -52,13 +57,15 @@ export const DataSetsIndexPage = () => {
             key: "actions",
             render: (_, dataSet) => (
               <Space size="large">
-                <Link to={`/datasets/${dataSet.id}/reports/scatterplot`}>
+                <Link to={scatterplotPath({ dataSetId: dataSet.id })}>
                   Scatterplot
                 </Link>
-                <Link to={`/datasets/${dataSet.id}/reports/throughput`}>
+                <Link to={throughputPath({ dataSetId: dataSet.id })}>
                   Throughput
                 </Link>
-                <Link to={`/datasets/${dataSet.id}/issues`}>Issues</Link>
+                <Link to={issuesIndexPath({ dataSetId: dataSet.id })}>
+                  Issues
+                </Link>
                 <Button
                   icon={<SyncOutlined />}
                   onClick={() => syncSelectedDataSet(dataSet)}
