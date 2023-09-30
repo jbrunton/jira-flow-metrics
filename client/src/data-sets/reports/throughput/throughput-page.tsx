@@ -4,15 +4,15 @@ import {
   Issue,
   filterCompletedIssues,
   useIssues,
-} from "../../data/issues";
-import { useNavigationContext } from "../../navigation/context";
-import { FilterForm } from "./components/filter-form";
-import { Interval, TimeUnit } from "../../lib/intervals";
-import { ThroughputChart } from "./components/throughput-chart";
+} from "../../../data/issues";
+import { useNavigationContext } from "../../../navigation/context";
+import { FilterForm } from "../components/filter-form";
+import { Interval, TimeUnit } from "../../../lib/intervals";
+import { ThroughputChart } from "../components/throughput-chart";
 import { Col, Form, Select } from "antd";
-import { ThroughputResult, calculateThroughput } from "../../lib/throughput";
-import { IssuesTable } from "../../components/issues-table";
-import { useFilterContext } from "../../filter/context";
+import { ThroughputResult, calculateThroughput } from "../../../lib/throughput";
+import { IssuesTable } from "../../../components/issues-table";
+import { useFilterContext } from "../../../filter/context";
 
 export const ThroughputPage = () => {
   const { dataSet } = useNavigationContext();

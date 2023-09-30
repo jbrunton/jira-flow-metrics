@@ -4,14 +4,14 @@ import {
   Issue,
   filterCompletedIssues,
   useIssues,
-} from "../../data/issues";
-import { useNavigationContext } from "../../navigation/context";
-import { Scatterplot } from "./components/scatterplot";
+} from "../../../data/issues";
+import { useNavigationContext } from "../../../navigation/context";
+import { Scatterplot } from "../components/scatterplot";
 import { useEffect, useState } from "react";
-import { IssueDetails } from "./components/issue-details";
-import { IssuesTable } from "../../components/issues-table";
-import { FilterForm } from "./components/filter-form";
-import { useFilterContext } from "../../filter/context";
+import { IssueDetails } from "../components/issue-details";
+import { IssuesTable } from "../../../components/issues-table";
+import { FilterForm } from "../components/filter-form";
+import { useFilterContext } from "../../../filter/context";
 
 export const ScatterplotPage = () => {
   const { dataSet } = useNavigationContext();
