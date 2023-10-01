@@ -107,6 +107,7 @@ export const DatasetsIndexPage = () => {
                 <Button
                   icon={<DeleteOutlined />}
                   onClick={() => setDatasetToRemove(dataset)}
+                  disabled={loadingDatasetId !== undefined}
                 />
               </Space>
             ),
