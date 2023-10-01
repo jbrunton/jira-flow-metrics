@@ -36,9 +36,9 @@ export class DataSetsController {
   @Post()
   async createDataSet(
     @Query("domainId") domainId,
-    @Body() dataSet: CreateDataSetBody,
+    @Body() dataset: CreateDataSetBody,
   ) {
-    return await this.dataSets.addDataset(domainId, dataSet);
+    return await this.dataSets.addDataset(domainId, dataset);
   }
 
   @Put(":dataset/sync")

@@ -1,7 +1,7 @@
 import { Link, Navigate, Route } from "react-router-dom";
 import { BreadcrumbHandle } from "./navigation/breadcrumbs";
 import { domainRoutes } from "./domains/domain-routes";
-import { dataSetRoutes } from "./data-sets/data-sets-routes";
+import { dataSetRoutes } from "./data-sets/dataset-routes";
 import { AppLayout } from "./app-layout";
 
 const rootHandle: BreadcrumbHandle = {

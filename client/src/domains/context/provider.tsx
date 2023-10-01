@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { setDefaultDomainId } from "../../data/config";
-import { invalidateDataSourceQueries } from "../../data/data-sets";
+import { invalidateDataSourceQueries } from "../../data/datasets";
 import { DomainContext } from "./context";
 
 export const DomainProvider: React.FC<{ children: React.ReactNode }> = ({

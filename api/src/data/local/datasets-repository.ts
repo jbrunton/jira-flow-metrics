@@ -34,8 +34,8 @@ export class LocalDatasetsRepository extends DatasetsRepository {
     const id = createHash("md5")
       .update(JSON.stringify(params))
       .digest("base64url");
-    const dataSet = { ...params, id };
-    await this.cache.push(`/dataSets/${domainId}/${id}`, dataSet);
-    return dataSet;
+    const dataset = { ...params, id };
+    await this.cache.push(`/dataSets/${domainId}/${id}`, dataset);
+    return dataset;
   }
 }

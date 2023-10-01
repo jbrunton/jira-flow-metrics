@@ -1,6 +1,6 @@
 import { Link, Route } from "react-router-dom";
 import { BreadcrumbHandle } from "../navigation/breadcrumbs";
-import { DataSetsIndexPage } from "./index/data-sets-index-page";
+import { DataSetsIndexPage } from "./index/datasets-index-page";
 import { issueRoutes } from "./issues/issue-routes";
 import { reportRoutes } from "./reports/report-routes";
 import { datasetRootPath } from "../navigation/paths";
@@ -14,23 +14,23 @@ const dataSetsHandle: BreadcrumbHandle = {
 };
 
 const dataSetHandle: BreadcrumbHandle = {
-  crumb({ dataSet, dataSets }) {
+  crumb({ dataset, dataSets }) {
     if (!dataSets) {
       return { title: "Loading" };
     }
 
-    const items = dataSets?.map((dataSet) => ({
-      key: dataSet.id,
+    const items = dataSets?.map((dataset) => ({
+      key: dataset.id,
       label: (
-        <Link to={datasetRootPath({ dataSetId: dataSet.id })}>
-          {dataSet.name}
+        <Link to={datasetRootPath({ dataSetId: dataset.id })}>
+          {dataset.name}
         </Link>
       ),
     }));
 
-    const selectedKeys = dataSet ? [dataSet.id] : [];
+    const selectedKeys = dataset ? [dataset.id] : [];
 
-    return { title: dataSet?.name, menu: { items, selectedKeys } };
+    return { title: dataset?.name, menu: { items, selectedKeys } };
   },
 };
 
