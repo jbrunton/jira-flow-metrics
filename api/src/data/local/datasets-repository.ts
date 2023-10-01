@@ -1,10 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { Dataset, DatasetsRepository } from "@entities/datasets";
+import {
+  CreateDatasetParams,
+  Dataset,
+  DatasetsRepository,
+} from "@entities/datasets";
 import { createHash } from "crypto";
 import { DataError } from "node-json-db";
 import { LocalCache } from "@data/database";
-
-export type CreateDatasetParams = Omit<Dataset, "id">;
 
 @Injectable()
 export class LocalDatasetsRepository extends DatasetsRepository {
@@ -36,6 +38,17 @@ export class LocalDatasetsRepository extends DatasetsRepository {
       .digest("base64url");
     const dataset = { ...params, id };
     await this.cache.push(datasetPath(domainId, id), dataset);
+    return dataset;
+  }
+
+  async updateDataset(
+    domainId: string,
+    datasetId: string,
+    params: Partial<CreateDatasetParams>,
+  ): Promise<Dataset> {
+    const dataset = await this.getDataset(domainId, datasetId);
+    Object.assign(dataset, params);
+    await this.cache.push(datasetPath(domainId, datasetId), dataset);
     return dataset;
   }
 

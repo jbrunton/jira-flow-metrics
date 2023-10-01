@@ -12,6 +12,10 @@ export type Dataset = {
   id: string;
   name: string;
   jql: string;
+  lastSync?: {
+    date: Date;
+    issueCount: number;
+  };
 };
 
 const datasetsQueryKey = "datasets";
@@ -39,7 +43,18 @@ export const useDataSources = (query: string) => {
 
 const getDatasets = async (): Promise<Dataset[]> => {
   const response = await axios.get(`/datasets`);
-  return response.data;
+  return response.data.map((dataset: Dataset) => {
+    const lastSync = dataset.lastSync;
+    return {
+      ...dataset,
+      lastSync: lastSync
+        ? {
+            ...lastSync,
+            date: new Date(lastSync.date),
+          }
+        : undefined,
+    };
+  });
 };
 
 export const useDatasets = () => {
@@ -56,7 +71,10 @@ const syncDataset = async (datasetId: string): Promise<void> => {
 export const useSyncDataset = () => {
   return useMutation({
     mutationFn: syncDataset,
-    onSuccess: () => client.invalidateQueries(["issues"]),
+    onSuccess: () => {
+      client.invalidateQueries(["issues"]);
+      client.invalidateQueries([datasetsQueryKey]);
+    },
   });
 };
 

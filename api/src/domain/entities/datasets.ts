@@ -2,6 +2,10 @@ export type Dataset = {
   id: string;
   name: string;
   jql: string;
+  lastSync?: {
+    date: Date;
+    issueCount: number;
+  };
 };
 
 export type DataSource = {
@@ -11,11 +15,17 @@ export type DataSource = {
 };
 
 export type CreateDatasetParams = Omit<Dataset, "id">;
+export type UpdateDatasetParams = Partial<CreateDatasetParams>;
 
 export abstract class DatasetsRepository {
   abstract getDatasets(domainId: string): Promise<Dataset[]>;
   abstract getDataset(domainId: string, datasetId: string): Promise<Dataset>;
   abstract addDataset(domainId: string, params: CreateDatasetParams);
+  abstract updateDataset(
+    domainId: string,
+    datasetId: string,
+    params: UpdateDatasetParams,
+  ): Promise<Dataset>;
   abstract removeDataset(domainId: string, datasetId: string): Promise<void>;
 }
 
