@@ -38,6 +38,12 @@ export class SyncUseCase {
     const estimatedIssues = this.cycleTimesUseCase.exec(issues);
 
     await this.issues.setIssues(domainId, datasetId, estimatedIssues);
+    await this.datasets.updateDataset(domainId, datasetId, {
+      lastSync: {
+        date: new Date(),
+        issueCount: issues.length,
+      },
+    });
     return estimatedIssues;
   }
 }

@@ -10,6 +10,7 @@ export class LocalIssuesRepository extends IssuesRepository {
   }
 
   async getIssues(domainId: string, datasetId: string): Promise<Issue[]> {
+    console.info("getIssues", domainId, datasetId);
     try {
       const issues = await this.cache.getObject<Record<string, Issue>>(
         issuesPath(domainId, datasetId),

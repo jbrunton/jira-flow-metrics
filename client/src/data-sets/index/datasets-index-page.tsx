@@ -10,6 +10,7 @@ import {
   throughputPath,
 } from "../../navigation/paths";
 import { RemoveDatasetModal } from "./remove-dataset-modal";
+import { formatDate } from "../../lib/format";
 
 export const DatasetsIndexPage = () => {
   const [isAddDatasetModalOpen, setIsAddDatasetModalOpen] = useState(false);
@@ -57,7 +58,8 @@ export const DatasetsIndexPage = () => {
           { title: "Name", dataIndex: "name", key: "name" },
           { title: "JQL", dataIndex: "jql", key: "jql" },
           {
-            key: "actions",
+            title: "Reports",
+            key: "reports",
             render: (_, dataset) => (
               <Space size="large">
                 <Link to={scatterplotPath({ datasetId: dataset.id })}>
@@ -67,8 +69,19 @@ export const DatasetsIndexPage = () => {
                   Throughput
                 </Link>
                 <Link to={issuesIndexPath({ datasetId: dataset.id })}>
-                  Issues
+                  Issues{" "}
+                  {dataset.lastSync ? (
+                    <span>({dataset.lastSync.issueCount})</span>
+                  ) : null}
                 </Link>
+              </Space>
+            ),
+          },
+          {
+            title: "Sync",
+            key: "sync",
+            render: (_, dataset) => (
+              <Space size="large">
                 <Button
                   icon={<SyncOutlined />}
                   onClick={() => syncSelectedDataset(dataset)}
@@ -79,6 +92,18 @@ export const DatasetsIndexPage = () => {
                 >
                   Sync
                 </Button>
+                {dataset.lastSync ? (
+                  <span>Last synced: {formatDate(dataset.lastSync.date)}</span>
+                ) : (
+                  <span>Never</span>
+                )}
+              </Space>
+            ),
+          },
+          {
+            key: "actions",
+            render: (_, dataset) => (
+              <Space size="large">
                 <Button
                   icon={<DeleteOutlined />}
                   onClick={() => setDatasetToRemove(dataset)}

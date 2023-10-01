@@ -1,5 +1,4 @@
 import { DataSourcesRepository, DatasetsRepository } from "@entities/datasets";
-import { DomainsRepository } from "@entities/domains";
 import { IssuesRepository } from "@entities/issues";
 import {
   Body,
@@ -28,7 +27,6 @@ export class DatasetsController {
     private readonly datasets: DatasetsRepository,
     private readonly dataSources: DataSourcesRepository,
     private readonly issues: IssuesRepository,
-    private readonly domains: DomainsRepository,
     private readonly sync: SyncUseCase,
   ) {}
 
@@ -66,7 +64,7 @@ export class DatasetsController {
     return this.sync.exec(domainId, datasetId);
   }
 
-  @Get(":dataset/issues")
+  @Get(":datasetId/issues")
   async getIssues(
     @Query("domainId") domainId: string,
     @Param("datasetId") datasetId: string,
