@@ -19,7 +19,7 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
   issues,
   parentEpic,
 }) => {
-  const { dataSetId } = useNavigationContext();
+  const { datasetId } = useNavigationContext();
 
   const categoryColors = {
     "To Do": "grey",
@@ -54,7 +54,7 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       dataIndex: "key",
       key: "key",
       render: (issueKey) => (
-        <Link to={issueDetailsPath({ dataSetId, issueKey })}>{issueKey}</Link>
+        <Link to={issueDetailsPath({ datasetId, issueKey })}>{issueKey}</Link>
       ),
     },
     {

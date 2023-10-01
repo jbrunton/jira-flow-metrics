@@ -14,7 +14,7 @@ export type CreateDataSetParams = Omit<DataSet, "id">;
 
 export abstract class DatasetsRepository {
   abstract getDatasets(domainId: string): Promise<DataSet[]>;
-  abstract getDataset(domainId: string, dataSetId: string): Promise<DataSet>;
+  abstract getDataset(domainId: string, datasetId: string): Promise<DataSet>;
   abstract addDataset(domainId: string, params: CreateDataSetParams);
 }
 

@@ -14,10 +14,10 @@ export type DataSet = {
   jql: string;
 };
 
-const dataSetsQueryKey = "datasets";
+const datasetsQueryKey = "datasets";
 
 export const invalidateDataSourceQueries = () =>
-  client.invalidateQueries([dataSetsQueryKey]);
+  client.invalidateQueries([datasetsQueryKey]);
 
 const getDataSources = async (query: string): Promise<DataSource[]> => {
   if (query.trim().length === 0) {
@@ -32,7 +32,7 @@ const getDataSources = async (query: string): Promise<DataSource[]> => {
 
 export const useDataSources = (query: string) => {
   return useQuery({
-    queryKey: [dataSetsQueryKey, query],
+    queryKey: [datasetsQueryKey, query],
     queryFn: () => getDataSources(query),
   });
 };
@@ -44,13 +44,13 @@ const getDataSets = async (): Promise<DataSet[]> => {
 
 export const useDataSets = () => {
   return useQuery({
-    queryKey: [dataSetsQueryKey],
+    queryKey: [datasetsQueryKey],
     queryFn: () => getDataSets(),
   });
 };
 
-const syncDataSet = async (dataSetId: string): Promise<void> => {
-  await axios.put(`/datasets/${dataSetId}/sync`);
+const syncDataSet = async (datasetId: string): Promise<void> => {
+  await axios.put(`/datasets/${datasetId}/sync`);
 };
 
 export const useSyncDataSet = () => {
@@ -74,6 +74,6 @@ const createDataSet = async (
 export const useCreateDataSet = () => {
   return useMutation({
     mutationFn: createDataSet,
-    onSuccess: () => client.invalidateQueries([dataSetsQueryKey]),
+    onSuccess: () => client.invalidateQueries([datasetsQueryKey]),
   });
 };

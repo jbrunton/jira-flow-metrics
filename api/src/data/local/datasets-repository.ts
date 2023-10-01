@@ -14,10 +14,10 @@ export class LocalDatasetsRepository extends DatasetsRepository {
 
   async getDatasets(domainId: string): Promise<DataSet[]> {
     try {
-      const dataSets = await this.cache.getObject<Record<string, DataSet>>(
-        `/dataSets/${domainId}`,
+      const datasets = await this.cache.getObject<Record<string, DataSet>>(
+        `/datasets/${domainId}`,
       );
-      return Object.values(dataSets);
+      return Object.values(datasets);
     } catch (e) {
       if (e instanceof DataError) {
         return [];
@@ -26,8 +26,8 @@ export class LocalDatasetsRepository extends DatasetsRepository {
     }
   }
 
-  getDataset(domainId: string, dataSetId: string): Promise<DataSet> {
-    return this.cache.getObject<DataSet>(`/dataSets/${domainId}/${dataSetId}`);
+  getDataset(domainId: string, datasetId: string): Promise<DataSet> {
+    return this.cache.getObject<DataSet>(`/datasets/${domainId}/${datasetId}`);
   }
 
   async addDataset(domainId: string, params: CreateDataSetParams) {
@@ -35,7 +35,7 @@ export class LocalDatasetsRepository extends DatasetsRepository {
       .update(JSON.stringify(params))
       .digest("base64url");
     const dataset = { ...params, id };
-    await this.cache.push(`/dataSets/${domainId}/${id}`, dataset);
+    await this.cache.push(`/datasets/${domainId}/${id}`, dataset);
     return dataset;
   }
 }

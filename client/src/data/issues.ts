@@ -51,8 +51,8 @@ export type IssueStatus = {
 
 const issuesQueryKey = "issues";
 
-const getIssues = async (dataSetId?: string): Promise<Issue[]> => {
-  const response = await axios.get(`/datasets/${dataSetId}/issues`);
+const getIssues = async (datasetId?: string): Promise<Issue[]> => {
+  const response = await axios.get(`/datasets/${datasetId}/issues`);
   return response.data.map((issue: Issue) => {
     const metrics: IssueFlowMetrics = {
       started: parseDate(issue.metrics.started),
@@ -77,11 +77,11 @@ const parseDate = (date: string | Date | undefined): Date | undefined => {
   return date ? new Date(date) : undefined;
 };
 
-export const useIssues = (dataSetId?: string) => {
+export const useIssues = (datasetId?: string) => {
   return useQuery({
-    queryKey: [issuesQueryKey, dataSetId],
-    queryFn: () => getIssues(dataSetId),
-    enabled: dataSetId !== undefined,
+    queryKey: [issuesQueryKey, datasetId],
+    queryFn: () => getIssues(datasetId),
+    enabled: datasetId !== undefined,
   });
 };
 

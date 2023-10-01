@@ -1,7 +1,7 @@
 import { Link, Navigate, Route } from "react-router-dom";
 import { BreadcrumbHandle } from "./navigation/breadcrumbs";
 import { domainRoutes } from "./domains/domain-routes";
-import { dataSetRoutes } from "./data-sets/dataset-routes";
+import { datasetRoutes } from "./data-sets/dataset-routes";
 import { AppLayout } from "./app-layout";
 
 const rootHandle: BreadcrumbHandle = {
@@ -39,6 +39,6 @@ export const appRoutes = (
   <Route path="/" element={<AppLayout />} handle={rootHandle}>
     <Route index element={<Navigate to="/domains" />} />
     {domainRoutes}
-    {dataSetRoutes}
+    {datasetRoutes}
   </Route>
 );

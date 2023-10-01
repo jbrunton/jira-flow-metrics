@@ -17,9 +17,9 @@ export const DataSetsIndexPage = () => {
   const showModal = () => setIsModalOpen(true);
   const hideModal = () => setIsModalOpen(false);
 
-  const { data: dataSets } = useDataSets();
+  const { data: datasets } = useDataSets();
 
-  const dataSource = dataSets?.map((dataset) => ({
+  const dataSource = datasets?.map((dataset) => ({
     key: dataset.id,
     ...dataset,
   }));
@@ -57,13 +57,13 @@ export const DataSetsIndexPage = () => {
             key: "actions",
             render: (_, dataset) => (
               <Space size="large">
-                <Link to={scatterplotPath({ dataSetId: dataset.id })}>
+                <Link to={scatterplotPath({ datasetId: dataset.id })}>
                   Scatterplot
                 </Link>
-                <Link to={throughputPath({ dataSetId: dataset.id })}>
+                <Link to={throughputPath({ datasetId: dataset.id })}>
                   Throughput
                 </Link>
-                <Link to={issuesIndexPath({ dataSetId: dataset.id })}>
+                <Link to={issuesIndexPath({ datasetId: dataset.id })}>
                   Issues
                 </Link>
                 <Button

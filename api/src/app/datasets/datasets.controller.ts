@@ -16,7 +16,7 @@ class CreateDataSetBody {
 @Controller("datasets")
 export class DataSetsController {
   constructor(
-    private readonly dataSets: DatasetsRepository,
+    private readonly datasets: DatasetsRepository,
     private readonly dataSources: DataSourcesRepository,
     private readonly issues: IssuesRepository,
     private readonly domains: DomainsRepository,
@@ -25,7 +25,7 @@ export class DataSetsController {
 
   @Get()
   async getDataSets(@Query("domainId") domainId: string) {
-    return this.dataSets.getDatasets(domainId);
+    return this.datasets.getDatasets(domainId);
   }
 
   @Get("sources")
@@ -38,22 +38,22 @@ export class DataSetsController {
     @Query("domainId") domainId,
     @Body() dataset: CreateDataSetBody,
   ) {
-    return await this.dataSets.addDataset(domainId, dataset);
+    return await this.datasets.addDataset(domainId, dataset);
   }
 
   @Put(":dataset/sync")
   async syncDataset(
     @Query("domainId") domainId: string,
-    @Param("dataset") dataSetId: string,
+    @Param("dataset") datasetId: string,
   ) {
-    return this.sync.exec(domainId, dataSetId);
+    return this.sync.exec(domainId, datasetId);
   }
 
   @Get(":dataset/issues")
   async getIssues(
     @Query("domainId") domainId: string,
-    @Param("dataset") dataSetId: string,
+    @Param("dataset") datasetId: string,
   ) {
-    return this.issues.getIssues(domainId, dataSetId);
+    return this.issues.getIssues(domainId, datasetId);
   }
 }

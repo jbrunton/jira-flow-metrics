@@ -4,35 +4,35 @@ import { NavigationContext } from "./context";
 const paths = {
   datasets: {
     index: "/datasets",
-    root: "/datasets/:dataSetId",
+    root: "/datasets/:datasetId",
   },
   issues: {
-    index: "/datasets/:dataSetId/issues",
-    details: "/datasets/:dataSetId/issues/:issueKey",
+    index: "/datasets/:datasetId/issues",
+    details: "/datasets/:datasetId/issues/:issueKey",
   },
   reports: {
-    scatterplot: "/datasets/:dataSetId/reports/scatterplot",
-    throughput: "/datasets/:dataSetId/reports/throughput",
+    scatterplot: "/datasets/:datasetId/reports/scatterplot",
+    throughput: "/datasets/:datasetId/reports/throughput",
   },
 };
 
 export const datasetsIndexPath = () => paths.datasets.index;
 
-export const datasetRootPath = (params: Pick<NavigationContext, "dataSetId">) =>
+export const datasetRootPath = (params: Pick<NavigationContext, "datasetId">) =>
   generatePath(paths.datasets.root, params);
 
 export const issuesIndexPath = (
-  params: Pick<NavigationContext, "dataSetId">,
+  params: Pick<NavigationContext, "datasetId">,
 ): string => generatePath(paths.issues.index, params);
 
 export const issueDetailsPath = (
-  params: Pick<NavigationContext, "dataSetId" | "issueKey">,
+  params: Pick<NavigationContext, "datasetId" | "issueKey">,
 ): string => generatePath(paths.issues.details, params);
 
 export const scatterplotPath = (
-  params: Pick<NavigationContext, "dataSetId">,
+  params: Pick<NavigationContext, "datasetId">,
 ): string => generatePath(paths.reports.scatterplot, params);
 
 export const throughputPath = (
-  params: Pick<NavigationContext, "dataSetId">,
+  params: Pick<NavigationContext, "datasetId">,
 ): string => generatePath(paths.reports.throughput, params);
