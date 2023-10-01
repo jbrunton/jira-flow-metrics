@@ -1,7 +1,16 @@
 import { DataSourcesRepository, DatasetsRepository } from "@entities/datasets";
 import { DomainsRepository } from "@entities/domains";
 import { IssuesRepository } from "@entities/issues";
-import { Body, Controller, Get, Param, Post, Put, Query } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+} from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
 import { SyncUseCase } from "@usecases/datasets/sync/sync-use-case";
 
@@ -41,6 +50,14 @@ export class DataSetsController {
     return await this.datasets.addDataset(domainId, dataset);
   }
 
+  @Delete(":datasetId")
+  async removeDataset(
+    @Query("domainId") domainId,
+    @Param("datasetId") datasetId: string,
+  ) {
+    return this.datasets.removeDataset(domainId, datasetId);
+  }
+
   @Put(":dataset/sync")
   async syncDataset(
     @Query("domainId") domainId: string,
@@ -52,7 +69,7 @@ export class DataSetsController {
   @Get(":dataset/issues")
   async getIssues(
     @Query("domainId") domainId: string,
-    @Param("dataset") datasetId: string,
+    @Param("datasetId") datasetId: string,
   ) {
     return this.issues.getIssues(domainId, datasetId);
   }

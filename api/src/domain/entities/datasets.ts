@@ -16,6 +16,7 @@ export abstract class DatasetsRepository {
   abstract getDatasets(domainId: string): Promise<DataSet[]>;
   abstract getDataset(domainId: string, datasetId: string): Promise<DataSet>;
   abstract addDataset(domainId: string, params: CreateDataSetParams);
+  abstract removeDataset(domainId: string, datasetId: string): Promise<void>;
 }
 
 export abstract class DataSourcesRepository {

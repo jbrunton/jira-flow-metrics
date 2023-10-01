@@ -15,7 +15,7 @@ export class LocalDatasetsRepository extends DatasetsRepository {
   async getDatasets(domainId: string): Promise<DataSet[]> {
     try {
       const datasets = await this.cache.getObject<Record<string, DataSet>>(
-        `/datasets/${domainId}`,
+        datasetsPath(domainId),
       );
       return Object.values(datasets);
     } catch (e) {
@@ -27,7 +27,7 @@ export class LocalDatasetsRepository extends DatasetsRepository {
   }
 
   getDataset(domainId: string, datasetId: string): Promise<DataSet> {
-    return this.cache.getObject<DataSet>(`/datasets/${domainId}/${datasetId}`);
+    return this.cache.getObject<DataSet>(datasetPath(domainId, datasetId));
   }
 
   async addDataset(domainId: string, params: CreateDataSetParams) {
@@ -35,7 +35,16 @@ export class LocalDatasetsRepository extends DatasetsRepository {
       .update(JSON.stringify(params))
       .digest("base64url");
     const dataset = { ...params, id };
-    await this.cache.push(`/datasets/${domainId}/${id}`, dataset);
+    await this.cache.push(datasetPath(domainId, id), dataset);
     return dataset;
   }
+
+  removeDataset(domainId: string, datasetId: string): Promise<void> {
+    return this.cache.delete(datasetPath(domainId, datasetId));
+  }
 }
+
+const datasetsPath = (domainId: string): string => `/datasets/${domainId}`;
+
+const datasetPath = (domainId: string, datasetId: string): string =>
+  `${datasetsPath(domainId)}/${datasetId}`;

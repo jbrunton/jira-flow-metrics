@@ -30,8 +30,14 @@ export const AddDataSetModal: React.FC<AddDataSetModalParams> = ({
   const onSubmit = async () => {
     try {
       const values = await form.validateFields();
-      createDataSet.mutate({ jql: dataSource?.jql, domainId, ...values });
-      form.resetFields();
+      createDataSet.mutate(
+        { jql: dataSource?.jql, domainId, ...values },
+        {
+          onSuccess: () => {
+            form.resetFields();
+          },
+        },
+      );
     } catch (e) {
       // validation failed
     }

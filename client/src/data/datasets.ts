@@ -60,6 +60,20 @@ export const useSyncDataSet = () => {
   });
 };
 
+const removeDataSet = async (datasetId: string): Promise<void> => {
+  await axios.delete(`/datasets/${datasetId}`);
+};
+
+export const useRemoveDataSet = (datasetId?: string) => {
+  return useMutation({
+    mutationFn: () => removeDataSet(datasetId ?? ""),
+    onSuccess: () => {
+      client.invalidateQueries(["issues"]);
+      client.invalidateQueries([datasetsQueryKey]);
+    },
+  });
+};
+
 export type CreateDataSetParams = Omit<DataSet, "id"> & {
   domainId: string;
 };
