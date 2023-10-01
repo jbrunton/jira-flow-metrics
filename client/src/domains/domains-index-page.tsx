@@ -6,7 +6,7 @@ import { AddDomainModal } from "./add-domain-modal";
 import { Link } from "react-router-dom";
 import { useDomainContext } from "./context";
 
-export const DomainsPage = () => {
+export const DomainsIndexPage = () => {
   const { data: domains } = useDomains();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,6 +21,7 @@ export const DomainsPage = () => {
 
   return (
     <>
+      <h1>Jira domains</h1>
       <Button
         type="primary"
         icon={<PlusOutlined />}
@@ -53,7 +54,7 @@ const SelectDomain: React.FC<{ domain: Domain }> = ({ domain }) => {
   const { setDomainId } = useDomainContext();
   return (
     <Link to="/datasets" onClick={() => setDomainId(domain.id)}>
-      Data Sets
+      Explore
     </Link>
   );
 };

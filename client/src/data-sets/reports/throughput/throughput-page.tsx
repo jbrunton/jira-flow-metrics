@@ -53,6 +53,7 @@ export const ThroughputPage = () => {
 
   return (
     <>
+      <h1>{dataset?.name} throughput</h1>
       <FilterForm
         issues={filteredIssues}
         filter={filter}
