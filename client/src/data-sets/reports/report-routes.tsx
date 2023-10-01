@@ -11,16 +11,16 @@ export const reportRoutes = (
       path="scatterplot"
       element={<ScatterplotPage />}
       handle={{
-        crumb: ({ dataSet }: NavigationContext) =>
-          reportsCrumb(dataSet?.id, "scatterplot"),
+        crumb: ({ dataset }: NavigationContext) =>
+          reportsCrumb(dataset?.id, "scatterplot"),
       }}
     />
     <Route
       path="throughput"
       element={<ThroughputPage />}
       handle={{
-        crumb: ({ dataSet }: NavigationContext) =>
-          reportsCrumb(dataSet?.id, "throughput"),
+        crumb: ({ dataset }: NavigationContext) =>
+          reportsCrumb(dataset?.id, "throughput"),
       }}
     />
     <Route index element={<Navigate to="scatterplot" />} />

@@ -65,9 +65,9 @@ export type CreateDataSetParams = Omit<DataSet, "id"> & {
 };
 
 const createDataSet = async (
-  dataSet: CreateDataSetParams,
+  dataset: CreateDataSetParams,
 ): Promise<DataSet> => {
-  const response = await axios.post(`/datasets`, dataSet);
+  const response = await axios.post(`/datasets`, dataset);
   return response.data;
 };
 

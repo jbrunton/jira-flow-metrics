@@ -3,7 +3,7 @@ import {
   DataSource,
   useCreateDataSet,
   useDataSources,
-} from "../../data/data-sets";
+} from "../../data/datasets";
 import { useEffect, useState } from "react";
 
 export type AddDataSetModalParams = {

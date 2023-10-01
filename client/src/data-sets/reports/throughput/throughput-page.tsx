@@ -15,8 +15,8 @@ import { IssuesTable } from "../../../components/issues-table";
 import { useFilterContext } from "../../../filter/context";
 
 export const ThroughputPage = () => {
-  const { dataSet } = useNavigationContext();
-  const { data: issues } = useIssues(dataSet?.id);
+  const { dataset } = useNavigationContext();
+  const { data: issues } = useIssues(dataset?.id);
 
   const { filter, setFilter } = useFilterContext();
 

@@ -2,8 +2,8 @@ import { PlusOutlined, SyncOutlined } from "@ant-design/icons";
 import { Button, Space, Table } from "antd";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { AddDataSetModal } from "./add-data-set-modal";
-import { DataSet, useDataSets, useSyncDataSet } from "../../data/data-sets";
+import { AddDataSetModal } from "./add-dataset-modal";
+import { DataSet, useDataSets, useSyncDataSet } from "../../data/datasets";
 import {
   issuesIndexPath,
   scatterplotPath,
@@ -19,16 +19,16 @@ export const DataSetsIndexPage = () => {
 
   const { data: dataSets } = useDataSets();
 
-  const dataSource = dataSets?.map((dataSet) => ({
-    key: dataSet.id,
-    ...dataSet,
+  const dataSource = dataSets?.map((dataset) => ({
+    key: dataset.id,
+    ...dataset,
   }));
 
   const syncDataSet = useSyncDataSet();
 
-  const syncSelectedDataSet = (dataSet: DataSet) => {
-    syncDataSet.mutate(dataSet.id);
-    setLoadingDataSetId(dataSet.id);
+  const syncSelectedDataSet = (dataset: DataSet) => {
+    syncDataSet.mutate(dataset.id);
+    setLoadingDataSetId(dataset.id);
   };
 
   useEffect(() => {
@@ -55,23 +55,23 @@ export const DataSetsIndexPage = () => {
           { title: "JQL", dataIndex: "jql", key: "jql" },
           {
             key: "actions",
-            render: (_, dataSet) => (
+            render: (_, dataset) => (
               <Space size="large">
-                <Link to={scatterplotPath({ dataSetId: dataSet.id })}>
+                <Link to={scatterplotPath({ dataSetId: dataset.id })}>
                   Scatterplot
                 </Link>
-                <Link to={throughputPath({ dataSetId: dataSet.id })}>
+                <Link to={throughputPath({ dataSetId: dataset.id })}>
                   Throughput
                 </Link>
-                <Link to={issuesIndexPath({ dataSetId: dataSet.id })}>
+                <Link to={issuesIndexPath({ dataSetId: dataset.id })}>
                   Issues
                 </Link>
                 <Button
                   icon={<SyncOutlined />}
-                  onClick={() => syncSelectedDataSet(dataSet)}
+                  onClick={() => syncSelectedDataSet(dataset)}
                   disabled={syncDataSet.isLoading}
                   loading={
-                    syncDataSet.isLoading && dataSet.id === loadingDataSetId
+                    syncDataSet.isLoading && dataset.id === loadingDataSetId
                   }
                 >
                   Sync

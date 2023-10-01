@@ -14,8 +14,8 @@ import { FilterForm } from "../components/filter-form";
 import { useFilterContext } from "../../../filter/context";
 
 export const ScatterplotPage = () => {
-  const { dataSet } = useNavigationContext();
-  const { data: issues } = useIssues(dataSet?.id);
+  const { dataset } = useNavigationContext();
+  const { data: issues } = useIssues(dataset?.id);
 
   const { filter, setFilter } = useFilterContext();
 
