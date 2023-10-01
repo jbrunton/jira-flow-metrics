@@ -13,6 +13,7 @@ export type NavigationContext = DomainContextType & {
   dataSet?: DataSet;
   dataSets?: DataSet[];
   issueKey?: string;
+  issues?: Issue[];
   issue?: Issue;
 };
 
@@ -44,6 +45,7 @@ export const useNavigationContext = (): NavigationContext => {
     dataSetId,
     dataSets,
     issueKey,
+    issues,
     issue,
   };
 };

@@ -20,6 +20,7 @@ export type CompletedIssueMetrics = IssueFlowMetrics & {
 export type Issue = {
   key: string;
   externalUrl: string;
+  parentKey?: string;
   summary: string;
   status: string;
   resolution: string;

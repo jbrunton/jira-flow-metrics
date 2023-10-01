@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { Issue } from "../data/issues";
-import { Space, Table, Tag } from "antd";
+import { Table, Tag, Typography } from "antd";
 import { ExportOutlined } from "@ant-design/icons";
 import { formatDate, formatNumber } from "../lib/format";
-import { compareAsc } from "date-fns";
+import { compareAsc, differenceInMinutes } from "date-fns";
 import { ColumnType, ColumnsType, SortOrder } from "antd/es/table/interface";
 import { useEffect, useState } from "react";
 import { isNil, reject, uniq } from "rambda";
@@ -12,9 +12,13 @@ import { issueDetailsPath } from "../navigation/paths";
 
 export type IssuesTableProps = {
   issues: Issue[];
+  parentEpic?: Issue;
 };
 
-export const IssuesTable: React.FC<IssuesTableProps> = ({ issues }) => {
+export const IssuesTable: React.FC<IssuesTableProps> = ({
+  issues,
+  parentEpic,
+}) => {
   const { dataSetId } = useNavigationContext();
 
   const categoryColors = {
@@ -53,7 +57,27 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({ issues }) => {
         <Link to={issueDetailsPath({ dataSetId, issueKey })}>{issueKey}</Link>
       ),
     },
-    { title: "Summary", dataIndex: "summary", key: "summary" },
+    {
+      key: "open",
+      render: (_, issue) => (
+        <Link to={issue.externalUrl} target="_blank">
+          <ExportOutlined />
+        </Link>
+      ),
+    },
+    {
+      title: "Summary",
+      key: "summary",
+      dataIndex: "summary",
+      render: (summary) => (
+        <Typography.Text
+          style={{ maxWidth: 300 }}
+          ellipsis={{ tooltip: summary }}
+        >
+          {summary}
+        </Typography.Text>
+      ),
+    },
     {
       title: "Issue Type",
       dataIndex: "issueType",
@@ -120,21 +144,65 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({ issues }) => {
       sorter: (a, b, sortOrder) =>
         compareNumbers(a.metrics.cycleTime, b.metrics.cycleTime, sortOrder),
     },
-    {
-      key: "actions",
-      render: (_, issue) => {
-        return (
-          <Space>
-            <Link to={issue.externalUrl} target="_blank">
-              <ExportOutlined />
-            </Link>
-          </Space>
-        );
-      },
-    },
   ];
 
-  return <Table dataSource={issues} size="small" columns={columns} />;
+  const IssueProgress = ({ issue }: { issue: Issue }) => {
+    if (!parentEpic) return null;
+    const parentStarted = parentEpic.metrics.started;
+    const parentCompleted = parentEpic.metrics.completed;
+    if (!parentStarted || !parentCompleted) return null;
+
+    const issueStarted = issue.metrics.started;
+    const issueCompleted = issue.metrics.completed;
+
+    if (!issueStarted || !issueCompleted) return null;
+
+    const totalTime = differenceInMinutes(parentCompleted, parentStarted);
+    const startedTime = differenceInMinutes(issueStarted, parentStarted);
+    const completedTime = differenceInMinutes(issueCompleted, parentStarted);
+    const progressTime = differenceInMinutes(issueCompleted, issueStarted);
+
+    const startedIndex = (startedTime / totalTime) * 100;
+    const completedIndex = (completedTime / totalTime) * 100;
+    const progressWidth = (progressTime / totalTime) * 100;
+
+    return (
+      <div
+        style={{
+          width: progressWidth,
+          borderRadius: "10px",
+          backgroundColor: "#1677ff",
+          height: "10px",
+          marginLeft: startedIndex,
+          marginRight: completedIndex,
+        }}
+      />
+    );
+  };
+
+  if (parentEpic) {
+    columns.push({
+      key: "progress",
+      render: (_, issue) => {
+        return <IssueProgress issue={issue} />;
+      },
+    });
+  }
+
+  const [pageSize, setPageSize] = useState(20);
+
+  return (
+    <Table
+      dataSource={issues}
+      size="small"
+      columns={columns}
+      pagination={{
+        pageSize,
+        showSizeChanger: true,
+        onChange: (_, pageSize) => setPageSize(pageSize),
+      }}
+    />
+  );
 };
 
 const makeFilters = (options: string[]): ColumnType<Issue>["filters"] => {
