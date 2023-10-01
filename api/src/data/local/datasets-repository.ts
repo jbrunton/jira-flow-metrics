@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { DataSet, DatasetsRepository } from "@entities/datasets";
+import { Dataset, DatasetsRepository } from "@entities/datasets";
 import { createHash } from "crypto";
 import { DataError } from "node-json-db";
 import { LocalCache } from "@data/database";
 
-export type CreateDataSetParams = Omit<DataSet, "id">;
+export type CreateDatasetParams = Omit<Dataset, "id">;
 
 @Injectable()
 export class LocalDatasetsRepository extends DatasetsRepository {
@@ -12,12 +12,12 @@ export class LocalDatasetsRepository extends DatasetsRepository {
     super();
   }
 
-  async getDatasets(domainId: string): Promise<DataSet[]> {
+  async getDatasets(domainId: string): Promise<Dataset[]> {
     try {
-      const dataSets = await this.cache.getObject<Record<string, DataSet>>(
-        `/dataSets/${domainId}`,
+      const datasets = await this.cache.getObject<Record<string, Dataset>>(
+        datasetsPath(domainId),
       );
-      return Object.values(dataSets);
+      return Object.values(datasets);
     } catch (e) {
       if (e instanceof DataError) {
         return [];
@@ -26,16 +26,25 @@ export class LocalDatasetsRepository extends DatasetsRepository {
     }
   }
 
-  getDataset(domainId: string, dataSetId: string): Promise<DataSet> {
-    return this.cache.getObject<DataSet>(`/dataSets/${domainId}/${dataSetId}`);
+  getDataset(domainId: string, datasetId: string): Promise<Dataset> {
+    return this.cache.getObject<Dataset>(datasetPath(domainId, datasetId));
   }
 
-  async addDataset(domainId: string, params: CreateDataSetParams) {
+  async addDataset(domainId: string, params: CreateDatasetParams) {
     const id = createHash("md5")
       .update(JSON.stringify(params))
       .digest("base64url");
     const dataset = { ...params, id };
-    await this.cache.push(`/dataSets/${domainId}/${id}`, dataset);
+    await this.cache.push(datasetPath(domainId, id), dataset);
     return dataset;
   }
+
+  removeDataset(domainId: string, datasetId: string): Promise<void> {
+    return this.cache.delete(datasetPath(domainId, datasetId));
+  }
 }
+
+const datasetsPath = (domainId: string): string => `/datasets/${domainId}`;
+
+const datasetPath = (domainId: string, datasetId: string): string =>
+  `${datasetsPath(domainId)}/${datasetId}`;

@@ -1,11 +1,20 @@
 import { DataSourcesRepository, DatasetsRepository } from "@entities/datasets";
 import { DomainsRepository } from "@entities/domains";
 import { IssuesRepository } from "@entities/issues";
-import { Body, Controller, Get, Param, Post, Put, Query } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+} from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
 import { SyncUseCase } from "@usecases/datasets/sync/sync-use-case";
 
-class CreateDataSetBody {
+class CreateDatasetBody {
   @ApiProperty()
   name: string;
 
@@ -14,9 +23,9 @@ class CreateDataSetBody {
 }
 
 @Controller("datasets")
-export class DataSetsController {
+export class DatasetsController {
   constructor(
-    private readonly dataSets: DatasetsRepository,
+    private readonly datasets: DatasetsRepository,
     private readonly dataSources: DataSourcesRepository,
     private readonly issues: IssuesRepository,
     private readonly domains: DomainsRepository,
@@ -24,8 +33,8 @@ export class DataSetsController {
   ) {}
 
   @Get()
-  async getDataSets(@Query("domainId") domainId: string) {
-    return this.dataSets.getDatasets(domainId);
+  async getDatasets(@Query("domainId") domainId: string) {
+    return this.datasets.getDatasets(domainId);
   }
 
   @Get("sources")
@@ -34,26 +43,34 @@ export class DataSetsController {
   }
 
   @Post()
-  async createDataSet(
+  async createDataset(
     @Query("domainId") domainId,
-    @Body() dataset: CreateDataSetBody,
+    @Body() dataset: CreateDatasetBody,
   ) {
-    return await this.dataSets.addDataset(domainId, dataset);
+    return await this.datasets.addDataset(domainId, dataset);
+  }
+
+  @Delete(":datasetId")
+  async removeDataset(
+    @Query("domainId") domainId,
+    @Param("datasetId") datasetId: string,
+  ) {
+    return this.datasets.removeDataset(domainId, datasetId);
   }
 
   @Put(":dataset/sync")
   async syncDataset(
     @Query("domainId") domainId: string,
-    @Param("dataset") dataSetId: string,
+    @Param("dataset") datasetId: string,
   ) {
-    return this.sync.exec(domainId, dataSetId);
+    return this.sync.exec(domainId, datasetId);
   }
 
   @Get(":dataset/issues")
   async getIssues(
     @Query("domainId") domainId: string,
-    @Param("dataset") dataSetId: string,
+    @Param("datasetId") datasetId: string,
   ) {
-    return this.issues.getIssues(domainId, dataSetId);
+    return this.issues.getIssues(domainId, datasetId);
   }
 }

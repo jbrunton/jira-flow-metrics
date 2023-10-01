@@ -8,16 +8,16 @@ export type DataSource = {
   type: "project" | "filter";
 };
 
-export type DataSet = {
+export type Dataset = {
   id: string;
   name: string;
   jql: string;
 };
 
-const dataSetsQueryKey = "datasets";
+const datasetsQueryKey = "datasets";
 
 export const invalidateDataSourceQueries = () =>
-  client.invalidateQueries([dataSetsQueryKey]);
+  client.invalidateQueries([datasetsQueryKey]);
 
 const getDataSources = async (query: string): Promise<DataSource[]> => {
   if (query.trim().length === 0) {
@@ -32,48 +32,62 @@ const getDataSources = async (query: string): Promise<DataSource[]> => {
 
 export const useDataSources = (query: string) => {
   return useQuery({
-    queryKey: [dataSetsQueryKey, query],
+    queryKey: [datasetsQueryKey, query],
     queryFn: () => getDataSources(query),
   });
 };
 
-const getDataSets = async (): Promise<DataSet[]> => {
+const getDatasets = async (): Promise<Dataset[]> => {
   const response = await axios.get(`/datasets`);
   return response.data;
 };
 
-export const useDataSets = () => {
+export const useDatasets = () => {
   return useQuery({
-    queryKey: [dataSetsQueryKey],
-    queryFn: () => getDataSets(),
+    queryKey: [datasetsQueryKey],
+    queryFn: () => getDatasets(),
   });
 };
 
-const syncDataSet = async (dataSetId: string): Promise<void> => {
-  await axios.put(`/datasets/${dataSetId}/sync`);
+const syncDataset = async (datasetId: string): Promise<void> => {
+  await axios.put(`/datasets/${datasetId}/sync`);
 };
 
-export const useSyncDataSet = () => {
+export const useSyncDataset = () => {
   return useMutation({
-    mutationFn: syncDataSet,
+    mutationFn: syncDataset,
     onSuccess: () => client.invalidateQueries(["issues"]),
   });
 };
 
-export type CreateDataSetParams = Omit<DataSet, "id"> & {
+const removeDataset = async (datasetId: string): Promise<void> => {
+  await axios.delete(`/datasets/${datasetId}`);
+};
+
+export const useRemoveDataset = (datasetId?: string) => {
+  return useMutation({
+    mutationFn: () => removeDataset(datasetId ?? ""),
+    onSuccess: () => {
+      client.invalidateQueries(["issues"]);
+      client.invalidateQueries([datasetsQueryKey]);
+    },
+  });
+};
+
+export type CreateDatasetParams = Omit<Dataset, "id"> & {
   domainId: string;
 };
 
-const createDataSet = async (
-  dataset: CreateDataSetParams,
-): Promise<DataSet> => {
+const createDataset = async (
+  dataset: CreateDatasetParams,
+): Promise<Dataset> => {
   const response = await axios.post(`/datasets`, dataset);
   return response.data;
 };
 
-export const useCreateDataSet = () => {
+export const useCreateDataset = () => {
   return useMutation({
-    mutationFn: createDataSet,
-    onSuccess: () => client.invalidateQueries([dataSetsQueryKey]),
+    mutationFn: createDataset,
+    onSuccess: () => client.invalidateQueries([datasetsQueryKey]),
   });
 };

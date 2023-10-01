@@ -1,4 +1,4 @@
-export type DataSet = {
+export type Dataset = {
   id: string;
   name: string;
   jql: string;
@@ -10,12 +10,13 @@ export type DataSource = {
   jql: string;
 };
 
-export type CreateDataSetParams = Omit<DataSet, "id">;
+export type CreateDatasetParams = Omit<Dataset, "id">;
 
 export abstract class DatasetsRepository {
-  abstract getDatasets(domainId: string): Promise<DataSet[]>;
-  abstract getDataset(domainId: string, dataSetId: string): Promise<DataSet>;
-  abstract addDataset(domainId: string, params: CreateDataSetParams);
+  abstract getDatasets(domainId: string): Promise<Dataset[]>;
+  abstract getDataset(domainId: string, datasetId: string): Promise<Dataset>;
+  abstract addDataset(domainId: string, params: CreateDatasetParams);
+  abstract removeDataset(domainId: string, datasetId: string): Promise<void>;
 }
 
 export abstract class DataSourcesRepository {

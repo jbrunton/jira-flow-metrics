@@ -1,28 +1,28 @@
 import { Link, Route } from "react-router-dom";
 import { BreadcrumbHandle } from "../navigation/breadcrumbs";
-import { DataSetsIndexPage } from "./index/datasets-index-page";
+import { DatasetsIndexPage } from "./index/datasets-index-page";
 import { issueRoutes } from "./issues/issue-routes";
 import { reportRoutes } from "./reports/report-routes";
 import { datasetRootPath } from "../navigation/paths";
 
-const dataSetsHandle: BreadcrumbHandle = {
-  crumb({ dataSetId }) {
+const datasetsHandle: BreadcrumbHandle = {
+  crumb({ datasetId }) {
     return {
-      title: dataSetId ? <Link to="/datasets">Datasets</Link> : "Datasets",
+      title: datasetId ? <Link to="/datasets">Datasets</Link> : "Datasets",
     };
   },
 };
 
-const dataSetHandle: BreadcrumbHandle = {
-  crumb({ dataset, dataSets }) {
-    if (!dataSets) {
+const datasetHandle: BreadcrumbHandle = {
+  crumb({ dataset, datasets }) {
+    if (!datasets) {
       return { title: "Loading" };
     }
 
-    const items = dataSets?.map((dataset) => ({
+    const items = datasets?.map((dataset) => ({
       key: dataset.id,
       label: (
-        <Link to={datasetRootPath({ dataSetId: dataset.id })}>
+        <Link to={datasetRootPath({ datasetId: dataset.id })}>
           {dataset.name}
         </Link>
       ),
@@ -34,10 +34,10 @@ const dataSetHandle: BreadcrumbHandle = {
   },
 };
 
-export const dataSetRoutes = (
-  <Route path="datasets" handle={dataSetsHandle}>
-    <Route index element={<DataSetsIndexPage />} />
-    <Route path=":dataSetId" handle={dataSetHandle}>
+export const datasetRoutes = (
+  <Route path="datasets" handle={datasetsHandle}>
+    <Route index element={<DatasetsIndexPage />} />
+    <Route path=":datasetId" handle={datasetHandle}>
       {issueRoutes}
       {reportRoutes}
     </Route>

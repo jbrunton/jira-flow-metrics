@@ -28,17 +28,17 @@ export const reportRoutes = (
 );
 
 const reportsCrumb = (
-  dataSetId: string | undefined,
+  datasetId: string | undefined,
   reportKey: "scatterplot" | "throughput",
 ): ItemType => {
   const reports = [
     {
       key: "scatterplot",
-      label: <Link to={scatterplotPath({ dataSetId })}>Scatterplot</Link>,
+      label: <Link to={scatterplotPath({ datasetId })}>Scatterplot</Link>,
     },
     {
       key: "throughput",
-      label: <Link to={throughputPath({ dataSetId })}>Throughput</Link>,
+      label: <Link to={throughputPath({ datasetId })}>Throughput</Link>,
     },
   ];
   const currentReport = reports.find((report) => report.key === reportKey);

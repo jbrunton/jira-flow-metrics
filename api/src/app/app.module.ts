@@ -4,7 +4,7 @@ import { AppService } from "./app.service";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
 import { DomainsModule } from "./domains/domains.module";
-import { DataSetsModule } from "./datasets/datasets.module";
+import { DatasetsModule } from "./datasets/datasets.module";
 
 @Module({
   imports: [
@@ -13,7 +13,7 @@ import { DataSetsModule } from "./datasets/datasets.module";
       exclude: ["/api/(.*)"],
     }),
     DomainsModule,
-    DataSetsModule,
+    DatasetsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

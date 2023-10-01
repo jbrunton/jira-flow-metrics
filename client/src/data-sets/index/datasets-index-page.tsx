@@ -1,48 +1,51 @@
-import { PlusOutlined, SyncOutlined } from "@ant-design/icons";
+import { DeleteOutlined, PlusOutlined, SyncOutlined } from "@ant-design/icons";
 import { Button, Space, Table } from "antd";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { AddDataSetModal } from "./add-dataset-modal";
-import { DataSet, useDataSets, useSyncDataSet } from "../../data/datasets";
+import { AddDatasetModal } from "./add-dataset-modal";
+import { Dataset, useDatasets, useSyncDataset } from "../../data/datasets";
 import {
   issuesIndexPath,
   scatterplotPath,
   throughputPath,
 } from "../../navigation/paths";
+import { RemoveDatasetModal } from "./remove-dataset-modal";
 
-export const DataSetsIndexPage = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loadingDataSetId, setLoadingDataSetId] = useState<string>();
+export const DatasetsIndexPage = () => {
+  const [isAddDatasetModalOpen, setIsAddDatasetModalOpen] = useState(false);
+  const showAddDatasetModal = () => setIsAddDatasetModalOpen(true);
+  const hideAddDatasetModal = () => setIsAddDatasetModalOpen(false);
 
-  const showModal = () => setIsModalOpen(true);
-  const hideModal = () => setIsModalOpen(false);
+  const [datasetToRemove, setDatasetToRemove] = useState<Dataset>();
 
-  const { data: dataSets } = useDataSets();
+  const [loadingDatasetId, setLoadingDatasetId] = useState<string>();
 
-  const dataSource = dataSets?.map((dataset) => ({
+  const { data: datasets } = useDatasets();
+
+  const dataSource = datasets?.map((dataset) => ({
     key: dataset.id,
     ...dataset,
   }));
 
-  const syncDataSet = useSyncDataSet();
+  const syncDataset = useSyncDataset();
 
-  const syncSelectedDataSet = (dataset: DataSet) => {
-    syncDataSet.mutate(dataset.id);
-    setLoadingDataSetId(dataset.id);
+  const syncSelectedDataset = (dataset: Dataset) => {
+    syncDataset.mutate(dataset.id);
+    setLoadingDatasetId(dataset.id);
   };
 
   useEffect(() => {
-    if (!syncDataSet.isLoading) {
-      setLoadingDataSetId(undefined);
+    if (!syncDataset.isLoading) {
+      setLoadingDatasetId(undefined);
     }
-  }, [syncDataSet.isLoading, setLoadingDataSetId]);
+  }, [syncDataset.isLoading, setLoadingDatasetId]);
 
   return (
     <>
       <Button
         type="primary"
         icon={<PlusOutlined />}
-        onClick={showModal}
+        onClick={showAddDatasetModal}
         style={{ marginBottom: "16px" }}
       >
         Add Data Set
@@ -57,32 +60,44 @@ export const DataSetsIndexPage = () => {
             key: "actions",
             render: (_, dataset) => (
               <Space size="large">
-                <Link to={scatterplotPath({ dataSetId: dataset.id })}>
+                <Link to={scatterplotPath({ datasetId: dataset.id })}>
                   Scatterplot
                 </Link>
-                <Link to={throughputPath({ dataSetId: dataset.id })}>
+                <Link to={throughputPath({ datasetId: dataset.id })}>
                   Throughput
                 </Link>
-                <Link to={issuesIndexPath({ dataSetId: dataset.id })}>
+                <Link to={issuesIndexPath({ datasetId: dataset.id })}>
                   Issues
                 </Link>
                 <Button
                   icon={<SyncOutlined />}
-                  onClick={() => syncSelectedDataSet(dataset)}
-                  disabled={syncDataSet.isLoading}
+                  onClick={() => syncSelectedDataset(dataset)}
+                  disabled={loadingDatasetId !== undefined}
                   loading={
-                    syncDataSet.isLoading && dataset.id === loadingDataSetId
+                    syncDataset.isLoading && dataset.id === loadingDatasetId
                   }
                 >
                   Sync
                 </Button>
+                <Button
+                  icon={<DeleteOutlined />}
+                  onClick={() => setDatasetToRemove(dataset)}
+                />
               </Space>
             ),
           },
         ]}
       />
 
-      <AddDataSetModal isOpen={isModalOpen} close={hideModal} />
+      <AddDatasetModal
+        isOpen={isAddDatasetModalOpen}
+        close={hideAddDatasetModal}
+      />
+      <RemoveDatasetModal
+        dataset={datasetToRemove}
+        isOpen={datasetToRemove !== undefined}
+        close={() => setDatasetToRemove(undefined)}
+      />
     </>
   );
 };

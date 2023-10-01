@@ -8,9 +8,9 @@ export const issueRoutes = (
   <Route
     path="issues"
     handle={{
-      crumb: ({ issueKey, dataSetId }: NavigationContext) => ({
+      crumb: ({ issueKey, datasetId }: NavigationContext) => ({
         title: issueKey ? (
-          <Link to={issuesIndexPath({ dataSetId })}>Issues</Link>
+          <Link to={issuesIndexPath({ datasetId })}>Issues</Link>
         ) : (
           "Issues"
         ),
