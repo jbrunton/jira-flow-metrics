@@ -1,4 +1,3 @@
-import { Drawer } from "antd";
 import {
   CompletedIssue,
   Issue,
@@ -8,7 +7,7 @@ import {
 import { useNavigationContext } from "../../../navigation/context";
 import { Scatterplot } from "../components/scatterplot";
 import { useEffect, useState } from "react";
-import { IssueDetails } from "../components/issue-details";
+import { IssueDetailsDrawer } from "./components/issue-details-drawer";
 import { IssuesTable } from "../../../components/issues-table";
 import { FilterForm } from "../components/filter-form";
 import { useFilterContext } from "../../../filter/context";
@@ -32,6 +31,7 @@ export const ScatterplotPage = () => {
 
   return (
     <>
+      <h1>{dataset?.name} cycle times</h1>
       <FilterForm
         filter={filter}
         issues={issues ?? []}
@@ -43,17 +43,11 @@ export const ScatterplotPage = () => {
         setSelectedIssues={setSelectedIssues}
       />
       <IssuesTable issues={filteredIssues} />
-      <Drawer
-        placement="right"
-        width="30%"
-        closable={false}
+      <IssueDetailsDrawer
+        selectedIssues={selectedIssues}
         onClose={() => setSelectedIssues([])}
         open={selectedIssues.length > 0}
-      >
-        {selectedIssues.map((issue) => (
-          <IssueDetails key={issue.key} issue={issue} />
-        ))}
-      </Drawer>
+      />
     </>
   );
 };

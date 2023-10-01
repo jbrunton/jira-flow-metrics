@@ -1,9 +1,12 @@
-import { useParams } from "react-router-dom";
-import { useIssues } from "../../../data/issues";
 import { IssuesTable } from "../../../components/issues-table";
+import { useNavigationContext } from "../../../navigation/context";
 
 export const IssuesIndexPage = () => {
-  const { datasetId } = useParams();
-  const { data: issues } = useIssues(datasetId);
-  return <IssuesTable issues={issues ?? []} />;
+  const { issues, dataset } = useNavigationContext();
+  return (
+    <>
+      <h1>{dataset?.name} issues</h1>
+      <IssuesTable issues={issues ?? []} />
+    </>
+  );
 };

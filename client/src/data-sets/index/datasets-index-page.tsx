@@ -3,7 +3,7 @@ import { Button, Space, Table } from "antd";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AddDatasetModal } from "./add-dataset-modal";
-import { Dataset, useDatasets, useSyncDataset } from "../../data/datasets";
+import { Dataset, useSyncDataset } from "../../data/datasets";
 import {
   issuesIndexPath,
   scatterplotPath,
@@ -11,6 +11,7 @@ import {
 } from "../../navigation/paths";
 import { RemoveDatasetModal } from "./remove-dataset-modal";
 import { formatDate } from "../../lib/format";
+import { useNavigationContext } from "../../navigation/context";
 
 export const DatasetsIndexPage = () => {
   const [isAddDatasetModalOpen, setIsAddDatasetModalOpen] = useState(false);
@@ -21,7 +22,7 @@ export const DatasetsIndexPage = () => {
 
   const [loadingDatasetId, setLoadingDatasetId] = useState<string>();
 
-  const { data: datasets } = useDatasets();
+  const { datasets, domain } = useNavigationContext();
 
   const dataSource = datasets?.map((dataset) => ({
     key: dataset.id,
@@ -43,6 +44,7 @@ export const DatasetsIndexPage = () => {
 
   return (
     <>
+      <h1>{domain?.host}</h1>
       <Button
         type="primary"
         icon={<PlusOutlined />}

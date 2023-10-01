@@ -31,16 +31,18 @@ const reportsCrumb = (
   datasetId: string | undefined,
   reportKey: "scatterplot" | "throughput",
 ): ItemType => {
-  const reports = [
-    {
-      key: "scatterplot",
-      label: <Link to={scatterplotPath({ datasetId })}>Scatterplot</Link>,
-    },
-    {
-      key: "throughput",
-      label: <Link to={throughputPath({ datasetId })}>Throughput</Link>,
-    },
-  ];
+  const reports = datasetId
+    ? [
+        {
+          key: "scatterplot",
+          label: <Link to={scatterplotPath({ datasetId })}>Scatterplot</Link>,
+        },
+        {
+          key: "throughput",
+          label: <Link to={throughputPath({ datasetId })}>Throughput</Link>,
+        },
+      ]
+    : [];
   const currentReport = reports.find((report) => report.key === reportKey);
   return {
     title: currentReport?.label,
