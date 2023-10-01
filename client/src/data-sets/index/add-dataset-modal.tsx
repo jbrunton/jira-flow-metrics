@@ -1,18 +1,18 @@
 import { Empty, Form, Input, Modal, Select, Space, Tag } from "antd";
 import {
   DataSource,
-  useCreateDataSet,
+  useCreateDataset,
   useDataSources,
 } from "../../data/datasets";
 import { useEffect, useState } from "react";
 
-export type AddDataSetModalParams = {
+export type AddDatasetModalParams = {
   isOpen: boolean;
   close: () => void;
   domainId?: string;
 };
 
-export const AddDataSetModal: React.FC<AddDataSetModalParams> = ({
+export const AddDatasetModal: React.FC<AddDatasetModalParams> = ({
   isOpen,
   close,
   domainId,
@@ -25,12 +25,12 @@ export const AddDataSetModal: React.FC<AddDataSetModalParams> = ({
 
   const [dataSource, setDataSource] = useState<DataSource>();
 
-  const createDataSet = useCreateDataSet();
+  const createDataset = useCreateDataset();
 
   const onSubmit = async () => {
     try {
       const values = await form.validateFields();
-      createDataSet.mutate(
+      createDataset.mutate(
         { jql: dataSource?.jql, domainId, ...values },
         {
           onSuccess: () => {
@@ -55,10 +55,10 @@ export const AddDataSetModal: React.FC<AddDataSetModalParams> = ({
   };
 
   useEffect(() => {
-    if (createDataSet.isSuccess) {
+    if (createDataset.isSuccess) {
       close();
     }
-  }, [createDataSet.isSuccess, close]);
+  }, [createDataset.isSuccess, close]);
 
   const filterOption = (
     input: string,
@@ -84,7 +84,7 @@ export const AddDataSetModal: React.FC<AddDataSetModalParams> = ({
       open={isOpen}
       onOk={onSubmit}
       onCancel={close}
-      confirmLoading={createDataSet.isLoading}
+      confirmLoading={createDataset.isLoading}
     >
       <Form form={form}>
         <Form.Item

@@ -1,6 +1,6 @@
 import { Link, Route } from "react-router-dom";
 import { BreadcrumbHandle } from "../navigation/breadcrumbs";
-import { DataSetsIndexPage } from "./index/datasets-index-page";
+import { DatasetsIndexPage } from "./index/datasets-index-page";
 import { issueRoutes } from "./issues/issue-routes";
 import { reportRoutes } from "./reports/report-routes";
 import { datasetRootPath } from "../navigation/paths";
@@ -36,7 +36,7 @@ const datasetHandle: BreadcrumbHandle = {
 
 export const datasetRoutes = (
   <Route path="datasets" handle={datasetsHandle}>
-    <Route index element={<DataSetsIndexPage />} />
+    <Route index element={<DatasetsIndexPage />} />
     <Route path=":datasetId" handle={datasetHandle}>
       {issueRoutes}
       {reportRoutes}

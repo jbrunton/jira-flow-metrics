@@ -1,19 +1,19 @@
 import { Modal, Typography } from "antd";
-import { DataSet, useRemoveDataSet } from "../../data/datasets";
+import { Dataset, useRemoveDataset } from "../../data/datasets";
 import { useEffect } from "react";
 
-export type RemoveDataSetModalParams = {
+export type RemoveDatasetModalParams = {
   isOpen: boolean;
   close: () => void;
-  dataset?: DataSet;
+  dataset?: Dataset;
 };
 
-export const RemoveDataSetModal: React.FC<RemoveDataSetModalParams> = ({
+export const RemoveDatasetModal: React.FC<RemoveDatasetModalParams> = ({
   isOpen,
   close,
   dataset,
 }) => {
-  const removeDataset = useRemoveDataSet(dataset?.id);
+  const removeDataset = useRemoveDataset(dataset?.id);
 
   useEffect(() => {
     if (removeDataset.isSuccess) {

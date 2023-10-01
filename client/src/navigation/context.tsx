@@ -1,5 +1,5 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { DataSet, useDataSets } from "../data/datasets";
+import { Dataset, useDatasets } from "../data/datasets";
 import { Domain, useDomains } from "../data/domains";
 import { useDomainContext } from "../domains/context";
 import { DomainContextType } from "../domains/context/context";
@@ -10,8 +10,8 @@ export type NavigationContext = DomainContextType & {
   domains?: Domain[];
   domain?: Domain;
   datasetId?: string;
-  dataset?: DataSet;
-  datasets?: DataSet[];
+  dataset?: Dataset;
+  datasets?: Dataset[];
   issueKey?: string;
   issues?: Issue[];
   issue?: Issue;
@@ -26,7 +26,7 @@ export const useNavigationContext = (): NavigationContext => {
   const { data: domains } = useDomains();
   const domain = domains?.find((domain) => domain.id === domainId);
 
-  const { data: datasets } = useDataSets();
+  const { data: datasets } = useDatasets();
   const dataset = datasets?.find((dataset) => dataset.id === datasetId);
 
   const { data: issues } = useIssues(datasetId);

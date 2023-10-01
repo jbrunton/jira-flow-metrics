@@ -14,7 +14,7 @@ import {
 import { ApiProperty } from "@nestjs/swagger";
 import { SyncUseCase } from "@usecases/datasets/sync/sync-use-case";
 
-class CreateDataSetBody {
+class CreateDatasetBody {
   @ApiProperty()
   name: string;
 
@@ -23,7 +23,7 @@ class CreateDataSetBody {
 }
 
 @Controller("datasets")
-export class DataSetsController {
+export class DatasetsController {
   constructor(
     private readonly datasets: DatasetsRepository,
     private readonly dataSources: DataSourcesRepository,
@@ -33,7 +33,7 @@ export class DataSetsController {
   ) {}
 
   @Get()
-  async getDataSets(@Query("domainId") domainId: string) {
+  async getDatasets(@Query("domainId") domainId: string) {
     return this.datasets.getDatasets(domainId);
   }
 
@@ -43,9 +43,9 @@ export class DataSetsController {
   }
 
   @Post()
-  async createDataSet(
+  async createDataset(
     @Query("domainId") domainId,
-    @Body() dataset: CreateDataSetBody,
+    @Body() dataset: CreateDatasetBody,
   ) {
     return await this.datasets.addDataset(domainId, dataset);
   }

@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { DataSet, DatasetsRepository } from "@entities/datasets";
+import { Dataset, DatasetsRepository } from "@entities/datasets";
 import { createHash } from "crypto";
 import { DataError } from "node-json-db";
 import { LocalCache } from "@data/database";
 
-export type CreateDataSetParams = Omit<DataSet, "id">;
+export type CreateDatasetParams = Omit<Dataset, "id">;
 
 @Injectable()
 export class LocalDatasetsRepository extends DatasetsRepository {
@@ -12,9 +12,9 @@ export class LocalDatasetsRepository extends DatasetsRepository {
     super();
   }
 
-  async getDatasets(domainId: string): Promise<DataSet[]> {
+  async getDatasets(domainId: string): Promise<Dataset[]> {
     try {
-      const datasets = await this.cache.getObject<Record<string, DataSet>>(
+      const datasets = await this.cache.getObject<Record<string, Dataset>>(
         datasetsPath(domainId),
       );
       return Object.values(datasets);
@@ -26,11 +26,11 @@ export class LocalDatasetsRepository extends DatasetsRepository {
     }
   }
 
-  getDataset(domainId: string, datasetId: string): Promise<DataSet> {
-    return this.cache.getObject<DataSet>(datasetPath(domainId, datasetId));
+  getDataset(domainId: string, datasetId: string): Promise<Dataset> {
+    return this.cache.getObject<Dataset>(datasetPath(domainId, datasetId));
   }
 
-  async addDataset(domainId: string, params: CreateDataSetParams) {
+  async addDataset(domainId: string, params: CreateDatasetParams) {
     const id = createHash("md5")
       .update(JSON.stringify(params))
       .digest("base64url");
