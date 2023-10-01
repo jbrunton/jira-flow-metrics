@@ -23,14 +23,14 @@ export const RemoveDatasetModal: React.FC<RemoveDatasetModalParams> = ({
 
   return (
     <Modal
-      title="Remove Domain"
+      title="Remove dataset?"
       open={isOpen}
       onOk={() => removeDataset.mutate()}
       onCancel={close}
       confirmLoading={removeDataset.isLoading}
     >
       <p>
-        Are you sure you want to remove{" "}
+        Are you sure you want to remove the dataset{" "}
         <Typography.Text code>{dataset?.name}</Typography.Text>?
       </p>
     </Modal>
