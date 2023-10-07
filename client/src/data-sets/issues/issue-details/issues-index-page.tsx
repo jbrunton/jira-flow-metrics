@@ -6,7 +6,7 @@ export const IssuesIndexPage = () => {
   return (
     <>
       <h1>{dataset?.name} issues</h1>
-      <IssuesTable issues={issues ?? []} />
+      <IssuesTable issues={issues ?? []} defaultSortField="created" />
     </>
   );
 };

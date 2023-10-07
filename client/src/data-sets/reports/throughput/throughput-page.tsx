@@ -77,7 +77,7 @@ export const ThroughputPage = () => {
           setSelectedIssues={setSelectedIssues}
         />
       ) : null}
-      <IssuesTable issues={selectedIssues} />
+      <IssuesTable issues={selectedIssues} defaultSortField="cycleTime" />
     </>
   );
 };

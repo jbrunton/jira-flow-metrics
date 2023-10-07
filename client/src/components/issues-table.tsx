@@ -13,11 +13,13 @@ import { issueDetailsPath } from "../navigation/paths";
 export type IssuesTableProps = {
   issues: Issue[];
   parentEpic?: Issue;
+  defaultSortField: "created" | "started" | "cycleTime";
 };
 
 export const IssuesTable: React.FC<IssuesTableProps> = ({
   issues,
   parentEpic,
+  defaultSortField,
 }) => {
   const { datasetId } = useNavigationContext();
 
@@ -122,7 +124,7 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       title: "Created",
       dataIndex: ["created"],
       key: "created",
-      defaultSortOrder: "descend",
+      defaultSortOrder: defaultSortField === "created" ? "descend" : undefined,
       render: (date) => {
         return formatDate(date);
       },
@@ -133,6 +135,7 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       title: "Started",
       dataIndex: ["metrics", "started"],
       key: "started",
+      defaultSortOrder: defaultSortField === "started" ? "ascend" : undefined,
       render: (date) => {
         return formatDate(date);
       },
@@ -153,6 +156,8 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       title: "Cycle Time",
       dataIndex: ["metrics", "cycleTime"],
       key: "cycleTime",
+      defaultSortOrder:
+        defaultSortField === "cycleTime" ? "descend" : undefined,
       render: (cycleTime) => {
         return formatNumber(cycleTime);
       },
@@ -197,6 +202,7 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
 
   if (parentEpic) {
     columns.push({
+      title: "Progress",
       key: "progress",
       render: (_, issue) => {
         return <IssueProgress issue={issue} />;
