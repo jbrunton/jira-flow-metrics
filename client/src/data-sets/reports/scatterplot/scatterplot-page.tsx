@@ -35,6 +35,7 @@ export const ScatterplotPage = () => {
       <FilterForm
         filter={filter}
         issues={issues ?? []}
+        showDateSelector={true}
         onFilterChanged={setFilter}
       />
       <Scatterplot
@@ -42,7 +43,7 @@ export const ScatterplotPage = () => {
         range={filter?.dates ?? null}
         setSelectedIssues={setSelectedIssues}
       />
-      <IssuesTable issues={filteredIssues} />
+      <IssuesTable issues={filteredIssues} defaultSortField="cycleTime" />
       <IssueDetailsDrawer
         selectedIssues={selectedIssues}
         onClose={() => setSelectedIssues([])}

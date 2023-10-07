@@ -23,7 +23,7 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
 }) => {
   const [{ items, ranges }] = useState(() => getDateRanges());
   return (
-    <Space.Compact>
+    <Space.Compact style={{ width: "100%" }}>
       <Form.Item noStyle>
         <Dropdown
           menu={{

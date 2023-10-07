@@ -57,6 +57,7 @@ export const ThroughputPage = () => {
       <FilterForm
         issues={filteredIssues}
         filter={filter}
+        showDateSelector={true}
         onFilterChanged={setFilter}
         additionalOptions={
           <Col span={4}>
@@ -77,7 +78,7 @@ export const ThroughputPage = () => {
           setSelectedIssues={setSelectedIssues}
         />
       ) : null}
-      <IssuesTable issues={selectedIssues} />
+      <IssuesTable issues={selectedIssues} defaultSortField="cycleTime" />
     </>
   );
 };

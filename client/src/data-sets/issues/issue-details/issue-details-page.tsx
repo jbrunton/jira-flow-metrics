@@ -28,7 +28,11 @@ export const IssueDetailsPage = () => {
         </Col>
       </Row>
       {isEpic ? (
-        <IssuesTable issues={children ?? []} parentEpic={issue} />
+        <IssuesTable
+          issues={children ?? []}
+          parentEpic={issue}
+          defaultSortField="started"
+        />
       ) : null}
     </>
   ) : null;

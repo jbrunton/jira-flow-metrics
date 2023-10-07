@@ -4,20 +4,21 @@ import { Table, Tag, Typography } from "antd";
 import { ExportOutlined } from "@ant-design/icons";
 import { formatDate, formatNumber } from "../lib/format";
 import { compareAsc, differenceInMinutes } from "date-fns";
-import { ColumnType, ColumnsType, SortOrder } from "antd/es/table/interface";
-import { useEffect, useState } from "react";
-import { isNil, reject, uniq } from "rambda";
+import { ColumnsType, SortOrder } from "antd/es/table/interface";
+import { useState } from "react";
 import { useNavigationContext } from "../navigation/context";
 import { issueDetailsPath } from "../navigation/paths";
 
 export type IssuesTableProps = {
   issues: Issue[];
   parentEpic?: Issue;
+  defaultSortField: "created" | "started" | "cycleTime";
 };
 
 export const IssuesTable: React.FC<IssuesTableProps> = ({
   issues,
   parentEpic,
+  defaultSortField,
 }) => {
   const { datasetId } = useNavigationContext();
 
@@ -27,34 +28,18 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
     Done: "green",
   };
 
-  const [issueTypeFilters, setIssueTypeFilters] = useState<
-    ColumnType<Issue>["filters"]
-  >([]);
-  const [statusFilters, setStatusFilters] = useState<
-    ColumnType<Issue>["filters"]
-  >([]);
-  const [resolutionFilters, setResolutionFilters] = useState<
-    ColumnType<Issue>["filters"]
-  >([]);
-
-  useEffect(() => {
-    const issueTypes = uniq(issues.map((issue) => issue.issueType));
-    setIssueTypeFilters(makeFilters(issueTypes));
-
-    const statuses = uniq(issues.map((issue) => issue.status));
-    setStatusFilters(makeFilters(statuses));
-
-    const resolutions = uniq(issues.map((issue) => issue.resolution));
-    setResolutionFilters(makeFilters(resolutions));
-  }, [issues]);
-
   const columns: ColumnsType<Issue> = [
     {
       title: "Key",
       dataIndex: "key",
       key: "key",
       render: (issueKey) => (
-        <Link to={issueDetailsPath({ datasetId, issueKey })}>{issueKey}</Link>
+        <Link
+          style={{ whiteSpace: "nowrap" }}
+          to={issueDetailsPath({ datasetId, issueKey })}
+        >
+          {issueKey}
+        </Link>
       ),
     },
     {
@@ -82,10 +67,6 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       title: "Issue Type",
       dataIndex: "issueType",
       key: "issueType",
-      sorter: (a, b, sortOrder) =>
-        compareStrings(a.issueType, b.issueType, sortOrder),
-      filters: issueTypeFilters,
-      onFilter: (issueType, issue) => issue.issueType === issueType,
     },
     {
       title: "Status",
@@ -94,10 +75,6 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       render: (status, issue) => {
         return <Tag color={categoryColors[issue.statusCategory]}>{status}</Tag>;
       },
-      sorter: (a, b, sortOrder) =>
-        compareStrings(a.status, b.status, sortOrder),
-      filters: statusFilters,
-      onFilter: (status, issue) => issue.status === status,
     },
     {
       title: "Resolution",
@@ -108,15 +85,23 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
           <Tag color="green">{resolution}</Tag>
         );
       },
+    },
+    {
+      title: "Created",
+      dataIndex: ["created"],
+      key: "created",
+      defaultSortOrder: defaultSortField === "created" ? "descend" : undefined,
+      render: (date) => {
+        return formatDate(date);
+      },
       sorter: (a, b, sortOrder) =>
-        compareStrings(a.resolution, b.resolution, sortOrder),
-      filters: resolutionFilters,
-      onFilter: (resolution, issue) => issue.resolution === resolution,
+        compareDates(a.created, b.created, sortOrder),
     },
     {
       title: "Started",
       dataIndex: ["metrics", "started"],
       key: "started",
+      defaultSortOrder: defaultSortField === "started" ? "ascend" : undefined,
       render: (date) => {
         return formatDate(date);
       },
@@ -137,10 +122,11 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       title: "Cycle Time",
       dataIndex: ["metrics", "cycleTime"],
       key: "cycleTime",
+      defaultSortOrder:
+        defaultSortField === "cycleTime" ? "descend" : undefined,
       render: (cycleTime) => {
         return formatNumber(cycleTime);
       },
-      defaultSortOrder: "descend",
       sorter: (a, b, sortOrder) =>
         compareNumbers(a.metrics.cycleTime, b.metrics.cycleTime, sortOrder),
     },
@@ -182,6 +168,7 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
 
   if (parentEpic) {
     columns.push({
+      title: "Progress",
       key: "progress",
       render: (_, issue) => {
         return <IssueProgress issue={issue} />;
@@ -203,36 +190,6 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       }}
     />
   );
-};
-
-const makeFilters = (options: string[]): ColumnType<Issue>["filters"] => {
-  return reject(isNil)(
-    options.map((option) => {
-      if (option !== undefined) {
-        return { text: option, value: option };
-      }
-    }),
-  );
-};
-
-const compareStrings = (
-  left: string | undefined,
-  right: string | undefined,
-  sortOrder: SortOrder | undefined,
-) => {
-  if (left && right) {
-    return left.localeCompare(right);
-  }
-
-  if (left) {
-    return sortOrder === "ascend" ? -1 : 1;
-  }
-
-  if (right) {
-    return sortOrder === "ascend" ? 1 : -1;
-  }
-
-  return 0;
 };
 
 const compareDates = (
