@@ -10,6 +10,7 @@ export type FilterFormProps = {
   issues: Issue[];
   filter: IssueFilter;
   onFilterChanged: (filter: IssueFilter) => void;
+  showDateSelector: boolean;
   additionalOptions?: React.ReactNode;
 };
 
@@ -17,6 +18,7 @@ export const FilterForm: React.FC<FilterFormProps> = ({
   issues,
   filter: defaultFilter,
   onFilterChanged,
+  showDateSelector,
   additionalOptions,
 }) => {
   const [hierarchyLevel, setHierarchyLevel] = useState<
@@ -65,11 +67,13 @@ export const FilterForm: React.FC<FilterFormProps> = ({
   return (
     <Form layout="vertical">
       <Row gutter={[8, 8]}>
-        <Col span={6}>
-          <Form.Item label="Dates">
-            <DateSelector dates={dates} onChange={setDates} />
-          </Form.Item>
-        </Col>
+        {showDateSelector ? (
+          <Col span={6}>
+            <Form.Item label="Dates">
+              <DateSelector dates={dates} onChange={setDates} />
+            </Form.Item>
+          </Col>
+        ) : null}
         <Col span={4}>
           <Form.Item label="Hierarchy Level">
             <Select value={hierarchyLevel} onChange={setHierarchyLevel}>

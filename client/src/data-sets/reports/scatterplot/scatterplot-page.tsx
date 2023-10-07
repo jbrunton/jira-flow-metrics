@@ -35,6 +35,7 @@ export const ScatterplotPage = () => {
       <FilterForm
         filter={filter}
         issues={issues ?? []}
+        showDateSelector={true}
         onFilterChanged={setFilter}
       />
       <Scatterplot
