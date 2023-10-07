@@ -54,7 +54,12 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       dataIndex: "key",
       key: "key",
       render: (issueKey) => (
-        <Link to={issueDetailsPath({ datasetId, issueKey })}>{issueKey}</Link>
+        <Link
+          style={{ whiteSpace: "nowrap" }}
+          to={issueDetailsPath({ datasetId, issueKey })}
+        >
+          {issueKey}
+        </Link>
       ),
     },
     {
@@ -114,6 +119,17 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       onFilter: (resolution, issue) => issue.resolution === resolution,
     },
     {
+      title: "Created",
+      dataIndex: ["created"],
+      key: "created",
+      defaultSortOrder: "descend",
+      render: (date) => {
+        return formatDate(date);
+      },
+      sorter: (a, b, sortOrder) =>
+        compareDates(a.created, b.created, sortOrder),
+    },
+    {
       title: "Started",
       dataIndex: ["metrics", "started"],
       key: "started",
@@ -140,7 +156,6 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       render: (cycleTime) => {
         return formatNumber(cycleTime);
       },
-      defaultSortOrder: "descend",
       sorter: (a, b, sortOrder) =>
         compareNumbers(a.metrics.cycleTime, b.metrics.cycleTime, sortOrder),
     },
