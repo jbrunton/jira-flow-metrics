@@ -24,33 +24,24 @@ export const FilterForm: React.FC<FilterFormProps> = ({
   const [hierarchyLevel, setHierarchyLevel] = useState<
     HierarchyLevel | undefined
   >(defaultFilter.hierarchyLevel);
-  const [resolutions, setResolutions] = useState<SelectProps["options"]>(
-    defaultFilter.resolutions?.map((resolution) => ({
-      label: resolution,
-      value: resolution,
-    })),
-  );
+
+  const [resolutions, setResolutions] = useState<SelectProps["options"]>();
+  const [statuses, setStatuses] = useState<SelectProps["options"]>();
+  const [issueTypes, setIssueTypes] = useState<SelectProps["options"]>();
 
   useEffect(() => {
     if (!issues) {
       return;
     }
 
-    const resolutions = pipe(
-      map((issue: Issue) => issue.resolution),
-      reject(isNil),
-      uniq,
-    )(issues);
-
-    setResolutions(
-      resolutions.map((resolution) => ({
-        label: resolution,
-        value: resolution,
-      })),
-    );
+    setResolutions(makeFilterOptions(issues, "resolution"));
+    setStatuses(makeFilterOptions(issues, "status"));
+    setIssueTypes(makeFilterOptions(issues, "issueType"));
   }, [issues]);
 
   const [selectedResolutions, setSelectedResolutions] = useState<string[]>([]);
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+  const [selectedIssueTypes, setSelectedIssueTypes] = useState<string[]>([]);
 
   const [dates, setDates] = useState<RangeType>(() => {
     return defaultFilter.dates ?? null;
@@ -61,8 +52,17 @@ export const FilterForm: React.FC<FilterFormProps> = ({
       hierarchyLevel,
       dates,
       resolutions: selectedResolutions,
+      statuses: selectedStatuses,
+      issueTypes: selectedIssueTypes,
     });
-  }, [onFilterChanged, hierarchyLevel, dates, selectedResolutions]);
+  }, [
+    onFilterChanged,
+    hierarchyLevel,
+    dates,
+    selectedResolutions,
+    selectedStatuses,
+    selectedIssueTypes,
+  ]);
 
   return (
     <Form layout="vertical">
@@ -92,8 +92,47 @@ export const FilterForm: React.FC<FilterFormProps> = ({
             />
           </Form.Item>
         </Col>
+        <Col span={4}>
+          <Form.Item label="Status">
+            <Select
+              mode="multiple"
+              allowClear={true}
+              options={statuses}
+              onChange={setSelectedStatuses}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={4}>
+          <Form.Item label="Issue Type">
+            <Select
+              mode="multiple"
+              allowClear={true}
+              options={issueTypes}
+              onChange={setSelectedIssueTypes}
+            />
+          </Form.Item>
+        </Col>
         {additionalOptions}
       </Row>
     </Form>
   );
+};
+
+const makeFilterOptions = (
+  issues: Issue[],
+  property: keyof Issue,
+): SelectProps["options"] => {
+  const options = getUniqueValues(issues, property);
+  return options?.map((option) => ({
+    label: option,
+    value: option,
+  }));
+};
+
+const getUniqueValues = (issues: Issue[], property: keyof Issue): string[] => {
+  return pipe(
+    map((issue: Issue) => issue[property]),
+    reject(isNil),
+    uniq,
+  )(issues);
 };

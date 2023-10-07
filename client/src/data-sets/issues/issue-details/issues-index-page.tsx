@@ -4,7 +4,7 @@ import { useFilterContext } from "../../../filter/context";
 import { useNavigationContext } from "../../../navigation/context";
 import { FilterForm } from "../../reports/components/filter-form";
 import { Issue, filterIssues } from "../../../data/issues";
-import { pick, pipe } from "rambda";
+import { omit, pipe } from "rambda";
 import { Col, Form, Input } from "antd";
 
 export const IssuesIndexPage = () => {
@@ -18,8 +18,7 @@ export const IssuesIndexPage = () => {
   useEffect(() => {
     if (filter && issues) {
       const filteredIssues = pipe(
-        (issues) =>
-          filterIssues(issues, pick(["hierarchyLevel", "resolution"], filter)),
+        (issues) => filterIssues(issues, omit(["dates"], filter)),
         (issues) => {
           if (searchQuery.trim().length === 0) {
             return issues;

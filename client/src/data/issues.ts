@@ -90,6 +90,8 @@ export type DateRange = null | [Date, Date];
 export type IssueFilter = {
   hierarchyLevel?: HierarchyLevel;
   resolutions?: string[];
+  statuses?: string[];
+  issueTypes?: string[];
   dates?: DateRange;
 };
 
@@ -103,6 +105,18 @@ export const filterIssues = (issues: Issue[], filter: IssueFilter): Issue[] => {
 
     if (filter.resolutions && filter.resolutions.length > 0) {
       if (!filter.resolutions.includes(issue.resolution)) {
+        return false;
+      }
+    }
+
+    if (filter.issueTypes && filter.issueTypes.length > 0) {
+      if (!filter.issueTypes.includes(issue.issueType)) {
+        return false;
+      }
+    }
+
+    if (filter.statuses && filter.statuses.length > 0) {
+      if (!filter.statuses.includes(issue.status)) {
         return false;
       }
     }
