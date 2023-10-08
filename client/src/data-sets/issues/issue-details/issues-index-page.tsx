@@ -39,6 +39,7 @@ export const IssuesIndexPage = () => {
       <h1>{dataset?.name} issues</h1>
       <FilterForm
         showDateSelector={false}
+        showStatusFilter={true}
         issues={issues ?? []}
         filter={filter}
         onFilterChanged={setFilter}

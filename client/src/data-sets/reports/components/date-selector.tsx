@@ -39,7 +39,7 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
           </Button>
         </Dropdown>
       </Form.Item>
-      <Form.Item>
+      <Form.Item style={{ width: "100%" }}>
         <DatePicker.RangePicker
           suffixIcon={false}
           style={{ width: "100%" }}

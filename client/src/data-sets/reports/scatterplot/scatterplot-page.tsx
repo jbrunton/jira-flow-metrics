@@ -36,6 +36,7 @@ export const ScatterplotPage = () => {
         filter={filter}
         issues={issues ?? []}
         showDateSelector={true}
+        showStatusFilter={false}
         onFilterChanged={setFilter}
       />
       <Scatterplot
