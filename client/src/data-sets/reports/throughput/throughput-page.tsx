@@ -58,6 +58,7 @@ export const ThroughputPage = () => {
         issues={filteredIssues}
         filter={filter}
         showDateSelector={true}
+        showStatusFilter={false}
         onFilterChanged={setFilter}
         additionalOptions={
           <Col span={4}>
