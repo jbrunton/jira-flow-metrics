@@ -21,6 +21,7 @@ export type Issue = {
   key: string;
   externalUrl: string;
   parentKey?: string;
+  parent?: Issue;
   summary: string;
   status: string;
   resolution: string;
