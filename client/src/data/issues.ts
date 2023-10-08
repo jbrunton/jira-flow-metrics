@@ -34,6 +34,7 @@ export type Issue = {
     toStatus: IssueStatus;
   }[];
   metrics: IssueFlowMetrics;
+  sortIndex?: number;
 };
 
 export type CompletedIssue = Issue & {

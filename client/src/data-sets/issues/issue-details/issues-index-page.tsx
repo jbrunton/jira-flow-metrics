@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { IssuesTable } from "../../../components/issues-table";
+import { IssuesTable, SortState } from "../../../components/issues-table";
 import { useFilterContext } from "../../../filter/context";
 import { useNavigationContext } from "../../../navigation/context";
 import { FilterForm } from "../../reports/components/filter-form";
 import { Issue, filterIssues } from "../../../data/issues";
-import { omit, pipe } from "rambda";
+import { omit, pipe, sortBy } from "rambda";
 import { Col, Form, Input } from "antd";
+import * as fuzzball from "fuzzball";
 
 export const IssuesIndexPage = () => {
   const { issues, dataset } = useNavigationContext();
@@ -15,6 +16,11 @@ export const IssuesIndexPage = () => {
 
   const [searchQuery, setSearchQuery] = useState<string>("");
 
+  const [sortState, setSortState] = useState<SortState>({
+    columnKey: "created",
+    sortOrder: "descend",
+  });
+
   useEffect(() => {
     if (filter && issues) {
       const filteredIssues = pipe(
@@ -23,16 +29,44 @@ export const IssuesIndexPage = () => {
           if (searchQuery.trim().length === 0) {
             return issues;
           }
-          return issues.filter(
-            (issue) =>
-              issue.key.includes(searchQuery) ||
-              issue.summary.includes(searchQuery),
+
+          const searchedIssues = issues
+            .map((issue) => {
+              const sortResult = fuzzball.extract(
+                searchQuery,
+                [issue.key, issue.summary],
+                { scorer: fuzzball.token_set_ratio },
+              );
+              const sortIndex = Math.max(
+                ...sortResult.map(([, score]) => score),
+              );
+              return {
+                ...issue,
+                sortIndex,
+              };
+            })
+            .filter((issue) => issue.sortIndex >= 60);
+
+          const sortedIssues = sortBy(
+            (issue) => -issue.sortIndex,
+            searchedIssues,
           );
+
+          return sortedIssues;
         },
       )(issues);
       setFilteredIssues(filteredIssues);
     }
   }, [issues, filter, searchQuery, setFilteredIssues]);
+
+  useEffect(() => {
+    if (searchQuery.trim().length > 0) {
+      setSortState({
+        columnKey: undefined,
+        sortOrder: null,
+      });
+    }
+  }, [searchQuery]);
 
   return (
     <>
@@ -54,7 +88,12 @@ export const IssuesIndexPage = () => {
           </Col>
         }
       />
-      <IssuesTable issues={filteredIssues} defaultSortField="created" />
+      <IssuesTable
+        issues={filteredIssues}
+        defaultSortField="created"
+        sortState={sortState}
+        onSortStateChanged={setSortState}
+      />
     </>
   );
 };

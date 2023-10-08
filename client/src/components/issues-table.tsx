@@ -4,21 +4,30 @@ import { Table, Tag, Typography } from "antd";
 import { ExportOutlined } from "@ant-design/icons";
 import { formatDate, formatNumber } from "../lib/format";
 import { compareAsc, differenceInMinutes } from "date-fns";
-import { ColumnsType, SortOrder } from "antd/es/table/interface";
+import { ColumnType, ColumnsType, SortOrder } from "antd/es/table/interface";
 import { useState } from "react";
 import { useNavigationContext } from "../navigation/context";
 import { issueDetailsPath } from "../navigation/paths";
 
+export type SortState = {
+  columnKey: "created" | "started" | "completed" | "cycleTime" | undefined;
+  sortOrder: SortOrder;
+};
+
 export type IssuesTableProps = {
   issues: Issue[];
   parentEpic?: Issue;
-  defaultSortField: "created" | "started" | "cycleTime";
+  defaultSortField: "created" | "started" | "cycleTime" | undefined;
+  sortState?: SortState;
+  onSortStateChanged?: (sortState: SortState) => void;
 };
 
 export const IssuesTable: React.FC<IssuesTableProps> = ({
   issues,
   parentEpic,
   defaultSortField,
+  sortState,
+  onSortStateChanged,
 }) => {
   const { datasetId } = useNavigationContext();
 
@@ -26,6 +35,30 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
     "To Do": "grey",
     "In Progress": "blue",
     Done: "green",
+  };
+
+  console.info(sortState);
+
+  const configureSort = (column: ColumnType<Issue>): ColumnType<Issue> => {
+    const key = column.key as string;
+
+    const defaultSortOrders: Record<string, SortOrder> = {
+      created: "ascend",
+      started: "ascend",
+      cycleTime: "descend",
+    };
+
+    const sortConfig: ColumnType<Issue> = {
+      defaultSortOrder:
+        defaultSortField === key ? defaultSortOrders[key] : undefined,
+    };
+
+    if (sortState) {
+      sortConfig.sortOrder =
+        sortState.columnKey === key ? sortState.sortOrder : undefined;
+    }
+
+    return { ...sortConfig, ...column };
   };
 
   const columns: ColumnsType<Issue> = [
@@ -86,29 +119,27 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
         );
       },
     },
-    {
+    configureSort({
       title: "Created",
       dataIndex: ["created"],
       key: "created",
-      defaultSortOrder: defaultSortField === "created" ? "descend" : undefined,
       render: (date) => {
         return formatDate(date);
       },
       sorter: (a, b, sortOrder) =>
         compareDates(a.created, b.created, sortOrder),
-    },
-    {
+    }),
+    configureSort({
       title: "Started",
       dataIndex: ["metrics", "started"],
       key: "started",
-      defaultSortOrder: defaultSortField === "started" ? "ascend" : undefined,
       render: (date) => {
         return formatDate(date);
       },
       sorter: (a, b, sortOrder) =>
         compareDates(a.metrics.started, b.metrics.started, sortOrder),
-    },
-    {
+    }),
+    configureSort({
       title: "Completed",
       dataIndex: ["metrics", "completed"],
       key: "completed",
@@ -117,19 +148,17 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       },
       sorter: (a, b, sortOrder) =>
         compareDates(a.metrics.completed, b.metrics.completed, sortOrder),
-    },
-    {
+    }),
+    configureSort({
       title: "Cycle Time",
       dataIndex: ["metrics", "cycleTime"],
       key: "cycleTime",
-      defaultSortOrder:
-        defaultSortField === "cycleTime" ? "descend" : undefined,
       render: (cycleTime) => {
         return formatNumber(cycleTime);
       },
       sorter: (a, b, sortOrder) =>
         compareNumbers(a.metrics.cycleTime, b.metrics.cycleTime, sortOrder),
-    },
+    }),
   ];
 
   const IssueProgress = ({ issue }: { issue: Issue }) => {
@@ -183,6 +212,15 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       dataSource={issues}
       size="small"
       columns={columns}
+      onChange={(_pagination, _filters, sorter) => {
+        if ("columnKey" in sorter) {
+          const sortState = {
+            columnKey: sorter.columnKey,
+            sortOrder: sorter.order,
+          } as SortState;
+          onSortStateChanged?.(sortState);
+        }
+      }}
       pagination={{
         pageSize,
         showSizeChanger: true,
