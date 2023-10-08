@@ -1,18 +1,16 @@
 import { Drawer, Space } from "antd";
 import React, { ReactElement } from "react";
 import { Issue } from "../../../../data/issues";
-import { IssueSummaryCard } from "../../../issues/components/issue-summary-card";
+import { IssueDetailsCard } from "../../../issues/components/issue-details-card";
 import { IssueMetricsCard } from "../../../issues/components/issue-metrics-card";
 import { IssueTransitionsCard } from "../../../issues/components/issue-transitions-card";
 
 const IssueDetails = ({ issue }: { issue: Issue }): ReactElement => {
   return (
     <>
-      <h2>
-        {issue.key} – {issue.summary}
-      </h2>
+      <h2>{issue.summary}</h2>
       <Space direction="vertical">
-        <IssueSummaryCard issue={issue} />
+        <IssueDetailsCard issue={issue} />
         <IssueMetricsCard issue={issue} />
         <IssueTransitionsCard issue={issue} />
       </Space>

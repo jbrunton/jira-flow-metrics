@@ -69,6 +69,12 @@ export class DatasetsController {
     @Query("domainId") domainId: string,
     @Param("datasetId") datasetId: string,
   ) {
-    return this.issues.getIssues(domainId, datasetId);
+    const issues = await this.issues.getIssues(domainId, datasetId);
+    return issues.map((issue) => {
+      const parent = issue.parentKey
+        ? issues.find((parent) => parent.key === issue.parentKey)
+        : undefined;
+      return { ...issue, parent };
+    });
   }
 }
