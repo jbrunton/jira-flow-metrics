@@ -12,6 +12,7 @@ export type FilterFormProps = {
   onFilterChanged: (filter: IssueFilter) => void;
   showDateSelector: boolean;
   showStatusFilter: boolean;
+  showResolutionFilter: boolean;
   additionalOptions?: React.ReactNode;
 };
 
@@ -21,6 +22,7 @@ export const FilterForm: React.FC<FilterFormProps> = ({
   onFilterChanged,
   showDateSelector,
   showStatusFilter,
+  showResolutionFilter,
   additionalOptions,
 }) => {
   const [hierarchyLevel, setHierarchyLevel] = useState<
@@ -84,16 +86,18 @@ export const FilterForm: React.FC<FilterFormProps> = ({
             </Select>
           </Form.Item>
         </Col>
-        <Col span={4}>
-          <Form.Item label="Resolution">
-            <Select
-              mode="multiple"
-              allowClear={true}
-              options={resolutions}
-              onChange={setSelectedResolutions}
-            />
-          </Form.Item>
-        </Col>
+        {showResolutionFilter ? (
+          <Col span={4}>
+            <Form.Item label="Resolution">
+              <Select
+                mode="multiple"
+                allowClear={true}
+                options={resolutions}
+                onChange={setSelectedResolutions}
+              />
+            </Form.Item>
+          </Col>
+        ) : null}
         {showStatusFilter ? (
           <Col span={4}>
             <Form.Item label="Status">

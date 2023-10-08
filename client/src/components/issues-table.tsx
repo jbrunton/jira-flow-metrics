@@ -37,8 +37,6 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
     Done: "green",
   };
 
-  console.info(sortState);
-
   const configureSort = (column: ColumnType<Issue>): ColumnType<Issue> => {
     const key = column.key as string;
 
@@ -189,7 +187,7 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
           backgroundColor: "#1677ff",
           height: "10px",
           marginLeft: startedIndex,
-          marginRight: completedIndex,
+          marginRight: 100 - completedIndex,
         }}
       />
     );
