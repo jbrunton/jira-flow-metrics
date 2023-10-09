@@ -59,6 +59,7 @@ export const ThroughputPage = () => {
         filter={filter}
         showDateSelector={true}
         showStatusFilter={false}
+        showResolutionFilter={true}
         onFilterChanged={setFilter}
         additionalOptions={
           <Col span={4}>

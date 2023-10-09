@@ -8,6 +8,7 @@ import {
   issuesIndexPath,
   scatterplotPath,
   throughputPath,
+  wipPath,
 } from "../../navigation/paths";
 import { RemoveDatasetModal } from "./remove-dataset-modal";
 import { formatDate } from "../../lib/format";
@@ -70,6 +71,7 @@ export const DatasetsIndexPage = () => {
                 <Link to={throughputPath({ datasetId: dataset.id })}>
                   Throughput
                 </Link>
+                <Link to={wipPath({ datasetId: dataset.id })}>WIP</Link>
                 <Link to={issuesIndexPath({ datasetId: dataset.id })}>
                   Issues{" "}
                   {dataset.lastSync ? (

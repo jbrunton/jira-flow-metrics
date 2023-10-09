@@ -3,7 +3,12 @@ import { ScatterplotPage } from "./scatterplot/scatterplot-page";
 import { NavigationContext } from "../../navigation/context";
 import { ThroughputPage } from "./throughput/throughput-page";
 import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
-import { scatterplotPath, throughputPath } from "../../navigation/paths";
+import {
+  scatterplotPath,
+  throughputPath,
+  wipPath,
+} from "../../navigation/paths";
+import { WipPage } from "./wip/wip-page";
 
 export const reportRoutes = (
   <Route path="reports" handle={{ crumb: () => ({ title: "Reports" }) }}>
@@ -23,13 +28,21 @@ export const reportRoutes = (
           reportsCrumb(dataset?.id, "throughput"),
       }}
     />
+    <Route
+      path="wip"
+      element={<WipPage />}
+      handle={{
+        crumb: ({ dataset }: NavigationContext) =>
+          reportsCrumb(dataset?.id, "wip"),
+      }}
+    />
     <Route index element={<Navigate to="scatterplot" />} />
   </Route>
 );
 
 const reportsCrumb = (
   datasetId: string | undefined,
-  reportKey: "scatterplot" | "throughput",
+  reportKey: "scatterplot" | "throughput" | "wip",
 ): ItemType => {
   const reports = datasetId
     ? [
@@ -40,6 +53,10 @@ const reportsCrumb = (
         {
           key: "throughput",
           label: <Link to={throughputPath({ datasetId })}>Throughput</Link>,
+        },
+        {
+          key: "wip",
+          label: <Link to={wipPath({ datasetId })}>WIP</Link>,
         },
       ]
     : [];

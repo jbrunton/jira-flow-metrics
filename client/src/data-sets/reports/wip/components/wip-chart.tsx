@@ -2,28 +2,25 @@ import { ReactElement } from "react";
 import { Line } from "react-chartjs-2";
 import { ChartOptions } from "chart.js";
 import "chartjs-adapter-date-fns";
-import { ThroughputResult } from "../../../lib/throughput";
-import { TimeUnit } from "../../../lib/intervals";
-import { Issue } from "../../../data/issues";
+import { Issue } from "../../../../data/issues";
+import { WipResult } from "../../../../lib/wip";
 
-type ThroughputChartProps = {
-  result: ThroughputResult;
-  timeUnit: TimeUnit;
+type WipChartProps = {
+  result: WipResult;
   setSelectedIssues: (issues: Issue[]) => void;
 };
 
-export const ThroughputChart = ({
+export const WipChart = ({
   result,
-  timeUnit,
   setSelectedIssues,
-}: ThroughputChartProps): ReactElement => {
+}: WipChartProps): ReactElement => {
   const labels = result.map(({ date }) => date.toISOString());
 
   const data = {
     labels,
     datasets: [
       {
-        label: "Throughput",
+        label: "WIP",
         data: result.map(({ count }) => count),
         fill: false,
         borderColor: "rgb(255, 99, 132)",
@@ -36,7 +33,7 @@ export const ThroughputChart = ({
     x: {
       type: "time",
       time: {
-        unit: timeUnit,
+        unit: "day",
       },
       position: "bottom",
     },

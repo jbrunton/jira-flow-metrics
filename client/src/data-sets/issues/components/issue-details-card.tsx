@@ -31,7 +31,9 @@ export const IssueDetailsCard: React.FC<IssueDetailsCardProps> = ({
       >
         <Descriptions.Item label="Key">
           <Space direction="horizontal">
-            {issue.key}
+            <Link to={issueDetailsPath({ datasetId, issueKey: issue.key })}>
+              {issue.key}
+            </Link>
             <Link to={issue.externalUrl} target="_blank">
               <ExportOutlined />
             </Link>

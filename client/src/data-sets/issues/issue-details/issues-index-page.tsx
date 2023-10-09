@@ -74,6 +74,7 @@ export const IssuesIndexPage = () => {
       <FilterForm
         showDateSelector={false}
         showStatusFilter={true}
+        showResolutionFilter={true}
         issues={issues ?? []}
         filter={filter}
         onFilterChanged={setFilter}

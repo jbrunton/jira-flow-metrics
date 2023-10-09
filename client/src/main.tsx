@@ -7,6 +7,28 @@ import { DomainProvider } from "./domains/context/provider.tsx";
 import App from "./app.tsx";
 import { FilterProvider } from "./filter/context/provider.tsx";
 
+import {
+  Chart as ChartJS,
+  LineController,
+  LineElement,
+  PointElement,
+  LinearScale,
+  TimeScale,
+  Tooltip,
+  Title,
+} from "chart.js";
+import "chartjs-adapter-date-fns";
+// TODO: do we need all of these?
+ChartJS.register(
+  LineController,
+  LineElement,
+  PointElement,
+  LinearScale,
+  Title,
+  TimeScale,
+  Tooltip,
+);
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={client}>

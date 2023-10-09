@@ -92,7 +92,7 @@ const estimateEpicFlowMetrics = (
   const started = startedDates[0];
 
   const completedDates = pipe(
-    map(path(["metrics", "started"])),
+    map(path(["metrics", "completed"])),
     sort(compareDesc),
     map((x) => new Date(x)),
   )(completedChildren);
