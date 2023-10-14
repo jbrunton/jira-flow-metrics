@@ -36,7 +36,7 @@ export const ThroughputChart = ({
     x: {
       type: "time",
       time: {
-        unit: timeUnit,
+        unit: timeUnit === TimeUnit.Fortnight ? "week" : timeUnit,
       },
       position: "bottom",
     },

@@ -5,8 +5,7 @@ import {
   TimeUnit,
   addTime,
   difference,
-  endOf,
-  startOf,
+  getOverlappingInterval,
 } from "./intervals";
 
 export type CalculateThroughputParams = {
@@ -26,8 +25,7 @@ export const calculateThroughput = ({
   interval,
   timeUnit,
 }: CalculateThroughputParams): ThroughputResult => {
-  const start = startOf(interval.start, timeUnit);
-  const end = endOf(interval.end, timeUnit);
+  const { start, end } = getOverlappingInterval(interval, timeUnit);
 
   const intervals = range(0, difference(end, start, timeUnit) + 1).map(
     (index) => ({
