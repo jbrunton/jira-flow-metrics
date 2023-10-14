@@ -2,7 +2,6 @@ import { ReactElement } from "react";
 import { CompletedIssue, Issue } from "../../../data/issues";
 import { ChartOptions } from "chart.js";
 import { Scatter } from "react-chartjs-2";
-import "chartjs-adapter-date-fns";
 import { RangeType } from "./date-picker";
 import { formatDate } from "../../../lib/format";
 import { compareAsc, startOfDay } from "date-fns";

@@ -1,7 +1,6 @@
 import { ReactElement } from "react";
 import { Line } from "react-chartjs-2";
 import { ChartOptions } from "chart.js";
-import "chartjs-adapter-date-fns";
 import { Issue } from "../../../../data/issues";
 import { WipResult } from "../../../../lib/wip";
 

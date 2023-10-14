@@ -16,12 +16,16 @@ import {
   TimeScale,
   Tooltip,
   Title,
+  BarController,
+  BarElement,
 } from "chart.js";
 import "chartjs-adapter-date-fns";
 // TODO: do we need all of these?
 ChartJS.register(
   LineController,
   LineElement,
+  BarController,
+  BarElement,
   PointElement,
   LinearScale,
   Title,

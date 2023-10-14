@@ -1,10 +1,9 @@
 import { ReactElement } from "react";
 import { Line } from "react-chartjs-2";
 import { ChartOptions } from "chart.js";
-import "chartjs-adapter-date-fns";
-import { ThroughputResult } from "../../../lib/throughput";
-import { TimeUnit } from "../../../lib/intervals";
-import { Issue } from "../../../data/issues";
+import { ThroughputResult } from "../../../../lib/throughput";
+import { TimeUnit } from "../../../../lib/intervals";
+import { Issue } from "../../../../data/issues";
 
 type ThroughputChartProps = {
   result: ThroughputResult;

@@ -8,13 +8,15 @@ import {
 import { useNavigationContext } from "../../../navigation/context";
 import { FilterForm } from "../components/filter-form";
 import { Interval, TimeUnit } from "../../../lib/intervals";
-import { ThroughputChart } from "./components/throughput-chart";
+import { ThroughputChart } from "../throughput/components/throughput-chart";
 import { Col, Form, Select } from "antd";
 import { ThroughputResult, calculateThroughput } from "../../../lib/throughput";
 import { IssuesTable } from "../../../components/issues-table";
 import { useFilterContext } from "../../../filter/context";
+import { count, map, max, range } from "rambda";
+import { Bucket, ThroughputHistogram } from "./components/throughput-histogram";
 
-export const ThroughputPage = () => {
+export const ThroughputHistogramPage = () => {
   const { dataset } = useNavigationContext();
   const { data: issues } = useIssues(dataset?.id);
 
@@ -51,9 +53,26 @@ export const ThroughputPage = () => {
     );
   }, [filter, timeUnit, filteredIssues]);
 
+  const [buckets, setBuckets] = useState<Bucket[]>([]);
+
+  useEffect(() => {
+    if (!throughputResult) {
+      return;
+    }
+
+    const maxThroughput = Math.max(
+      ...throughputResult.map((item) => item.count),
+    );
+    const buckets = range(0, maxThroughput + 1).map((throughput) => ({
+      throughput,
+      frequency: count((item) => item.count === throughput, throughputResult),
+    }));
+    setBuckets(buckets);
+  }, [throughputResult]);
+
   return (
     <>
-      <h1>{dataset?.name} throughput</h1>
+      <h1>{dataset?.name} throughput histogram</h1>
       <FilterForm
         issues={filteredIssues}
         filter={filter}
@@ -76,14 +95,7 @@ export const ThroughputPage = () => {
           </Col>
         }
       />
-      {throughputResult ? (
-        <ThroughputChart
-          result={throughputResult}
-          timeUnit={timeUnit}
-          setSelectedIssues={setSelectedIssues}
-        />
-      ) : null}
-      <IssuesTable issues={selectedIssues} defaultSortField="cycleTime" />
+      {throughputResult ? <ThroughputHistogram buckets={buckets} /> : null}
     </>
   );
 };
