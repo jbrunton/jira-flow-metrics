@@ -1,20 +1,22 @@
 import { useEffect, useState } from "react";
 import {
   CompletedIssue,
-  Issue,
   filterCompletedIssues,
   useIssues,
 } from "../../../data/issues";
 import { useNavigationContext } from "../../../navigation/context";
 import { FilterForm } from "../components/filter-form";
 import { Interval, TimeUnit } from "../../../lib/intervals";
-import { ThroughputChart } from "../throughput/components/throughput-chart";
 import { Col, Form, Select } from "antd";
 import { ThroughputResult, calculateThroughput } from "../../../lib/throughput";
-import { IssuesTable } from "../../../components/issues-table";
 import { useFilterContext } from "../../../filter/context";
-import { count, map, max, range } from "rambda";
-import { Bucket, ThroughputHistogram } from "./components/throughput-histogram";
+import { count, range } from "rambda";
+import { quantileSeq } from "mathjs";
+import {
+  Bucket,
+  Percentile,
+  ThroughputHistogram,
+} from "./components/throughput-histogram";
 
 export const ThroughputHistogramPage = () => {
   const { dataset } = useNavigationContext();
@@ -25,8 +27,6 @@ export const ThroughputHistogramPage = () => {
   const [timeUnit, setTimeUnit] = useState<TimeUnit>(TimeUnit.Day);
 
   const [filteredIssues, setFilteredIssues] = useState<CompletedIssue[]>([]);
-
-  const [selectedIssues, setSelectedIssues] = useState<Issue[]>([]);
 
   useEffect(() => {
     if (filter && issues) {
@@ -55,19 +55,44 @@ export const ThroughputHistogramPage = () => {
 
   const [buckets, setBuckets] = useState<Bucket[]>([]);
 
+  const [percentiles, setPercentiles] = useState<Percentile[]>([]);
+
   useEffect(() => {
     if (!throughputResult) {
       return;
     }
 
-    const maxThroughput = Math.max(
-      ...throughputResult.map((item) => item.count),
-    );
-    const buckets = range(0, maxThroughput + 1).map((throughput) => ({
+    const throughputCounts = throughputResult.map((item) => item.count);
+
+    const maxThroughput = Math.max(...throughputCounts);
+
+    const buckets = range(0, maxThroughput).map((throughput) => ({
       throughput,
       frequency: count((item) => item.count === throughput, throughputResult),
     }));
+
     setBuckets(buckets);
+
+    const orderedValues = throughputResult.map((x) => x.count);
+
+    const quantiles =
+      orderedValues.length > 20
+        ? [0.5, 0.7, 0.85, 0.95]
+        : orderedValues.length > 10
+        ? [0.5, 0.7]
+        : orderedValues.length >= 5
+        ? [0.5]
+        : [];
+
+    const percentiles = quantiles.map((quantile) => {
+      return {
+        percentile: quantile * 100,
+        throughput: Math.ceil(
+          quantileSeq(throughputCounts, quantile) as number,
+        ),
+      };
+    });
+    setPercentiles(percentiles);
   }, [throughputResult]);
 
   return (
@@ -95,7 +120,9 @@ export const ThroughputHistogramPage = () => {
           </Col>
         }
       />
-      {throughputResult ? <ThroughputHistogram buckets={buckets} /> : null}
+      {throughputResult ? (
+        <ThroughputHistogram buckets={buckets} percentiles={percentiles} />
+      ) : null}
     </>
   );
 };

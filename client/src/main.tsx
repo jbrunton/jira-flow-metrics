@@ -20,6 +20,7 @@ import {
   BarElement,
 } from "chart.js";
 import "chartjs-adapter-date-fns";
+import annotationPlugin from "chartjs-plugin-annotation";
 // TODO: do we need all of these?
 ChartJS.register(
   LineController,
@@ -31,6 +32,7 @@ ChartJS.register(
   Title,
   TimeScale,
   Tooltip,
+  annotationPlugin,
 );
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
