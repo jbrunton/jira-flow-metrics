@@ -18,6 +18,11 @@ import {
   ThroughputHistogram,
 } from "./components/throughput-histogram";
 
+enum PercentileType {
+  AtLeast = "at_least",
+  AtMost = "at_most",
+}
+
 export const ThroughputHistogramPage = () => {
   const { dataset } = useNavigationContext();
   const { data: issues } = useIssues(dataset?.id);
@@ -25,6 +30,10 @@ export const ThroughputHistogramPage = () => {
   const { filter, setFilter } = useFilterContext();
 
   const [timeUnit, setTimeUnit] = useState<TimeUnit>(TimeUnit.Day);
+
+  const [percentileType, setPercentileType] = useState<PercentileType>(
+    PercentileType.AtMost,
+  );
 
   const [filteredIssues, setFilteredIssues] = useState<CompletedIssue[]>([]);
 
@@ -88,12 +97,15 @@ export const ThroughputHistogramPage = () => {
       return {
         percentile: quantile * 100,
         throughput: Math.ceil(
-          quantileSeq(throughputCounts, quantile) as number,
+          quantileSeq(
+            throughputCounts,
+            percentileType === PercentileType.AtLeast ? quantile : 1 - quantile,
+          ) as number,
         ),
       };
     });
     setPercentiles(percentiles);
-  }, [throughputResult]);
+  }, [throughputResult, percentileType]);
 
   return (
     <>
@@ -106,18 +118,32 @@ export const ThroughputHistogramPage = () => {
         showResolutionFilter={true}
         onFilterChanged={setFilter}
         additionalOptions={
-          <Col span={4}>
-            <Form.Item label="Time Unit">
-              <Select value={timeUnit} onChange={setTimeUnit}>
-                <Select.Option key={TimeUnit.Day}>Days</Select.Option>
-                <Select.Option key={TimeUnit.Week}>Weeks</Select.Option>
-                <Select.Option key={TimeUnit.Fortnight}>
-                  Fortnights
-                </Select.Option>
-                <Select.Option key={TimeUnit.Month}>Months</Select.Option>
-              </Select>
-            </Form.Item>
-          </Col>
+          <>
+            <Col span={3}>
+              <Form.Item label="Time Unit">
+                <Select value={timeUnit} onChange={setTimeUnit}>
+                  <Select.Option key={TimeUnit.Day}>Day</Select.Option>
+                  <Select.Option key={TimeUnit.Week}>Week</Select.Option>
+                  <Select.Option key={TimeUnit.Fortnight}>
+                    Two Weeks
+                  </Select.Option>
+                  <Select.Option key={TimeUnit.Month}>Month</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={3}>
+              <Form.Item label="Percentiles">
+                <Select value={percentileType} onChange={setPercentileType}>
+                  <Select.Option key={PercentileType.AtMost}>
+                    At most
+                  </Select.Option>
+                  <Select.Option key={PercentileType.AtLeast}>
+                    At least
+                  </Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </>
         }
       />
       {throughputResult ? (
