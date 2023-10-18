@@ -67,6 +67,9 @@ export const ThroughputPage = () => {
               <Select value={timeUnit} onChange={setTimeUnit}>
                 <Select.Option key={TimeUnit.Day}>Days</Select.Option>
                 <Select.Option key={TimeUnit.Week}>Weeks</Select.Option>
+                <Select.Option key={TimeUnit.Fortnight}>
+                  Fortnights
+                </Select.Option>
                 <Select.Option key={TimeUnit.Month}>Months</Select.Option>
               </Select>
             </Form.Item>
