@@ -8,7 +8,7 @@ import {
 import { useNavigationContext } from "../../../navigation/context";
 import { FilterForm } from "../components/filter-form";
 import { Interval, TimeUnit } from "../../../lib/intervals";
-import { ThroughputChart } from "../components/throughput-chart";
+import { ThroughputChart } from "./components/throughput-chart";
 import { Col, Form, Select } from "antd";
 import { ThroughputResult, calculateThroughput } from "../../../lib/throughput";
 import { IssuesTable } from "../../../components/issues-table";
