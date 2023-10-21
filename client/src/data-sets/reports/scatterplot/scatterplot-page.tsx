@@ -5,7 +5,7 @@ import {
   useIssues,
 } from "../../../data/issues";
 import { useNavigationContext } from "../../../navigation/context";
-import { Scatterplot } from "../components/scatterplot";
+import { Scatterplot } from "./components/scatterplot";
 import { useEffect, useState } from "react";
 import { IssueDetailsDrawer } from "./components/issue-details-drawer";
 import { IssuesTable } from "../../../components/issues-table";

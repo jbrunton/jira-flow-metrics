@@ -120,7 +120,7 @@ const getDateRanges = (): DateRangeMenuOptions => {
   ];
 
   const calendarWeekItems = [
-    ...[0, 1, 2, 4, 8].map((prevWeeks) =>
+    ...[0, 1, 2, 4, 8, 16].map((prevWeeks) =>
       getCalendarRange(prevWeeks, "week", now),
     ),
   ];
