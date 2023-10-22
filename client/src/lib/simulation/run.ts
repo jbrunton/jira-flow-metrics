@@ -1,0 +1,221 @@
+import { groupBy, range } from "rambda";
+// import { excludeOutliers } from "../helpers/data_helper";
+import { RandomGenerator, selectValue } from "./select";
+import { CompletedIssue } from "../../data/issues";
+import {
+  addDays,
+  compareAsc,
+  eachDayOfInterval,
+  endOfDay,
+  getISODay,
+  startOfDay,
+} from "date-fns";
+import { formatDate } from "../format";
+
+export type Measurements = {
+  cycleTimes: number[];
+  throughputs: { [dayCategory: string]: number[] };
+};
+
+export function categorizeWeekday(dow: number): string {
+  return [6, 7].includes(dow) ? "weekend" : "weekday";
+}
+
+export function computeThroughput(
+  issues: CompletedIssue[],
+): { date: Date; count: number }[] {
+  const interval = {
+    start: startOfDay(issues[0].metrics.completed),
+    end: endOfDay(issues[issues.length - 1].metrics.completed),
+  };
+  const dates = eachDayOfInterval(interval);
+  const results: Record<string, number> = {};
+  for (const issue of issues) {
+    const key = startOfDay(issue.metrics.completed).toISOString();
+    results[key] = (results[key] || 0) + 1;
+  }
+  for (const date of dates) {
+    const key = startOfDay(date).toISOString();
+    if (!results[key]) {
+      results[key] = 0;
+    }
+  }
+  return dates.map((date) => {
+    const key = startOfDay(date).toISOString();
+    return { date, count: results[key] };
+  });
+}
+
+export function measure(
+  issues: CompletedIssue[],
+  //excludeCycleTimeOutliers: boolean
+): Measurements {
+  const throughputs: Record<string, number[]> = {};
+  for (const { date, count } of computeThroughput(issues)) {
+    const category = categorizeWeekday(getISODay(date));
+    if (!throughputs[category]) {
+      throughputs[category] = [];
+    }
+    throughputs[category].push(count);
+  }
+  const cycleTimes = issues.map((issue) => issue.metrics.cycleTime);
+  // if (excludeCycleTimeOutliers) {
+  //   cycleTimes = excludeOutliers(cycleTimes, (x: number) => x);
+  // }
+  return {
+    cycleTimes,
+    throughputs,
+  };
+}
+
+export function runOnce(
+  backlogSize: number,
+  measurements: Measurements,
+  startWeekday: number,
+  // excludeLeadTimes: boolean,
+  generator: RandomGenerator,
+): number {
+  // let time = excludeLeadTimes
+  //   ? 0
+  //   : selectValue(measurements.cycleTimes, generator);
+  let time = selectValue(measurements.cycleTimes, generator);
+  let weekday = Math.floor(time + startWeekday);
+  while (weekday > 7) {
+    weekday -= 7;
+  }
+  while (backlogSize > 0) {
+    const category = categorizeWeekday(weekday);
+    const throughput = selectValue(
+      measurements.throughputs[category],
+      generator,
+    );
+    backlogSize -= throughput;
+    time += 1;
+    weekday += 1;
+    while (weekday > 7) {
+      weekday -= 7;
+    }
+  }
+  return time;
+}
+
+export function getColorForPercentile(percentile: number): string {
+  if (percentile > 0.95) {
+    return "#009600";
+  }
+  if (percentile > 0.85) {
+    return "#00C900";
+  }
+  if (percentile > 0.7) {
+    return "#C9C900";
+  }
+  if (percentile > 0.5) {
+    return "#FF9B00";
+  }
+  return "#f44336";
+}
+
+export function getLongTailCutoff(rowCount: number): number {
+  if (rowCount < 50) {
+    return 0;
+  }
+  if (rowCount < 100) {
+    return 0.01;
+  }
+  if (rowCount < 200) {
+    return 0.02;
+  }
+  return 0.025;
+}
+
+export function run(
+  backlogSize: number,
+  measurements: Measurements,
+  runCount: number,
+  startDate: Date,
+  // excludeLeadTimes: boolean,
+  generator: RandomGenerator,
+): number[] {
+  // TODO: refactor with times()
+  const results = range(0, runCount)
+    .map(() =>
+      runOnce(
+        backlogSize,
+        measurements,
+        getISODay(startDate),
+        // excludeLeadTimes,
+        generator,
+      ),
+    )
+    .sort((a, b) => a - b);
+  return results;
+}
+
+export type SummaryRow = {
+  date: Date;
+  count: number;
+  annotation?: string;
+  annotationText?: string;
+  startPercentile: number;
+  endPercentile: number;
+  tooltip: string;
+};
+
+export function summarize(
+  runs: number[],
+  startDate: Date,
+  // includeLongTails: boolean
+): SummaryRow[] {
+  const timeByDays = groupBy((run) => Math.ceil(run).toString(), runs);
+  const rowCount = Object.keys(timeByDays).length;
+  const longtail = getLongTailCutoff(rowCount);
+  const minPercentile = longtail;
+  const maxPercentile = 1 - longtail;
+  const percentiles = {
+    "50": 0.5,
+    "70": 0.7,
+    "85": 0.85,
+    "95": 0.95,
+  };
+  let index = 0;
+  return Object.entries(timeByDays)
+    .map(([duration, runsWithDuration]) => {
+      const count = runsWithDuration.length;
+      const date = addDays(startDate, parseInt(duration));
+      const startPercentile = index / runs.length;
+      const endPercentile = (index + count) / runs.length;
+
+      const percentile = Object.entries(percentiles).find(([, percentile]) => {
+        return startPercentile <= percentile && percentile < endPercentile;
+      });
+      const annotation = percentile ? `${percentile[0]}th` : undefined;
+      const annotationText = percentile ? date.toISOString() : undefined;
+
+      index += count;
+
+      const percentComplete = Math.floor((index / runs.length) * 100);
+      const tooltip = `${percentComplete}% of trials finished by ${formatDate(
+        date,
+      )}`;
+
+      return {
+        date,
+        count,
+        annotation,
+        annotationText,
+        startPercentile,
+        endPercentile,
+        tooltip,
+      };
+    })
+    .filter((row) => {
+      // if (includeLongTails) {
+      //   return true;
+      // }
+      return (
+        row.endPercentile >= minPercentile &&
+        row.startPercentile <= maxPercentile
+      );
+    })
+    .sort((row1, row2) => compareAsc(row1.date, row2.date));
+}

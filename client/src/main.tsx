@@ -16,6 +16,8 @@ import {
   TimeScale,
   Tooltip,
   Title,
+  BarController,
+  BarElement,
 } from "chart.js";
 import "chartjs-adapter-date-fns";
 import annotationPlugin from "chartjs-plugin-annotation";
@@ -25,6 +27,8 @@ ChartJS.register(
   LineElement,
   PointElement,
   LinearScale,
+  BarController,
+  BarElement,
   Title,
   TimeScale,
   Tooltip,
