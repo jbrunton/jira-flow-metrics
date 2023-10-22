@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { AddDatasetModal } from "./add-dataset-modal";
 import { Dataset, useSyncDataset } from "../../data/datasets";
 import {
+  forecastPath,
   issuesIndexPath,
   scatterplotPath,
   throughputPath,
@@ -59,7 +60,6 @@ export const DatasetsIndexPage = () => {
         dataSource={dataSource}
         columns={[
           { title: "Name", dataIndex: "name", key: "name" },
-          { title: "JQL", dataIndex: "jql", key: "jql" },
           {
             title: "Reports",
             key: "reports",
@@ -72,6 +72,9 @@ export const DatasetsIndexPage = () => {
                   Throughput
                 </Link>
                 <Link to={wipPath({ datasetId: dataset.id })}>WIP</Link>
+                <Link to={forecastPath({ datasetId: dataset.id })}>
+                  Forecast
+                </Link>
                 <Link to={issuesIndexPath({ datasetId: dataset.id })}>
                   Issues{" "}
                   {dataset.lastSync ? (

@@ -4,11 +4,13 @@ import { NavigationContext } from "../../navigation/context";
 import { ThroughputPage } from "./throughput/throughput-page";
 import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
 import {
+  forecastPath,
   scatterplotPath,
   throughputPath,
   wipPath,
 } from "../../navigation/paths";
 import { WipPage } from "./wip/wip-page";
+import { ForecastPage } from "./forecast/forecast-page";
 
 export const reportRoutes = (
   <Route path="reports" handle={{ crumb: () => ({ title: "Reports" }) }}>
@@ -36,13 +38,21 @@ export const reportRoutes = (
           reportsCrumb(dataset?.id, "wip"),
       }}
     />
+    <Route
+      path="forecast"
+      element={<ForecastPage />}
+      handle={{
+        crumb: ({ dataset }: NavigationContext) =>
+          reportsCrumb(dataset?.id, "forecast"),
+      }}
+    />
     <Route index element={<Navigate to="scatterplot" />} />
   </Route>
 );
 
 const reportsCrumb = (
   datasetId: string | undefined,
-  reportKey: "scatterplot" | "throughput" | "wip",
+  reportKey: "scatterplot" | "throughput" | "wip" | "forecast",
 ): ItemType => {
   const reports = datasetId
     ? [
@@ -57,6 +67,10 @@ const reportsCrumb = (
         {
           key: "wip",
           label: <Link to={wipPath({ datasetId })}>WIP</Link>,
+        },
+        {
+          key: "forecast",
+          label: <Link to={forecastPath({ datasetId })}>WIP</Link>,
         },
       ]
     : [];
