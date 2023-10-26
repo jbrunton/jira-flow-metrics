@@ -1,5 +1,4 @@
-import { groupBy, range } from "rambda";
-// import { excludeOutliers } from "../helpers/data_helper";
+import { groupBy, times } from "rambda";
 import { RandomGenerator, selectValue } from "./select";
 import { CompletedIssue } from "../../data/issues";
 import {
@@ -11,6 +10,7 @@ import {
   startOfDay,
 } from "date-fns";
 import { formatDate } from "../format";
+import { excludeOutliersFromSeq } from "../outliers";
 
 export type Measurements = {
   cycleTimes: number[];
@@ -48,7 +48,7 @@ export function computeThroughput(
 
 export function measure(
   issues: CompletedIssue[],
-  //excludeCycleTimeOutliers: boolean
+  excludeCycleTimeOutliers: boolean,
 ): Measurements {
   const throughputs: Record<string, number[]> = {};
   for (const { date, count } of computeThroughput(issues)) {
@@ -58,10 +58,10 @@ export function measure(
     }
     throughputs[category].push(count);
   }
-  const cycleTimes = issues.map((issue) => issue.metrics.cycleTime);
-  // if (excludeCycleTimeOutliers) {
-  //   cycleTimes = excludeOutliers(cycleTimes, (x: number) => x);
-  // }
+  let cycleTimes = issues.map((issue) => issue.metrics.cycleTime);
+  if (excludeCycleTimeOutliers) {
+    cycleTimes = excludeOutliersFromSeq(cycleTimes, (x: number) => x);
+  }
   return {
     cycleTimes,
     throughputs,
@@ -72,13 +72,12 @@ export function runOnce(
   backlogSize: number,
   measurements: Measurements,
   startWeekday: number,
-  // excludeLeadTimes: boolean,
+  excludeLeadTimes: boolean,
   generator: RandomGenerator,
 ): number {
-  // let time = excludeLeadTimes
-  //   ? 0
-  //   : selectValue(measurements.cycleTimes, generator);
-  let time = selectValue(measurements.cycleTimes, generator);
+  let time = excludeLeadTimes
+    ? 0
+    : selectValue(measurements.cycleTimes, generator);
   let weekday = Math.floor(time + startWeekday);
   while (weekday > 7) {
     weekday -= 7;
@@ -133,21 +132,20 @@ export function run(
   measurements: Measurements,
   runCount: number,
   startDate: Date,
-  // excludeLeadTimes: boolean,
+  excludeLeadTimes: boolean,
   generator: RandomGenerator,
 ): number[] {
-  // TODO: refactor with times()
-  const results = range(0, runCount)
-    .map(() =>
+  const results = times(
+    () =>
       runOnce(
         backlogSize,
         measurements,
         getISODay(startDate),
-        // excludeLeadTimes,
+        excludeLeadTimes,
         generator,
       ),
-    )
-    .sort((a, b) => a - b);
+    runCount,
+  ).sort((a, b) => a - b);
   return results;
 }
 
@@ -164,7 +162,7 @@ export type SummaryRow = {
 export function summarize(
   runs: number[],
   startDate: Date,
-  // includeLongTails: boolean
+  includeLongTail: boolean,
 ): SummaryRow[] {
   const timeByDays = groupBy((run) => Math.ceil(run).toString(), runs);
   const rowCount = Object.keys(timeByDays).length;
@@ -209,9 +207,9 @@ export function summarize(
       };
     })
     .filter((row) => {
-      // if (includeLongTails) {
-      //   return true;
-      // }
+      if (includeLongTail) {
+        return true;
+      }
       return (
         row.endPercentile >= minPercentile &&
         row.startPercentile <= maxPercentile
