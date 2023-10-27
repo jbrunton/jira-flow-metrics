@@ -1,9 +1,5 @@
-import { Global, Module, Scope } from "@nestjs/common";
-import { DomainsCache, LocalCache } from "./database";
-import { Version3Client } from "jira.js";
-import { createJiraClient } from "./jira-client";
-import { Request } from "express";
-import { REQUEST } from "@nestjs/core";
+import { Global, Module } from "@nestjs/common";
+import { jiraClientProvider } from "./jira-client";
 import { DataSourcesRepository, DatasetsRepository } from "@entities/datasets";
 import { LocalDatasetsRepository } from "./local/datasets-repository";
 import { DomainsRepository } from "@entities/domains";
@@ -17,23 +13,13 @@ import { IssuesRepository } from "@entities/issues";
 import { LocalIssuesRepository } from "./local/issues-repository";
 import { JiraIssuesRepository } from "@usecases/datasets/sync/jira-issues-repository";
 import { HttpJiraIssuesRepository } from "./http/issues-repository";
+import { StorageModule } from "./storage-module";
 
 @Global()
 @Module({
+  imports: [StorageModule],
   providers: [
-    DomainsCache,
-    LocalCache,
-    {
-      scope: Scope.REQUEST,
-      provide: Version3Client,
-      inject: [REQUEST, DomainsRepository],
-      useFactory: async (request: Request, domainsRepo: DomainsRepository) => {
-        const domains = await domainsRepo.getDomains();
-        const domainId = request.query.domainId;
-        const domain = domains.find((domain) => domain.id === domainId);
-        return createJiraClient(domain);
-      },
-    },
+    jiraClientProvider,
     {
       provide: DomainsRepository,
       useClass: LocalDomainsRepository,

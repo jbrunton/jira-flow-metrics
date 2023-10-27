@@ -6,11 +6,11 @@ import {
 } from "@entities/datasets";
 import { createHash } from "crypto";
 import { DataError } from "node-json-db";
-import { LocalCache } from "@data/database";
+import { DataCache } from "@data/storage";
 
 @Injectable()
 export class LocalDatasetsRepository extends DatasetsRepository {
-  constructor(private readonly cache: LocalCache) {
+  constructor(private readonly cache: DataCache) {
     super();
   }
 
@@ -32,7 +32,10 @@ export class LocalDatasetsRepository extends DatasetsRepository {
     return this.cache.getObject<Dataset>(datasetPath(domainId, datasetId));
   }
 
-  async addDataset(domainId: string, params: CreateDatasetParams) {
+  async addDataset(
+    domainId: string,
+    params: CreateDatasetParams,
+  ): Promise<Dataset> {
     const id = createHash("md5")
       .update(JSON.stringify(params))
       .digest("base64url");

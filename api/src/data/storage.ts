@@ -6,7 +6,7 @@ export class DomainsCache extends JsonDB {
   }
 }
 
-export class LocalCache extends JsonDB {
+export class DataCache extends JsonDB {
   constructor() {
     super(new Config("./cache/data.json", true, true));
   }

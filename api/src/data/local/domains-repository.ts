@@ -6,7 +6,7 @@ import {
   DomainsRepository,
 } from "@entities/domains";
 import { createHash } from "crypto";
-import { DomainsCache } from "../database";
+import { DomainsCache } from "../storage";
 
 @Injectable()
 export class LocalDomainsRepository extends DomainsRepository {
