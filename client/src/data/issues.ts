@@ -24,7 +24,7 @@ export type Issue = {
   parent?: Issue;
   summary: string;
   status: string;
-  resolution: string;
+  resolution?: string;
   issueType: string;
   statusCategory: "To Do" | "In Progress" | "Done";
   hierarchyLevel: HierarchyLevel;
@@ -106,7 +106,7 @@ export const filterIssues = (issues: Issue[], filter: IssueFilter): Issue[] => {
     }
 
     if (filter.resolutions && filter.resolutions.length > 0) {
-      if (!filter.resolutions.includes(issue.resolution)) {
+      if (!issue.resolution || !filter.resolutions.includes(issue.resolution)) {
         return false;
       }
     }

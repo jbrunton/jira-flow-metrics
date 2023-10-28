@@ -16,8 +16,21 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run build
-  
+
   test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        directory: ["client", "api"]
+    defaults:
+      run:
+        working-directory: ${{ matrix.directory }}
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm ci
+      - run: npm run test
+      
+  test-e2e:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -25,5 +38,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: npm ci
-      - run: npm run test
       - run: npm run test:e2e
