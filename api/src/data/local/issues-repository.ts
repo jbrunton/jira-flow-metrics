@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { DataError } from "node-json-db";
 import { Issue, IssuesRepository } from "@entities/issues";
-import { LocalCache } from "@data/database";
+import { DataCache } from "@data/storage/storage";
 
 @Injectable()
 export class LocalIssuesRepository extends IssuesRepository {
-  constructor(private readonly cache: LocalCache) {
+  constructor(private readonly cache: DataCache) {
     super();
   }
 

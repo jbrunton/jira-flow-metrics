@@ -20,7 +20,10 @@ export type UpdateDatasetParams = Partial<CreateDatasetParams>;
 export abstract class DatasetsRepository {
   abstract getDatasets(domainId: string): Promise<Dataset[]>;
   abstract getDataset(domainId: string, datasetId: string): Promise<Dataset>;
-  abstract addDataset(domainId: string, params: CreateDatasetParams);
+  abstract addDataset(
+    domainId: string,
+    params: CreateDatasetParams,
+  ): Promise<Dataset>;
   abstract updateDataset(
     domainId: string,
     datasetId: string,
