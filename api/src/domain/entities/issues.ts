@@ -68,7 +68,7 @@ export type Issue = {
   hierarchyLevel: HierarchyLevel;
   status?: string;
   statusCategory: StatusCategory;
-  resolution: string;
+  resolution?: string;
   parentKey?: string;
   created?: Date;
   transitions: Transition[];
