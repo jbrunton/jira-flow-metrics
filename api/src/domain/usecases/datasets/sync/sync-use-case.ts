@@ -1,7 +1,7 @@
 import { DatasetsRepository } from "@entities/datasets";
 import { IssuesRepository } from "@entities/issues";
 import { Injectable } from "@nestjs/common";
-import { CycleTimesUseCase } from "@usecases/cycle-times-use-case";
+import { CycleTimesUseCase } from "@usecases/issues/metrics/cycle-times-use-case";
 import { JiraIssuesRepository } from "./jira-issues-repository";
 import { JiraIssueBuilder } from "./issue_builder";
 import { DomainsRepository } from "@entities/domains";
