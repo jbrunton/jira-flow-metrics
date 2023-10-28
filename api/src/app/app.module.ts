@@ -9,7 +9,7 @@ import { DatasetsModule } from "./datasets/datasets.module";
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, "..", "..", "client", "dist"),
+      rootPath: join(__dirname, "..", "..", "..", "client", "dist"),
       exclude: ["/api/(.*)"],
     }),
     DomainsModule,
