@@ -6,7 +6,7 @@ import {
 } from "@entities/datasets";
 import { createHash } from "crypto";
 import { DataError } from "node-json-db";
-import { DataCache } from "@data/storage";
+import { DataCache } from "@data/storage/storage";
 
 @Injectable()
 export class LocalDatasetsRepository extends DatasetsRepository {

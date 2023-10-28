@@ -1,8 +1,7 @@
-import { DataCache, DomainsCache } from "@data/storage";
-import { Global, Module } from "@nestjs/common";
+import { DataCache, DomainsCache } from "@data/storage/storage";
+import { Module } from "@nestjs/common";
 import { TestDataCache, TestDomainsCache } from "./test-storage";
 
-@Global()
 @Module({
   providers: [
     {

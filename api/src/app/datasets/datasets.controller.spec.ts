@@ -5,8 +5,8 @@ import * as request from "supertest";
 import { INestApplication } from "@nestjs/common";
 import { DatasetsRepository } from "@entities/datasets";
 import { DomainsRepository } from "@entities/domains";
-import { StorageModule } from "@data/storage-module";
-import { TestStorageModule } from "@fixtures/data/test-storage-module";
+import { StorageModule } from "@data/storage/storage-module";
+import { TestStorageModule } from "@fixtures/data/storage/test-storage-module";
 
 describe("DatasetsController", () => {
   let app: INestApplication;

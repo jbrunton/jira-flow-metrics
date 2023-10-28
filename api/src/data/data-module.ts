@@ -13,7 +13,7 @@ import { IssuesRepository } from "@entities/issues";
 import { LocalIssuesRepository } from "./local/issues-repository";
 import { JiraIssuesRepository } from "@usecases/datasets/sync/jira-issues-repository";
 import { HttpJiraIssuesRepository } from "./http/issues-repository";
-import { StorageModule } from "./storage-module";
+import { StorageModule } from "./storage/storage-module";
 
 @Global()
 @Module({
