@@ -70,7 +70,7 @@ const reportsCrumb = (
         },
         {
           key: "forecast",
-          label: <Link to={forecastPath({ datasetId })}>WIP</Link>,
+          label: <Link to={forecastPath({ datasetId })}>Forecast</Link>,
         },
       ]
     : [];
