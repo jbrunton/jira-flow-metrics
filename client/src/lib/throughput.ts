@@ -70,14 +70,13 @@ export const calculateThroughput = ({
 
 const getPercentiles = (data: ThroughputDatum[]): Percentile[] => {
   const throughputCounts = data.map((item) => item.count);
-  const orderedValues = data.map((x) => x.count);
 
   const quantiles =
-    orderedValues.length > 20
+    throughputCounts.length > 20
       ? [0.15, 0.3, 0.5, 0.7, 0.85]
-      : orderedValues.length > 10
+      : throughputCounts.length > 10
       ? [0.3, 0.5, 0.7]
-      : orderedValues.length >= 5
+      : throughputCounts.length >= 5
       ? [0.5]
       : [];
 

@@ -7,6 +7,8 @@ import { RangeType } from "../../components/date-picker";
 import { formatDate } from "../../../../lib/format";
 import { compareAsc, startOfDay } from "date-fns";
 import { sort, uniqBy } from "rambda";
+import { quantileSeq } from "mathjs";
+import { AnnotationOptions } from "chartjs-plugin-annotation";
 
 type ScatterplotProps = {
   issues: CompletedIssue[];
@@ -39,12 +41,48 @@ export const Scatterplot = ({
     },
   ];
 
+  const percentiles = getPercentiles(issues);
+
+  const annotations = Object.fromEntries(
+    percentiles.map((p) => {
+      const options: AnnotationOptions = {
+        type: "line",
+        borderColor: p.color,
+        borderWidth: 1,
+        borderDash: p.dashed ? [4, 4] : undefined,
+        label: {
+          backgroundColor: "#FFFFFF",
+          padding: 4,
+          position: "start",
+          content: `${p.percentile.toString()}% (${p.cycleTime} days)`,
+          display: false,
+          textAlign: "start",
+          color: "#666666",
+        },
+        enter({ element }) {
+          element.label!.options.display = true;
+          return true;
+        },
+        leave({ element }) {
+          element.label!.options.display = false;
+          return true;
+        },
+        scaleID: "y",
+        value: p.cycleTime,
+      };
+      return [p.percentile.toString(), options];
+    }),
+  );
+
   const minDate = range?.[0]?.toISOString();
   const maxDate = range?.[1]?.toISOString();
 
   const options: ChartOptions<"scatter"> = {
     onClick,
     plugins: {
+      annotation: {
+        annotations,
+      },
       tooltip: {
         callbacks: {
           title: (ctx) => {
@@ -85,4 +123,48 @@ export const Scatterplot = ({
   };
 
   return <Scatter data={{ datasets }} options={options} />;
+};
+
+type Percentile = {
+  percentile: number;
+  cycleTime: number;
+  color: string;
+  dashed: boolean;
+};
+
+const getPercentiles = (issues: CompletedIssue[]): Percentile[] => {
+  const cycleTimes = issues.map((item) => item.metrics.cycleTime);
+
+  const quantiles =
+    cycleTimes.length >= 20
+      ? [0.5, 0.7, 0.85, 0.95]
+      : cycleTimes.length >= 10
+      ? [0.5, 0.7, 0.85]
+      : cycleTimes.length >= 5
+      ? [0.5]
+      : [];
+
+  const percentiles = quantiles.map((quantile) => {
+    const percentile = quantile * 100;
+    return {
+      percentile,
+      color: getColorForPercentile(percentile),
+      dashed: percentile !== 95,
+      cycleTime: Math.ceil(quantileSeq(cycleTimes, quantile) as number),
+    };
+  });
+
+  return percentiles;
+};
+
+const getColorForPercentile = (percentile: number): string => {
+  if (percentile <= 50) {
+    return "#03a9f4";
+  }
+
+  if (percentile <= 70) {
+    return "#ff9800";
+  }
+
+  return "#f44336";
 };
