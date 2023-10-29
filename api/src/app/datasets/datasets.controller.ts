@@ -12,6 +12,7 @@ import {
 } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
 import { SyncUseCase } from "@usecases/datasets/sync/sync-use-case";
+import { CycleTimesUseCase } from "@usecases/issues/metrics/cycle-times-use-case";
 
 class CreateDatasetBody {
   @ApiProperty()
@@ -28,6 +29,7 @@ export class DatasetsController {
     private readonly dataSources: DataSourcesRepository,
     private readonly issues: IssuesRepository,
     private readonly sync: SyncUseCase,
+    private readonly cycleTimes: CycleTimesUseCase,
   ) {}
 
   @Get()
@@ -66,10 +68,17 @@ export class DatasetsController {
 
   @Get(":datasetId/issues")
   async getIssues(
-    @Query("domainId") domainId: string,
     @Param("datasetId") datasetId: string,
+    @Query("domainId") domainId: string,
+    @Query("fromStatus") fromStatus?: string,
+    @Query("toStatus") toStatus?: string,
   ) {
-    const issues = await this.issues.getIssues(domainId, datasetId);
+    let issues = await this.issues.getIssues(domainId, datasetId);
+
+    if (fromStatus && toStatus) {
+      issues = this.cycleTimes.exec(issues, fromStatus, toStatus);
+    }
+
     return issues.map((issue) => {
       const parent = issue.parentKey
         ? issues.find((parent) => parent.key === issue.parentKey)

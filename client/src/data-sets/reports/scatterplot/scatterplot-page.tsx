@@ -15,9 +15,14 @@ import { Percentile, getCycleTimePercentiles } from "../../../lib/cycle-times";
 
 export const ScatterplotPage = () => {
   const { dataset } = useNavigationContext();
-  const { data: issues } = useIssues(dataset?.id);
 
   const { filter, setFilter } = useFilterContext();
+
+  const { data: issues } = useIssues(
+    dataset?.id,
+    filter.fromStatus,
+    filter.toStatus,
+  );
 
   const [filteredIssues, setFilteredIssues] = useState<CompletedIssue[]>([]);
   const [percentiles, setPercentiles] = useState<Percentile[] | undefined>();

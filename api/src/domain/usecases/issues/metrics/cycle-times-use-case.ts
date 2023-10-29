@@ -11,7 +11,7 @@ import {
 import { compareAsc, compareDesc } from "date-fns";
 
 export class CycleTimesUseCase {
-  exec(issues: Issue[]): Issue[] {
+  exec(issues: Issue[], fromStatus?: string, toStatus?: string): Issue[] {
     const stories = issues.filter(
       (issue) => issue.hierarchyLevel === HierarchyLevel.Story,
     );
@@ -20,31 +20,49 @@ export class CycleTimesUseCase {
       (issue) => issue.hierarchyLevel === HierarchyLevel.Epic,
     );
 
-    for (const story of stories) {
-      story.metrics = getStoryFlowMetrics(story);
-    }
+    const updatedStories = stories.map((story) => {
+      const metrics = getStoryFlowMetrics(story, fromStatus, toStatus);
+      return {
+        ...story,
+        metrics,
+      };
+    });
 
-    for (const epic of epics) {
-      epic.metrics = estimateEpicFlowMetrics(epic, issues);
-    }
+    const updatedEpics = epics.map((epic) => {
+      const metrics = estimateEpicFlowMetrics(epic, updatedStories);
+      return {
+        ...epic,
+        metrics,
+      };
+    });
 
-    return [...epics, ...issues];
+    return [...updatedEpics, ...updatedStories];
   }
 }
 
-const getStartedDate = (transitions: Array<Transition>): Date | undefined => {
-  const startedTransition = transitions.find(
-    (transition) => transition.toStatus.category === StatusCategory.InProgress,
+const getStartedDate = (
+  transitions: Array<Transition>,
+  fromStatus?: string,
+): Date | undefined => {
+  const startedTransition = transitions.find((transition) =>
+    fromStatus
+      ? transition.fromStatus.name === fromStatus
+      : transition.toStatus.category === StatusCategory.InProgress,
   );
 
   return startedTransition?.date;
 };
 
-const getCompletedDate = (transitions: Array<Transition>): Date | undefined => {
-  const lastTransition = reverse(transitions).find(
-    (transition) =>
-      transition.toStatus.category === StatusCategory.Done &&
-      transition.fromStatus.category !== StatusCategory.Done,
+const getCompletedDate = (
+  transitions: Array<Transition>,
+  toStatus?: string,
+): Date | undefined => {
+  const lastTransition = reverse(transitions).find((transition) =>
+    toStatus
+      ? transition.toStatus.name === toStatus &&
+        transition.fromStatus.name !== toStatus
+      : transition.toStatus.category === StatusCategory.Done &&
+        transition.fromStatus.category !== StatusCategory.Done,
   );
 
   return lastTransition?.date;
@@ -65,9 +83,13 @@ export const getCycleTime = (
   return (completed.getTime() - started.getTime()) / (1_000 * 60 * 60 * 24);
 };
 
-const getStoryFlowMetrics = (story: Issue): IssueFlowMetrics => {
-  const started = getStartedDate(story.transitions);
-  const completed = getCompletedDate(story.transitions);
+const getStoryFlowMetrics = (
+  story: Issue,
+  fromStatus?: string,
+  toStatus?: string,
+): IssueFlowMetrics => {
+  const started = getStartedDate(story.transitions, fromStatus);
+  const completed = getCompletedDate(story.transitions, toStatus);
   const cycleTime = getCycleTime(started, completed);
   return {
     started,
