@@ -11,6 +11,7 @@ import { IssueDetailsDrawer } from "./components/issue-details-drawer";
 import { IssuesTable } from "../../../components/issues-table";
 import { FilterForm } from "../components/filter-form";
 import { useFilterContext } from "../../../filter/context";
+import { Percentile, getCycleTimePercentiles } from "../../../lib/cycle-times";
 
 export const ScatterplotPage = () => {
   const { dataset } = useNavigationContext();
@@ -19,13 +20,16 @@ export const ScatterplotPage = () => {
   const { filter, setFilter } = useFilterContext();
 
   const [filteredIssues, setFilteredIssues] = useState<CompletedIssue[]>([]);
+  const [percentiles, setPercentiles] = useState<Percentile[] | undefined>();
 
   useEffect(() => {
     if (filter && issues) {
       const filteredIssues = filterCompletedIssues(issues, filter);
+      const percentiles = getCycleTimePercentiles(filteredIssues);
       setFilteredIssues(filteredIssues);
+      setPercentiles(percentiles);
     }
-  }, [issues, filter, setFilteredIssues]);
+  }, [issues, filter, setFilteredIssues, setPercentiles]);
 
   const [selectedIssues, setSelectedIssues] = useState<Issue[]>([]);
 
@@ -40,12 +44,19 @@ export const ScatterplotPage = () => {
         showResolutionFilter={true}
         onFilterChanged={setFilter}
       />
+
       <Scatterplot
         issues={filteredIssues}
+        percentiles={percentiles}
         range={filter?.dates ?? null}
         setSelectedIssues={setSelectedIssues}
       />
-      <IssuesTable issues={filteredIssues} defaultSortField="cycleTime" />
+      <IssuesTable
+        issues={filteredIssues}
+        percentiles={percentiles}
+        defaultSortField="cycleTime"
+      />
+
       <IssueDetailsDrawer
         selectedIssues={selectedIssues}
         onClose={() => setSelectedIssues([])}
