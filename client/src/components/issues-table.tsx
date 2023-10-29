@@ -8,6 +8,8 @@ import { ColumnType, ColumnsType, SortOrder } from "antd/es/table/interface";
 import { useState } from "react";
 import { useNavigationContext } from "../navigation/context";
 import { issueDetailsPath } from "../navigation/paths";
+import { isNil } from "rambda";
+import { Percentile } from "../lib/cycle-times";
 
 export type SortState = {
   columnKey: "created" | "started" | "completed" | "cycleTime" | undefined;
@@ -20,6 +22,7 @@ export type IssuesTableProps = {
   defaultSortField: "created" | "started" | "cycleTime" | undefined;
   sortState?: SortState;
   onSortStateChanged?: (sortState: SortState) => void;
+  percentiles?: Percentile[];
 };
 
 export const IssuesTable: React.FC<IssuesTableProps> = ({
@@ -28,6 +31,7 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
   defaultSortField,
   sortState,
   onSortStateChanged,
+  percentiles,
 }) => {
   const { datasetId } = useNavigationContext();
 
@@ -152,7 +156,36 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       dataIndex: ["metrics", "cycleTime"],
       key: "cycleTime",
       render: (cycleTime) => {
-        return formatNumber(cycleTime);
+        if (!percentiles) {
+          return formatNumber(cycleTime);
+        }
+        const percentile = isNil(cycleTime)
+          ? undefined
+          : percentiles.find((p) => cycleTime >= p.cycleTime)?.percentile;
+        const color =
+          percentile === undefined
+            ? "blue"
+            : percentile >= 95
+            ? "rgb(244, 67, 54)"
+            : percentile >= 85
+            ? "red"
+            : percentile >= 70
+            ? "orange"
+            : "blue";
+        return (
+          <>
+            {formatNumber(cycleTime)}
+            <Tag
+              style={{
+                float: "right",
+                borderStyle: percentile !== undefined ? "solid" : "dashed",
+              }}
+              color={color}
+            >
+              {percentile ? `≥ p${percentile}` : "< p50"}
+            </Tag>
+          </>
+        );
       },
       sorter: (a, b, sortOrder) =>
         compareNumbers(a.metrics.cycleTime, b.metrics.cycleTime, sortOrder),
