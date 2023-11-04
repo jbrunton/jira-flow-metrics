@@ -53,8 +53,16 @@ export type IssueStatus = {
 
 const issuesQueryKey = "issues";
 
-const getIssues = async (datasetId?: string): Promise<Issue[]> => {
-  const response = await axios.get(`/datasets/${datasetId}/issues`);
+const getIssues = async (
+  datasetId?: string,
+  fromStatus?: string,
+  toStatus?: string,
+): Promise<Issue[]> => {
+  let url = `/datasets/${datasetId}/issues`;
+  if (fromStatus && toStatus) {
+    url += `?fromStatus=${fromStatus}&toStatus=${toStatus}`;
+  }
+  const response = await axios.get(url);
   return response.data.map((issue: Issue) => {
     const metrics: IssueFlowMetrics = {
       started: parseDate(issue.metrics.started),
@@ -79,10 +87,14 @@ const parseDate = (date: string | Date | undefined): Date | undefined => {
   return date ? new Date(date) : undefined;
 };
 
-export const useIssues = (datasetId?: string) => {
+export const useIssues = (
+  datasetId?: string,
+  fromStatus?: string,
+  toStatus?: string,
+) => {
   return useQuery({
-    queryKey: [issuesQueryKey, datasetId],
-    queryFn: () => getIssues(datasetId),
+    queryKey: [issuesQueryKey, datasetId, fromStatus, toStatus],
+    queryFn: () => getIssues(datasetId, fromStatus, toStatus),
     enabled: datasetId !== undefined,
   });
 };
@@ -93,6 +105,8 @@ export type IssueFilter = {
   hierarchyLevel?: HierarchyLevel;
   resolutions?: string[];
   statuses?: string[];
+  fromStatus?: string;
+  toStatus?: string;
   issueTypes?: string[];
   dates?: DateRange;
 };

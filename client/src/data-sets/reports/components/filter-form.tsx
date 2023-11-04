@@ -30,7 +30,7 @@ export const FilterForm: React.FC<FilterFormProps> = ({
   >(defaultFilter.hierarchyLevel);
 
   const [resolutions, setResolutions] = useState<SelectProps["options"]>();
-  const [statuses, setStatuses] = useState<SelectProps["options"]>();
+  const [statuses, setStatuses] = useState<SelectProps["options"]>([]);
   const [issueTypes, setIssueTypes] = useState<SelectProps["options"]>();
 
   useEffect(() => {
@@ -46,6 +46,8 @@ export const FilterForm: React.FC<FilterFormProps> = ({
   const [selectedResolutions, setSelectedResolutions] = useState<string[]>([]);
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const [selectedIssueTypes, setSelectedIssueTypes] = useState<string[]>([]);
+  const [fromStatus, setFromStatus] = useState<string>();
+  const [toStatus, setToStatus] = useState<string>();
 
   const [dates, setDates] = useState<RangeType>(() => {
     return defaultFilter.dates ?? null;
@@ -58,6 +60,8 @@ export const FilterForm: React.FC<FilterFormProps> = ({
       resolutions: selectedResolutions,
       statuses: selectedStatuses,
       issueTypes: selectedIssueTypes,
+      fromStatus,
+      toStatus,
     });
   }, [
     onFilterChanged,
@@ -66,6 +70,8 @@ export const FilterForm: React.FC<FilterFormProps> = ({
     selectedResolutions,
     selectedStatuses,
     selectedIssueTypes,
+    fromStatus,
+    toStatus,
   ]);
 
   return (
@@ -117,6 +123,24 @@ export const FilterForm: React.FC<FilterFormProps> = ({
               allowClear={true}
               options={issueTypes}
               onChange={setSelectedIssueTypes}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={3}>
+          <Form.Item label="From Status">
+            <Select
+              allowClear={true}
+              options={statuses}
+              onChange={setFromStatus}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={3}>
+          <Form.Item label="To Status">
+            <Select
+              allowClear={true}
+              options={statuses}
+              onChange={setToStatus}
             />
           </Form.Item>
         </Col>
