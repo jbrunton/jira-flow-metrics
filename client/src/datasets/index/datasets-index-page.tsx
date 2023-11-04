@@ -24,7 +24,7 @@ export const DatasetsIndexPage = () => {
 
   const [loadingDatasetId, setLoadingDatasetId] = useState<string>();
 
-  const { datasets, domain } = useNavigationContext();
+  const { datasets } = useNavigationContext();
 
   const dataSource = datasets?.map((dataset) => ({
     key: dataset.id,
@@ -46,7 +46,6 @@ export const DatasetsIndexPage = () => {
 
   return (
     <>
-      <h1>{domain?.host}</h1>
       <Button
         type="primary"
         icon={<PlusOutlined />}

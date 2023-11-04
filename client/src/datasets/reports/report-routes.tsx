@@ -5,6 +5,7 @@ import { ThroughputPage } from "./throughput/throughput-page";
 import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
 import {
   forecastPath,
+  issuesIndexPath,
   scatterplotPath,
   throughputPath,
   wipPath,
@@ -13,13 +14,15 @@ import { WipPage } from "./wip/wip-page";
 import { ForecastPage } from "./forecast/forecast-page";
 
 export const reportRoutes = (
-  <Route path="reports" handle={{ crumb: () => ({ title: "Reports" }) }}>
+  <Route path="reports">
     <Route
       path="scatterplot"
       element={<ScatterplotPage />}
       handle={{
         crumb: ({ dataset }: NavigationContext) =>
           reportsCrumb(dataset?.id, "scatterplot"),
+        title: ({ dataset }: NavigationContext) =>
+          `${dataset?.name} Scatterplot`,
       }}
     />
     <Route
@@ -28,6 +31,8 @@ export const reportRoutes = (
       handle={{
         crumb: ({ dataset }: NavigationContext) =>
           reportsCrumb(dataset?.id, "throughput"),
+        title: ({ dataset }: NavigationContext) =>
+          `${dataset?.name} Throughput`,
       }}
     />
     <Route
@@ -36,6 +41,8 @@ export const reportRoutes = (
       handle={{
         crumb: ({ dataset }: NavigationContext) =>
           reportsCrumb(dataset?.id, "wip"),
+        title: ({ dataset }: NavigationContext) =>
+          `${dataset?.name} Throughput`,
       }}
     />
     <Route
@@ -44,6 +51,7 @@ export const reportRoutes = (
       handle={{
         crumb: ({ dataset }: NavigationContext) =>
           reportsCrumb(dataset?.id, "forecast"),
+        title: ({ dataset }: NavigationContext) => `${dataset?.name} Forecast`,
       }}
     />
     <Route index element={<Navigate to="scatterplot" />} />
@@ -54,7 +62,7 @@ const reportsCrumb = (
   datasetId: string | undefined,
   reportKey: "scatterplot" | "throughput" | "wip" | "forecast",
 ): ItemType => {
-  const reports = datasetId
+  const reportOptions = datasetId
     ? [
         {
           key: "scatterplot",
@@ -74,9 +82,21 @@ const reportsCrumb = (
         },
       ]
     : [];
-  const currentReport = reports.find((report) => report.key === reportKey);
+  const currentReport = reportOptions.find(
+    (report) => report.key === reportKey,
+  );
+  const issueOptions = datasetId
+    ? [
+        { type: "divider" },
+        {
+          key: "issues",
+          label: <Link to={issuesIndexPath({ datasetId })}>Issues</Link>,
+        },
+      ]
+    : [];
+  const items = [...reportOptions, ...issueOptions];
   return {
     title: currentReport?.label,
-    menu: { items: reports, selectedKeys: [reportKey] },
+    menu: { items, selectedKeys: [reportKey] },
   };
 };

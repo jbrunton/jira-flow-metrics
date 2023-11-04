@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { IssuesTable, SortState } from "../../../components/issues-table";
 import { useFilterContext } from "../../../filter/context";
-import { useNavigationContext } from "../../../navigation/context";
-import { FilterForm } from "../../reports/components/filter-form";
 import { Issue, filterIssues } from "../../../data/issues";
 import { omit, pipe, sortBy } from "rambda";
 import { Col, Form, Input } from "antd";
 import * as fuzzball from "fuzzball";
+import { useDatasetContext } from "../../context";
+import { FilterOptionsForm } from "../../reports/components/filter-form/filter-options-form";
 
 export const IssuesIndexPage = () => {
-  const { issues, dataset } = useNavigationContext();
-  const { filter, setFilter } = useFilterContext();
+  const { issues } = useDatasetContext();
+  const { filter } = useFilterContext();
 
   const [filteredIssues, setFilteredIssues] = useState<Issue[]>([]);
 
@@ -70,25 +70,20 @@ export const IssuesIndexPage = () => {
 
   return (
     <>
-      <h1>{dataset?.name} issues</h1>
-      <FilterForm
+      <FilterOptionsForm
         showDateSelector={false}
         showStatusFilter={true}
         showResolutionFilter={true}
         issues={issues ?? []}
-        filter={filter}
-        onFilterChanged={setFilter}
-        additionalOptions={
-          <Col span={6}>
-            <Form.Item label="Search">
-              <Input
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </Form.Item>
-          </Col>
-        }
       />
+      <Col span={6}>
+        <Form.Item label="Search">
+          <Input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </Form.Item>
+      </Col>
       <IssuesTable
         issues={filteredIssues}
         defaultSortField="created"

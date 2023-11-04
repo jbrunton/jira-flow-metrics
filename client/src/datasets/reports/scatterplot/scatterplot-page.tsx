@@ -2,27 +2,20 @@ import {
   CompletedIssue,
   Issue,
   filterCompletedIssues,
-  useIssues,
 } from "../../../data/issues";
-import { useNavigationContext } from "../../../navigation/context";
 import { Scatterplot } from "./components/scatterplot";
 import { useEffect, useState } from "react";
 import { IssueDetailsDrawer } from "./components/issue-details-drawer";
 import { IssuesTable } from "../../../components/issues-table";
-import { FilterForm } from "../components/filter-form";
 import { useFilterContext } from "../../../filter/context";
 import { Percentile, getCycleTimePercentiles } from "../../../lib/cycle-times";
+import { FilterOptionsForm } from "../components/filter-form/filter-options-form";
+import { useDatasetContext } from "../../context";
 
 export const ScatterplotPage = () => {
-  const { dataset } = useNavigationContext();
+  const { issues } = useDatasetContext();
 
-  const { filter, setFilter } = useFilterContext();
-
-  const { data: issues } = useIssues(
-    dataset?.id,
-    filter.fromStatus,
-    filter.toStatus,
-  );
+  const { filter } = useFilterContext();
 
   const [filteredIssues, setFilteredIssues] = useState<CompletedIssue[]>([]);
   const [percentiles, setPercentiles] = useState<Percentile[] | undefined>();
@@ -40,14 +33,11 @@ export const ScatterplotPage = () => {
 
   return (
     <>
-      <h1>{dataset?.name} cycle times</h1>
-      <FilterForm
-        filter={filter}
+      <FilterOptionsForm
         issues={issues ?? []}
         showDateSelector={true}
         showStatusFilter={false}
         showResolutionFilter={true}
-        onFilterChanged={setFilter}
       />
 
       <Scatterplot

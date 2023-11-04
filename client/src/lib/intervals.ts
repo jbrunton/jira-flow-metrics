@@ -11,6 +11,7 @@ import {
   startOfDay,
   startOfMonth,
   startOfWeek,
+  subDays,
 } from "date-fns";
 
 export type Interval = {
@@ -89,4 +90,11 @@ export const difference = (
     case TimeUnit.Month:
       return differenceInMonths(dateLeft, dateRight);
   }
+};
+
+export const defaultDateRange = (): [Date, Date] => {
+  const today = new Date();
+  const defaultStart = startOfDay(subDays(today, 30));
+  const defaultEnd = endOfDay(today);
+  return [defaultStart, defaultEnd];
 };

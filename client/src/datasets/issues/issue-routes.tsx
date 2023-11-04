@@ -1,6 +1,6 @@
 import { Link, Route } from "react-router-dom";
 import { NavigationContext } from "../../navigation/context";
-import { IssuesIndexPage } from "./issue-details/issues-index-page";
+import { IssuesIndexPage } from "./issues-index/issues-index-page";
 import { IssueDetailsPage } from "./issue-details/issue-details-page";
 import { issuesIndexPath } from "../../navigation/paths";
 
@@ -15,6 +15,7 @@ export const issueRoutes = (
           "Issues"
         ),
       }),
+      title: () => "Issues",
     }}
   >
     <Route index element={<IssuesIndexPage />} />
@@ -23,6 +24,7 @@ export const issueRoutes = (
       element={<IssueDetailsPage />}
       handle={{
         crumb: ({ issueKey }: NavigationContext) => ({ title: issueKey }),
+        title: ({ issueKey }: NavigationContext) => issueKey,
       }}
     />
   </Route>

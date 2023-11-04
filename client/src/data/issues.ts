@@ -161,3 +161,23 @@ export const filterCompletedIssues = (
 ): CompletedIssue[] => {
   return filterIssues(issues, filter).filter(isCompleted);
 };
+
+export type DatasetStatuses = {
+  [HierarchyLevel.Story]: string[];
+  [HierarchyLevel.Epic]: string[];
+};
+
+const getDatasetStatuses = async (
+  datasetId?: string,
+): Promise<DatasetStatuses> => {
+  const response = await axios.get(`/datasets/${datasetId}/statuses`);
+  return response.data;
+};
+
+export const useDatasetStatuses = (datasetId?: string) => {
+  return useQuery({
+    queryKey: [issuesQueryKey, datasetId],
+    queryFn: () => getDatasetStatuses(datasetId),
+    enabled: datasetId !== undefined,
+  });
+};
