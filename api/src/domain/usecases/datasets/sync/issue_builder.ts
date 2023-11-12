@@ -90,14 +90,14 @@ export class JiraIssueBuilder {
         }
 
         const fromStatus = {
-          name: statusChange.fromString,
+          name: titleize(statusChange.fromString),
           category: this.statusCategories[
             statusChange.from ?? ""
           ] as StatusCategory,
         };
 
         const toStatus = {
-          name: statusChange.toString,
+          name: titleize(statusChange.toString),
           category: this.statusCategories[
             statusChange.to ?? ""
           ] as StatusCategory,
@@ -123,3 +123,7 @@ export class JiraIssueBuilder {
     return transitions.sort((t1, t2) => t1.date.getTime() - t2.date.getTime());
   }
 }
+
+const titleize = (text: string): string => {
+  return text.toLowerCase().replaceAll(/(?:^|\s|-)\S/g, (x) => x.toUpperCase());
+};

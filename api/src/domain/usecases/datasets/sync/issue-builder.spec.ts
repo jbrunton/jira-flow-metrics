@@ -32,18 +32,18 @@ describe("JiraIssueBuilder", () => {
           date: new Date("2023-09-04T13:37:24.303Z"),
           fromStatus: {
             category: "To Do",
-            name: "backlog",
+            name: "Backlog",
           },
           toStatus: {
             category: "To Do",
-            name: "Ready for Development",
+            name: "Ready For Development",
           },
         },
         {
           date: new Date("2023-09-05T14:22:32.068Z"),
           fromStatus: {
             category: "To Do",
-            name: "Ready for Development",
+            name: "Ready For Development",
           },
           toStatus: {
             category: "In Progress",
@@ -58,25 +58,25 @@ describe("JiraIssueBuilder", () => {
           },
           toStatus: {
             category: "In Progress",
-            name: "In review",
+            name: "In Review",
           },
         },
         {
           date: new Date("2023-09-06T11:32:54.488Z"),
           fromStatus: {
             category: "In Progress",
-            name: "In review",
+            name: "In Review",
           },
           toStatus: {
             category: "In Progress",
-            name: "In staging",
+            name: "In Staging",
           },
         },
         {
           date: new Date("2023-09-06T11:33:17.923Z"),
           fromStatus: {
             category: "In Progress",
-            name: "In staging",
+            name: "In Staging",
           },
           toStatus: {
             category: "Done",
