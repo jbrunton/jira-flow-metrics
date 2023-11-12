@@ -6,9 +6,13 @@ export const formatNumber = (x?: number): string | undefined => {
   }
 };
 
-export const formatDate = (date?: Date): string | undefined => {
+export const formatDate = (
+  date?: Date,
+  now = new Date(),
+): string | undefined => {
   if (date) {
-    return format(date, "d MMM yyyy");
+    const sameYear = date.getFullYear() === now.getFullYear();
+    return sameYear ? format(date, "d MMM") : format(date, "d MMM yyyy");
   }
 };
 
