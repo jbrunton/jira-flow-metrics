@@ -1,7 +1,6 @@
 import { DatasetsRepository } from "@entities/datasets";
 import { IssuesRepository } from "@entities/issues";
 import { Injectable } from "@nestjs/common";
-import { CycleTimesUseCase } from "@usecases/issues/metrics/cycle-times-use-case";
 import { JiraIssuesRepository } from "./jira-issues-repository";
 import { JiraIssueBuilder } from "./issue_builder";
 import { DomainsRepository } from "@entities/domains";
@@ -13,7 +12,6 @@ export class SyncUseCase {
     private readonly issues: IssuesRepository,
     private readonly domains: DomainsRepository,
     private readonly jiraIssues: JiraIssuesRepository,
-    private readonly cycleTimesUseCase: CycleTimesUseCase,
   ) {}
 
   async exec(domainId: string, datasetId: string) {
@@ -31,15 +29,14 @@ export class SyncUseCase {
       builder,
     });
 
-    const estimatedIssues = this.cycleTimesUseCase.exec(issues);
-
-    await this.issues.setIssues(domainId, datasetId, estimatedIssues);
+    await this.issues.setIssues(domainId, datasetId, issues);
     await this.datasets.updateDataset(domainId, datasetId, {
       lastSync: {
         date: new Date(),
         issueCount: issues.length,
       },
     });
-    return estimatedIssues;
+
+    return issues;
   }
 }

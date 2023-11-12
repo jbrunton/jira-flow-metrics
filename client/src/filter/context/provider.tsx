@@ -1,18 +1,16 @@
 import { useState } from "react";
-import { endOfDay, startOfDay, subDays } from "date-fns";
 import { HierarchyLevel, IssueFilter } from "../../data/issues";
 import { FilterContext } from "./context";
+import { defaultDateRange } from "../../lib/intervals";
 
 export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [filter, setFilter] = useState<IssueFilter>(() => {
-    const today = new Date();
-    const defaultStart = startOfDay(subDays(today, 30));
-    const defaultEnd = endOfDay(today);
+    const dates = defaultDateRange();
 
     const filter: IssueFilter = {
-      dates: [defaultStart, defaultEnd],
+      dates,
       hierarchyLevel: HierarchyLevel.Story,
     };
 

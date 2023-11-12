@@ -1,19 +1,18 @@
 import { useEffect, useState } from "react";
-import { Issue, filterIssues, useIssues } from "../../../data/issues";
-import { useNavigationContext } from "../../../navigation/context";
-import { FilterForm } from "../components/filter-form";
+import { Issue, filterIssues } from "../../../data/issues";
 import { IssuesTable } from "../../../components/issues-table";
 import { useFilterContext } from "../../../filter/context";
 import { WipResult, calculateWip } from "../../../lib/wip";
 import { WipChart } from "./components/wip-chart";
 import { omit } from "rambda";
-import { Checkbox, Col, Form } from "antd";
+import { Checkbox, Col, Form, Row } from "antd";
+import { FilterOptionsForm } from "../components/filter-form/filter-options-form";
+import { useDatasetContext } from "../../context";
 
 export const WipPage = () => {
-  const { dataset } = useNavigationContext();
-  const { data: issues } = useIssues(dataset?.id);
+  const { issues } = useDatasetContext();
 
-  const { filter, setFilter } = useFilterContext();
+  const { filter } = useFilterContext();
 
   const [filteredIssues, setFilteredIssues] = useState<Issue[]>([]);
 
@@ -62,27 +61,25 @@ export const WipPage = () => {
 
   return (
     <>
-      <h1>{dataset?.name} WIP</h1>
-      <FilterForm
-        issues={filteredIssues}
-        filter={filter}
+      <FilterOptionsForm
+        issues={issues ?? []}
         showDateSelector={true}
         showStatusFilter={false}
         showResolutionFilter={false}
-        onFilterChanged={setFilter}
-        additionalOptions={
-          <Col span={6}>
-            <Form.Item label="Options">
-              <Checkbox
-                checked={includeStoppedIssues}
-                onChange={(e) => setIncludeStoppedIssues(e.target.checked)}
-              >
-                Include stopped issues
-              </Checkbox>
-            </Form.Item>
-          </Col>
-        }
       />
+      <Row gutter={[8, 8]}>
+        <Col span={6}>
+          <Form.Item label="Options">
+            <Checkbox
+              checked={includeStoppedIssues}
+              onChange={(e) => setIncludeStoppedIssues(e.target.checked)}
+            >
+              Include stopped issues
+            </Checkbox>
+          </Form.Item>
+        </Col>
+      </Row>
+
       {wipResult ? (
         <WipChart result={wipResult} setSelectedIssues={setSelectedIssues} />
       ) : null}

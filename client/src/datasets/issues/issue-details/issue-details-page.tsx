@@ -5,16 +5,19 @@ import { useNavigationContext } from "../../../navigation/context";
 import { IssueDetailsCard } from "../components/issue-details-card";
 import { IssueMetricsCard } from "../components/issue-metrics-card";
 import { IssueTransitionsCard } from "../components/issue-transitions-card";
+import { useDatasetContext } from "../../context";
 
 export const IssueDetailsPage = () => {
-  const { issue, issueKey, issues } = useNavigationContext();
+  const { issueKey } = useNavigationContext();
+  const { issues } = useDatasetContext();
+  const issue = issues?.find((issue) => issue.key === issueKey);
   const isEpic = issue?.hierarchyLevel === HierarchyLevel.Epic;
   const children = isEpic
     ? issues?.filter((issue) => issue.parentKey === issueKey)
     : undefined;
   return issue ? (
     <>
-      <h1>{issue.summary}</h1>
+      <h2>{issue.summary}</h2>
       <Row gutter={[8, 8]}>
         <Col md={12} sm={24}>
           <Space direction="vertical">

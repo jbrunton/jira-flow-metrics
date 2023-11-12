@@ -3,22 +3,21 @@ import {
   CompletedIssue,
   Issue,
   filterCompletedIssues,
-  useIssues,
 } from "../../../data/issues";
-import { useNavigationContext } from "../../../navigation/context";
-import { FilterForm } from "../components/filter-form";
 import { Interval, TimeUnit } from "../../../lib/intervals";
 import { ThroughputChart } from "./components/throughput-chart";
-import { Col, Form, Select } from "antd";
+import { Col, Form, Row, Select } from "antd";
 import { ThroughputResult, calculateThroughput } from "../../../lib/throughput";
 import { IssuesTable } from "../../../components/issues-table";
 import { useFilterContext } from "../../../filter/context";
+import { ExpandableOptions } from "../../../components/expandable-options";
+import { FilterOptionsForm } from "../components/filter-form/filter-options-form";
+import { useDatasetContext } from "../../context";
 
 export const ThroughputPage = () => {
-  const { dataset } = useNavigationContext();
-  const { data: issues } = useIssues(dataset?.id);
+  const { issues } = useDatasetContext();
 
-  const { filter, setFilter } = useFilterContext();
+  const { filter } = useFilterContext();
 
   const [timeUnit, setTimeUnit] = useState<TimeUnit>(TimeUnit.Day);
 
@@ -53,15 +52,15 @@ export const ThroughputPage = () => {
 
   return (
     <>
-      <h1>{dataset?.name} throughput</h1>
-      <FilterForm
-        issues={filteredIssues}
-        filter={filter}
+      <FilterOptionsForm
+        issues={issues ?? []}
         showDateSelector={true}
         showStatusFilter={false}
         showResolutionFilter={true}
-        onFilterChanged={setFilter}
-        additionalOptions={
+      />
+
+      <ExpandableOptions title={() => "Chart Options"}>
+        <Row gutter={[8, 8]}>
           <Col span={4}>
             <Form.Item label="Time Unit">
               <Select value={timeUnit} onChange={setTimeUnit}>
@@ -74,8 +73,8 @@ export const ThroughputPage = () => {
               </Select>
             </Form.Item>
           </Col>
-        }
-      />
+        </Row>
+      </ExpandableOptions>
       {throughputResult ? (
         <ThroughputChart
           result={throughputResult}

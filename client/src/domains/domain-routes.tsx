@@ -1,8 +1,8 @@
 import { Route } from "react-router-dom";
-import { BreadcrumbHandle } from "../navigation/breadcrumbs";
+import { NavigationHandle } from "../navigation/breadcrumbs";
 import { DomainsIndexPage } from "./domains-index-page";
 
-const domainsHandle: BreadcrumbHandle = {
+const domainsHandle: NavigationHandle = {
   crumb: () => ({ title: "Domains" }),
 };
 

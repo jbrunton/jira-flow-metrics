@@ -1,5 +1,5 @@
 import { DataSourcesRepository, DatasetsRepository } from "@entities/datasets";
-import { IssuesRepository } from "@entities/issues";
+import { HierarchyLevel, Issue, IssuesRepository } from "@entities/issues";
 import {
   Body,
   Controller,
@@ -13,6 +13,7 @@ import {
 import { ApiProperty } from "@nestjs/swagger";
 import { SyncUseCase } from "@usecases/datasets/sync/sync-use-case";
 import { CycleTimesUseCase } from "@usecases/issues/metrics/cycle-times-use-case";
+import { flatten, isNil, reject, uniq } from "rambda";
 
 class CreateDatasetBody {
   @ApiProperty()
@@ -75,9 +76,7 @@ export class DatasetsController {
   ) {
     let issues = await this.issues.getIssues(domainId, datasetId);
 
-    if (fromStatus && toStatus) {
-      issues = this.cycleTimes.exec(issues, fromStatus, toStatus);
-    }
+    issues = this.cycleTimes.exec(issues, fromStatus, toStatus);
 
     return issues.map((issue) => {
       const parent = issue.parentKey
@@ -85,5 +84,36 @@ export class DatasetsController {
         : undefined;
       return { ...issue, parent };
     });
+  }
+
+  @Get(":datasetId/statuses")
+  async getStatuses(
+    @Param("datasetId") datasetId: string,
+    @Query("domainId") domainId: string,
+  ) {
+    const issues = await this.issues.getIssues(domainId, datasetId);
+    const getStatuses = (issues: Issue[]) =>
+      reject(isNil)(
+        uniq(
+          flatten(
+            issues.flatMap((issue) =>
+              issue.transitions.map((t) => [
+                t.fromStatus.name,
+                t.toStatus.name,
+              ]),
+            ),
+          ),
+        ),
+      );
+    const storyStatuses = getStatuses(
+      issues.filter((issue) => issue.hierarchyLevel === HierarchyLevel.Story),
+    );
+    const epicStatuses = getStatuses(
+      issues.filter((issue) => issue.hierarchyLevel === HierarchyLevel.Epic),
+    );
+    return {
+      Story: storyStatuses,
+      Epic: epicStatuses,
+    };
   }
 }

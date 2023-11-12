@@ -1,10 +1,10 @@
 import { Link, Navigate, Route } from "react-router-dom";
-import { BreadcrumbHandle } from "./navigation/breadcrumbs";
+import { NavigationHandle } from "./navigation/breadcrumbs";
 import { domainRoutes } from "./domains/domain-routes";
-import { datasetRoutes } from "./data-sets/dataset-routes";
+import { datasetRoutes } from "./datasets/dataset-routes";
 import { AppLayout } from "./app-layout";
 
-const rootHandle: BreadcrumbHandle = {
+const rootHandle: NavigationHandle = {
   crumb({ domain, domains, path, setDomainId }) {
     if (path === "/domains") {
       return;

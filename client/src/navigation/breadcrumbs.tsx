@@ -4,8 +4,9 @@ import { RightOutlined } from "@ant-design/icons";
 import { NavigationContext, useNavigationContext } from "./context";
 import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
 
-export interface BreadcrumbHandle {
-  crumb: (context: NavigationContext) => ItemType | undefined;
+export interface NavigationHandle {
+  crumb?: (context: NavigationContext) => ItemType | undefined;
+  title?: (context: NavigationContext) => string | undefined;
 }
 
 export const Breadcrumbs = () => {

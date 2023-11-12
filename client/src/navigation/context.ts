@@ -3,7 +3,6 @@ import { Dataset, useDatasets } from "../data/datasets";
 import { Domain, useDomains } from "../data/domains";
 import { useDomainContext } from "../domains/context";
 import { DomainContextType } from "../domains/context/context";
-import { Issue, useIssues } from "../data/issues";
 
 export type NavigationContext = DomainContextType & {
   path: string;
@@ -13,14 +12,13 @@ export type NavigationContext = DomainContextType & {
   dataset?: Dataset;
   datasets?: Dataset[];
   issueKey?: string;
-  issues?: Issue[];
-  issue?: Issue;
+  reportKey?: string;
 };
 
 export const useNavigationContext = (): NavigationContext => {
   const { pathname: path } = useLocation();
   const navigate = useNavigate();
-  const { datasetId, issueKey } = useParams();
+  const { datasetId, issueKey, reportKey } = useParams();
 
   const { domainId, setDomainId } = useDomainContext();
   const { data: domains } = useDomains();
@@ -28,9 +26,6 @@ export const useNavigationContext = (): NavigationContext => {
 
   const { data: datasets } = useDatasets();
   const dataset = datasets?.find((dataset) => dataset.id === datasetId);
-
-  const { data: issues } = useIssues(datasetId);
-  const issue = issues?.find((issue) => issue.key === issueKey);
 
   return {
     domainId,
@@ -45,7 +40,6 @@ export const useNavigationContext = (): NavigationContext => {
     datasetId,
     datasets,
     issueKey,
-    issues,
-    issue,
+    reportKey,
   };
 };
