@@ -5,8 +5,9 @@ import {
   Domain,
   DomainsRepository,
 } from "@entities/domains";
-import { createHash } from "crypto";
-import { DomainsCache } from "../storage/storage";
+import { DomainsCache } from "../../storage/storage";
+import { omit } from "rambda";
+import { createId } from "@data/local/id";
 
 @Injectable()
 export class LocalDomainsRepository extends DomainsRepository {
@@ -32,9 +33,7 @@ export class LocalDomainsRepository extends DomainsRepository {
   }
 
   async addDomain(params: CreateDomainParams): Promise<Domain> {
-    const id = createHash("md5")
-      .update(JSON.stringify(params))
-      .digest("base64url");
+    const id = createId(omit(["token"], params));
     const domain = { ...params, id };
     await this.cache.push(`/domains/${id}`, domain);
     return domain;

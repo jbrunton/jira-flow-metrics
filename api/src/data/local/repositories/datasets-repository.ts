@@ -4,9 +4,9 @@ import {
   Dataset,
   DatasetsRepository,
 } from "@entities/datasets";
-import { createHash } from "crypto";
 import { DataError } from "node-json-db";
 import { DataCache } from "@data/storage/storage";
+import { createId } from "@data/local/id";
 
 @Injectable()
 export class LocalDatasetsRepository extends DatasetsRepository {
@@ -36,9 +36,7 @@ export class LocalDatasetsRepository extends DatasetsRepository {
     domainId: string,
     params: CreateDatasetParams,
   ): Promise<Dataset> {
-    const id = createHash("md5")
-      .update(JSON.stringify(params))
-      .digest("base64url");
+    const id = createId(params);
     const dataset = { ...params, id };
     await this.cache.push(datasetPath(domainId, id), dataset);
     return dataset;

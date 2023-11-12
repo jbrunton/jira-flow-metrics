@@ -59,7 +59,7 @@ describe("DatasetsController", () => {
         .post(`/datasets?domainId=${domainId}`)
         .send(params)
         .expect(201, {
-          id: "0EJs5gv4vHf5eufVqm7gig",
+          id: "0EJs5gv4vHf5",
           ...params,
         });
     });

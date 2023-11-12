@@ -1,9 +1,9 @@
 import { Global, Module, Scope } from "@nestjs/common";
 import { jiraClientFactory } from "./http/client/jira-client";
 import { DataSourcesRepository, DatasetsRepository } from "@entities/datasets";
-import { LocalDatasetsRepository } from "./local/datasets-repository";
+import { LocalDatasetsRepository } from "./local/repositories/datasets-repository";
 import { DomainsRepository } from "@entities/domains";
-import { LocalDomainsRepository } from "./local/domains-repository";
+import { LocalDomainsRepository } from "./local/repositories/domains-repository";
 import { HttpJiraDataSourcesRepository } from "./http/repositories/data-sources-repository";
 import { IssuesRepository } from "@entities/issues";
 import { LocalIssuesRepository } from "./local/issues-repository";
