@@ -122,6 +122,11 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
               statuses: <Tag>{selectedStatuses.join()}</Tag>
             </>
           ) : null}
+          {selectedIssueTypes.length ? (
+            <>
+              issue types: <Tag>{selectedIssueTypes.join()}</Tag>
+            </>
+          ) : null}
         </Typography.Text>
       ) : null}
     </span>
