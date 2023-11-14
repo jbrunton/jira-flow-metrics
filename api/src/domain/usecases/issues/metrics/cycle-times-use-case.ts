@@ -46,7 +46,7 @@ const getStartedDate = (
 ): Date | undefined => {
   const startedTransition = transitions.find((transition) =>
     fromStatus
-      ? transition.fromStatus.name === fromStatus
+      ? transition.toStatus.name === fromStatus
       : transition.toStatus.category === StatusCategory.InProgress,
   );
 
