@@ -44,7 +44,8 @@ export type CompletedIssue = Issue & {
 
 export const isCompleted = (issue: Issue): issue is CompletedIssue =>
   issue.metrics.completed !== undefined &&
-  issue.metrics.cycleTime !== undefined;
+  issue.metrics.cycleTime !== undefined &&
+  issue.metrics.cycleTime > 0;
 
 export type IssueStatus = {
   name: string;
