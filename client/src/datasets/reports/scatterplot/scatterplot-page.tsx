@@ -11,6 +11,8 @@ import { useFilterContext } from "../../../filter/context";
 import { Percentile, getCycleTimePercentiles } from "../../../lib/cycle-times";
 import { FilterOptionsForm } from "../components/filter-form/filter-options-form";
 import { useDatasetContext } from "../../context";
+import { Checkbox, Col, Row, Tag, Typography } from "antd";
+import { ExpandableOptions } from "../../../components/expandable-options";
 
 export const ScatterplotPage = () => {
   const { issues } = useDatasetContext();
@@ -31,6 +33,19 @@ export const ScatterplotPage = () => {
 
   const [selectedIssues, setSelectedIssues] = useState<Issue[]>([]);
 
+  const [showPercentileLabels, setShowPercentileLabels] = useState(false);
+
+  const chartOptionsTitle = (expanded: boolean) => (
+    <span>
+      Chart Options &nbsp;
+      {expanded ? (
+        <Typography.Text type="secondary">
+          {showPercentileLabels ? <Tag>Show percentile labels</Tag> : null}
+        </Typography.Text>
+      ) : null}
+    </span>
+  );
+
   return (
     <>
       <FilterOptionsForm
@@ -40,11 +55,25 @@ export const ScatterplotPage = () => {
         showResolutionFilter={true}
       />
 
+      <ExpandableOptions title={chartOptionsTitle}>
+        <Row gutter={[8, 8]}>
+          <Col span={6}>
+            <Checkbox
+              checked={showPercentileLabels}
+              onChange={(e) => setShowPercentileLabels(e.target.checked)}
+            >
+              Show percentile labels
+            </Checkbox>
+          </Col>
+        </Row>
+      </ExpandableOptions>
+
       <Scatterplot
         issues={filteredIssues}
         percentiles={percentiles}
         range={filter?.dates ?? null}
         setSelectedIssues={setSelectedIssues}
+        showPercentileLabels={showPercentileLabels}
       />
       <IssuesTable
         issues={filteredIssues}

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Issue } from "../data/issues";
-import { Table, Tag, Typography } from "antd";
+import { Space, Table, Tag, Typography } from "antd";
 import { ExportOutlined } from "@ant-design/icons";
 import { formatDate, formatNumber } from "../lib/format";
 import { compareAsc, differenceInMinutes } from "date-fns";
@@ -173,18 +173,18 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
             ? "orange"
             : "blue";
         return (
-          <>
+          <Space direction="horizontal" style={{ float: "right" }}>
             {formatNumber(cycleTime)}
             <Tag
               style={{
-                float: "right",
+                // float: "right",
                 borderStyle: percentile !== undefined ? "solid" : "dashed",
               }}
               color={color}
             >
               {percentile ? `≥ p${percentile}` : "< p50"}
             </Tag>
-          </>
+          </Space>
         );
       },
       sorter: (a, b, sortOrder) =>

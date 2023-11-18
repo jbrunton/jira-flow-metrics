@@ -14,6 +14,7 @@ type ScatterplotProps = {
   issues: CompletedIssue[];
   percentiles?: Percentile[];
   range: RangeType;
+  showPercentileLabels: boolean;
   setSelectedIssues: (issues: Issue[]) => void;
 };
 
@@ -21,6 +22,7 @@ export const Scatterplot = ({
   issues,
   range,
   percentiles,
+  showPercentileLabels,
   setSelectedIssues,
 }: ScatterplotProps): ReactElement => {
   const data = issues.map((issue) => ({
@@ -56,7 +58,7 @@ export const Scatterplot = ({
               padding: 4,
               position: "start",
               content: `${p.percentile.toString()}% (${p.cycleTime} days)`,
-              display: false,
+              display: showPercentileLabels,
               textAlign: "start",
               color: "#666666",
             },
@@ -65,7 +67,7 @@ export const Scatterplot = ({
               return true;
             },
             leave({ element }) {
-              element.label!.options.display = false;
+              element.label!.options.display = showPercentileLabels;
               return true;
             },
             scaleID: "y",
