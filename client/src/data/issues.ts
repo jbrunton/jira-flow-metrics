@@ -33,6 +33,7 @@ export type Issue = {
     date: Date;
     fromStatus: IssueStatus;
     toStatus: IssueStatus;
+    timeInStatus: number;
   }[];
   metrics: IssueFlowMetrics;
   sortIndex?: number;
@@ -55,13 +56,14 @@ export type IssueStatus = {
 const issuesQueryKey = "issues";
 
 const getIssues = async (
-  datasetId?: string,
+  datasetId: string | undefined,
+  includeWaitTime: boolean,
   fromStatus?: string,
   toStatus?: string,
 ): Promise<Issue[]> => {
-  let url = `/datasets/${datasetId}/issues`;
+  let url = `/datasets/${datasetId}/issues?includeWaitTime=${includeWaitTime}`;
   if (fromStatus && toStatus) {
-    url += `?fromStatus=${fromStatus}&toStatus=${toStatus}`;
+    url += `&fromStatus=${fromStatus}&toStatus=${toStatus}`;
   }
   const response = await axios.get(url);
   return response.data.map((issue: Issue) => {
@@ -89,14 +91,21 @@ const parseDate = (date: string | Date | undefined): Date | undefined => {
 };
 
 export const useIssues = (
-  datasetId?: string,
+  datasetId: string | undefined,
+  includeWaitTime: boolean,
   fromStatus?: string,
   toStatus?: string,
 ) => {
   return useQuery({
-    queryKey: [issuesQueryKey, datasetId, fromStatus, toStatus],
-    queryFn: () => getIssues(datasetId, fromStatus, toStatus),
-    enabled: datasetId !== undefined,
+    queryKey: [
+      issuesQueryKey,
+      datasetId,
+      includeWaitTime,
+      fromStatus,
+      toStatus,
+    ],
+    queryFn: () => getIssues(datasetId, includeWaitTime, fromStatus, toStatus),
+    enabled: datasetId !== undefined && includeWaitTime !== undefined,
   });
 };
 

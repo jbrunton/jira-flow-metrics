@@ -25,7 +25,7 @@ export const IssueMetricsCard: React.FC<IssueMetricsCardProps> = ({
           {formatTime(issue.metrics.completed)}
         </Descriptions.Item>
         <Descriptions.Item label="Cycle Time">
-          {formatNumber(issue.metrics.cycleTime)}
+          {formatNumber(issue.metrics.cycleTime)} days
         </Descriptions.Item>
       </Descriptions>
     </Card>
