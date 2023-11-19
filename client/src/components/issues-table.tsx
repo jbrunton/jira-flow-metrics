@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import { Issue } from "../data/issues";
-import { Space, Table, Tag, Typography } from "antd";
+import { Checkbox, Space, Table, Tag, Typography } from "antd";
 import { ExportOutlined } from "@ant-design/icons";
 import { formatDate, formatNumber } from "../lib/format";
 import { compareAsc, differenceInMinutes } from "date-fns";
 import { ColumnType, ColumnsType, SortOrder } from "antd/es/table/interface";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigationContext } from "../navigation/context";
 import { issueDetailsPath } from "../navigation/paths";
 import { isNil } from "rambda";
@@ -22,6 +22,7 @@ export type IssuesTableProps = {
   defaultSortField: "created" | "started" | "cycleTime" | undefined;
   sortState?: SortState;
   onSortStateChanged?: (sortState: SortState) => void;
+  onExcludedIssuesChanged?: (excludedIssueKeys: string[]) => void;
   percentiles?: Percentile[];
 };
 
@@ -31,9 +32,45 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
   defaultSortField,
   sortState,
   onSortStateChanged,
+  onExcludedIssuesChanged,
   percentiles,
 }) => {
   const { datasetId } = useNavigationContext();
+
+  const [excludedIssueKeys, setExcludedIssueKeys] = useState<string[]>([]);
+
+  const onSelectIssueChanged = (key: string, checked: boolean) => {
+    const includeIssue = () =>
+      setExcludedIssueKeys(excludedIssueKeys.filter((k) => k !== key));
+    const excludeIssue = () =>
+      setExcludedIssueKeys([...excludedIssueKeys, key]);
+
+    const excluded = excludedIssueKeys.includes(key);
+    if (checked && excluded) {
+      includeIssue();
+    } else if (!checked && !excluded) {
+      excludeIssue();
+    }
+  };
+
+  const [indeterminate, setIndeterminate] = useState(true);
+  const [allChecked, setAllChecked] = useState(false);
+
+  const onSelectAllChanged = () => {
+    if (allChecked) {
+      setExcludedIssueKeys(issues.map((issue) => issue.key));
+    } else {
+      setExcludedIssueKeys([]);
+    }
+  };
+
+  useEffect(() => {
+    const allChecked = excludedIssueKeys.length < issues.length;
+    const indeterminate = allChecked && excludedIssueKeys.length > 0;
+    setAllChecked(allChecked);
+    setIndeterminate(indeterminate);
+    onExcludedIssuesChanged?.(excludedIssueKeys);
+  }, [excludedIssueKeys, issues, onExcludedIssuesChanged]);
 
   const categoryColors = {
     "To Do": "grey",
@@ -191,6 +228,30 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
         compareNumbers(a.metrics.cycleTime, b.metrics.cycleTime, sortOrder),
     }),
   ];
+
+  if (onExcludedIssuesChanged) {
+    const selectColumn: ColumnType<Issue> = {
+      title: () => {
+        return (
+          <Checkbox
+            indeterminate={indeterminate}
+            checked={allChecked}
+            onChange={onSelectAllChanged}
+          />
+        );
+      },
+      render: (issue: Issue) => (
+        <Checkbox
+          checked={!excludedIssueKeys.includes(issue.key)}
+          onChange={(event) =>
+            onSelectIssueChanged(issue.key, event.target.checked)
+          }
+        />
+      ),
+      width: "46px",
+    };
+    columns.unshift(selectColumn);
+  }
 
   const IssueProgress = ({ issue }: { issue: Issue }) => {
     if (!parentEpic) return null;

@@ -18,6 +18,7 @@ export const ScatterplotPage = () => {
   const { issues } = useDatasetContext();
 
   const { filter } = useFilterContext();
+  const [excludedIssues, setExcludedIssues] = useState<string[]>([]);
 
   const [filteredIssues, setFilteredIssues] = useState<CompletedIssue[]>([]);
   const [percentiles, setPercentiles] = useState<Percentile[] | undefined>();
@@ -29,7 +30,7 @@ export const ScatterplotPage = () => {
       setFilteredIssues(filteredIssues);
       setPercentiles(percentiles);
     }
-  }, [issues, filter, setFilteredIssues, setPercentiles]);
+  }, [issues, filter, setFilteredIssues, setPercentiles, excludedIssues]);
 
   const [selectedIssues, setSelectedIssues] = useState<Issue[]>([]);
 
@@ -69,7 +70,9 @@ export const ScatterplotPage = () => {
       </ExpandableOptions>
 
       <Scatterplot
-        issues={filteredIssues}
+        issues={filteredIssues.filter(
+          (issue) => !excludedIssues.includes(issue.key),
+        )}
         percentiles={percentiles}
         range={filter?.dates ?? null}
         setSelectedIssues={setSelectedIssues}
@@ -77,6 +80,7 @@ export const ScatterplotPage = () => {
       />
       <IssuesTable
         issues={filteredIssues}
+        onExcludedIssuesChanged={setExcludedIssues}
         percentiles={percentiles}
         defaultSortField="cycleTime"
       />
