@@ -11,7 +11,7 @@ import { useFilterContext } from "../../../filter/context";
 import { Percentile, getCycleTimePercentiles } from "../../../lib/cycle-times";
 import { FilterOptionsForm } from "../components/filter-form/filter-options-form";
 import { useDatasetContext } from "../../context";
-import { Checkbox, Col, Row, Tag, Typography } from "antd";
+import { Checkbox, Col, Row } from "antd";
 import { ExpandableOptions } from "../../../components/expandable-options";
 
 export const ScatterplotPage = () => {
@@ -36,17 +36,6 @@ export const ScatterplotPage = () => {
 
   const [showPercentileLabels, setShowPercentileLabels] = useState(false);
 
-  const chartOptionsTitle = (expanded: boolean) => (
-    <span>
-      Chart Options &nbsp;
-      {expanded ? (
-        <Typography.Text type="secondary">
-          {showPercentileLabels ? <Tag>Show percentile labels</Tag> : null}
-        </Typography.Text>
-      ) : null}
-    </span>
-  );
-
   return (
     <>
       <FilterOptionsForm
@@ -56,7 +45,18 @@ export const ScatterplotPage = () => {
         showResolutionFilter={true}
       />
 
-      <ExpandableOptions title={chartOptionsTitle}>
+      <ExpandableOptions
+        header={{
+          title: "Chart Options",
+          options: [
+            {
+              value: showPercentileLabels
+                ? "Show percentile labels"
+                : "Hide percentile labels",
+            },
+          ],
+        }}
+      >
         <Row gutter={[8, 8]}>
           <Col span={6}>
             <Checkbox

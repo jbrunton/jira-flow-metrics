@@ -1,16 +1,37 @@
-import { Collapse } from "antd";
+import { Collapse, Tag, Typography } from "antd";
 import { FC, ReactNode, useState } from "react";
 
+export type ExpandableOptionsHeader = {
+  title: string;
+  options: { label?: string; value?: string }[];
+};
+
 export type ExpandableOptionsProps = {
-  title: (isExpanded: boolean) => ReactNode;
+  header: ExpandableOptionsHeader;
   children: ReactNode;
 };
 
 export const ExpandableOptions: FC<ExpandableOptionsProps> = ({
-  title,
+  header: { title, options },
   children,
 }) => {
   const [expandedKeys, setExpandedKeys] = useState<string[]>();
+  const expanded = !expandedKeys?.length;
+  const header = (
+    <span style={{ opacity: expanded ? 1 : 0.5 }}>
+      <span>{title}&nbsp;</span>
+      {options.map(({ label, value }, index) => (
+        <span key={`${title}-${index}`}>
+          {label ? (
+            <Typography.Text key={`option-${title}-${index}`} type="secondary">
+              {label}:&nbsp;
+            </Typography.Text>
+          ) : null}
+          {value ? <Tag key={`${title}-${index}-value`}>{value}</Tag> : null}
+        </span>
+      ))}
+    </span>
+  );
   return (
     <Collapse
       style={{ marginBottom: 8 }}
@@ -20,7 +41,7 @@ export const ExpandableOptions: FC<ExpandableOptionsProps> = ({
       items={[
         {
           key: "dataset",
-          label: title(!expandedKeys?.length),
+          label: header,
           children,
         },
       ]}

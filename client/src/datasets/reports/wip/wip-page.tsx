@@ -5,9 +5,10 @@ import { useFilterContext } from "../../../filter/context";
 import { WipResult, calculateWip } from "../../../lib/wip";
 import { WipChart } from "./components/wip-chart";
 import { omit } from "rambda";
-import { Checkbox, Col, Form, Row } from "antd";
+import { Checkbox, Col, Row } from "antd";
 import { FilterOptionsForm } from "../components/filter-form/filter-options-form";
 import { useDatasetContext } from "../../context";
+import { ExpandableOptions } from "../../../components/expandable-options";
 
 export const WipPage = () => {
   const { issues } = useDatasetContext();
@@ -67,18 +68,29 @@ export const WipPage = () => {
         showStatusFilter={false}
         showResolutionFilter={false}
       />
-      <Row gutter={[8, 8]}>
-        <Col span={6}>
-          <Form.Item label="Options">
+      <ExpandableOptions
+        header={{
+          title: "Chart Options",
+          options: [
+            {
+              value: includeStoppedIssues
+                ? "Include stopped issues"
+                : "Exclude stopped issues",
+            },
+          ],
+        }}
+      >
+        <Row gutter={[8, 8]}>
+          <Col span={6}>
             <Checkbox
               checked={includeStoppedIssues}
               onChange={(e) => setIncludeStoppedIssues(e.target.checked)}
             >
               Include stopped issues
             </Checkbox>
-          </Form.Item>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      </ExpandableOptions>
 
       {wipResult ? (
         <WipChart result={wipResult} setSelectedIssues={setSelectedIssues} />

@@ -24,6 +24,7 @@ import { RedoOutlined } from "@ant-design/icons";
 import { FilterOptionsForm } from "../components/filter-form/filter-options-form";
 import { ExpandableOptions } from "../../../components/expandable-options";
 import { useDatasetContext } from "../../context";
+import { formatDate } from "../../../lib/format";
 
 export const ForecastPage = () => {
   const { issues } = useDatasetContext();
@@ -83,7 +84,31 @@ export const ForecastPage = () => {
         showStatusFilter={false}
         showResolutionFilter={true}
       />
-      <ExpandableOptions title={() => "Chart Options"}>
+      <ExpandableOptions
+        header={{
+          title: "Chart Options",
+          options: [
+            { label: "Issue count", value: issueCount.toString() },
+            { label: "Start date", value: formatDate(startDate) ?? "-" },
+            { label: "Seed", value: seed.toString() },
+            {
+              value: includeLongTail
+                ? "Include long tail"
+                : "Exclude long tail",
+            },
+            {
+              value: excludeLeadTimes
+                ? "Exclude lead times"
+                : "Include lead times",
+            },
+            {
+              value: excludeOutliers
+                ? "Exclude cycle time outliers"
+                : "Include cycle time outliers",
+            },
+          ],
+        }}
+      >
         <Form layout="vertical">
           <Row gutter={[8, 8]}>
             <Col span={2}>
