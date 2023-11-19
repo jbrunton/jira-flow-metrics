@@ -34,6 +34,7 @@ export type Transition = {
   date: Date;
   fromStatus: TransitionStatus;
   toStatus: TransitionStatus;
+  timeInStatus: number;
 };
 
 // export type SerializedTransition = Omit<Transition, "date"> & {

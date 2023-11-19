@@ -98,16 +98,16 @@ describe("CycleTimesUseCase", () => {
         metrics: {},
       });
 
-      const [result] = cycleTimes.exec([issue]);
+      const [result] = cycleTimes.exec([issue], false);
 
       expect(result.metrics).toEqual({
-        cycleTime: 0.8824751736111112,
+        cycleTime: 0.8824537037037037,
         started: startedDate,
         completed: completedDate,
       });
     });
 
-    it("uses the first started date when an issue is paused", () => {
+    describe("when the issue is paused", () => {
       const firstStartedDate = new Date("2023-01-01T10:30:00.000Z");
       const stoppedDate = new Date("2023-01-01T12:30:00.000Z");
       const secondStartedDate = new Date("2023-01-01T14:30:00.000Z");
@@ -138,16 +138,39 @@ describe("CycleTimesUseCase", () => {
         ],
       });
 
-      const [result] = cycleTimes.exec([issue]);
+      it("uses the first started date", () => {
+        const [result] = cycleTimes.exec([issue], false);
 
-      expect(result.metrics).toEqual({
-        started: firstStartedDate,
-        completed: completedDate,
-        cycleTime: 0.25,
+        expect(result.metrics).toEqual(
+          expect.objectContaining({
+            started: firstStartedDate,
+            completed: completedDate,
+          }),
+        );
+      });
+
+      it("excludes the paused status time when includeWaitTime = false", () => {
+        const [result] = cycleTimes.exec([issue], false);
+
+        expect(result.metrics).toEqual(
+          expect.objectContaining({
+            cycleTime: 0.16666666666666666,
+          }),
+        );
+      });
+
+      it("includes the paused status time when includeWaitTime = true", () => {
+        const [result] = cycleTimes.exec([issue], true);
+
+        expect(result.metrics).toEqual(
+          expect.objectContaining({
+            cycleTime: 0.25,
+          }),
+        );
       });
     });
 
-    it("uses the last completed date when an issue is restarted", () => {
+    describe("when the issue is restarted", () => {
       const startedDate = new Date("2023-01-01T10:30:00.000Z");
       const firstCompletedDate = new Date("2023-01-01T12:30:00.000Z");
       const restartedDate = new Date("2023-01-01T14:30:00.000Z");
@@ -178,12 +201,35 @@ describe("CycleTimesUseCase", () => {
         ],
       });
 
-      const [result] = cycleTimes.exec([issue]);
+      it("uses the last completed date", () => {
+        const [result] = cycleTimes.exec([issue], false);
 
-      expect(result.metrics).toEqual({
-        started: startedDate,
-        completed: secondCompletedDate,
-        cycleTime: 0.25,
+        expect(result.metrics).toEqual(
+          expect.objectContaining({
+            started: startedDate,
+            completed: secondCompletedDate,
+          }),
+        );
+      });
+
+      it("excludes the paused status time when includeWaitTime = false", () => {
+        const [result] = cycleTimes.exec([issue], false);
+
+        expect(result.metrics).toEqual(
+          expect.objectContaining({
+            cycleTime: 0.16666666666666666,
+          }),
+        );
+      });
+
+      it("includes the paused status time when includeWaitTime = true", () => {
+        const [result] = cycleTimes.exec([issue], true);
+
+        expect(result.metrics).toEqual(
+          expect.objectContaining({
+            cycleTime: 0.25,
+          }),
+        );
       });
     });
 
@@ -212,7 +258,7 @@ describe("CycleTimesUseCase", () => {
         ],
       });
 
-      const [result] = cycleTimes.exec([issue]);
+      const [result] = cycleTimes.exec([issue], false);
 
       expect(result.metrics).toEqual({
         started: startedDate,
@@ -232,6 +278,7 @@ describe("CycleTimesUseCase", () => {
       issueType: "Epic",
       hierarchyLevel: HierarchyLevel.Epic,
       statusCategory: StatusCategory.Done,
+      transitions: [],
     });
 
     const story1 = buildIssue({
@@ -267,7 +314,7 @@ describe("CycleTimesUseCase", () => {
     });
 
     it("computes epic cycle time metrics based on stories", () => {
-      const [result] = cycleTimes.exec([epic, story1, story2]);
+      const [result] = cycleTimes.exec([epic, story1, story2], false);
 
       expect(result.metrics).toEqual({
         started: story1Started,
@@ -282,7 +329,7 @@ describe("CycleTimesUseCase", () => {
         statusCategory: StatusCategory.InProgress,
       };
 
-      const [result] = cycleTimes.exec([inProgressEpic, story1, story2]);
+      const [result] = cycleTimes.exec([inProgressEpic, story1, story2], false);
 
       expect(result.metrics).toEqual({
         started: story1Started,

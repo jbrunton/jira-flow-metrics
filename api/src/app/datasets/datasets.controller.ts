@@ -71,12 +71,18 @@ export class DatasetsController {
   async getIssues(
     @Param("datasetId") datasetId: string,
     @Query("domainId") domainId: string,
+    @Query("includeWaitTime") includeWaitTime: string,
     @Query("fromStatus") fromStatus?: string,
     @Query("toStatus") toStatus?: string,
   ) {
     let issues = await this.issues.getIssues(domainId, datasetId);
 
-    issues = this.cycleTimes.exec(issues, fromStatus, toStatus);
+    issues = this.cycleTimes.exec(
+      issues,
+      ["true", "1"].includes(includeWaitTime),
+      fromStatus,
+      toStatus,
+    );
 
     return issues.map((issue) => {
       const parent = issue.parentKey

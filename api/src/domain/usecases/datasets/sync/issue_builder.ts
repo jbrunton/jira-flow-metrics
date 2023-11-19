@@ -8,6 +8,11 @@ import {
   StatusCategory,
   Transition,
 } from "@entities/issues";
+import { compareAsc, differenceInSeconds } from "date-fns";
+
+export type TransitionContext = Omit<Transition, "timeInStatus">;
+
+const secondsInDay = 60 * 60 * 24;
 
 export class JiraIssueBuilder {
   private readonly statusCategories: { [externalId: string]: string } = {};
@@ -57,7 +62,12 @@ export class JiraIssueBuilder {
       throw new Error(`Status category for issue ${json.key} is undefined`);
     }
 
-    const transitions = this.buildTransitions(json);
+    const transitions = this.buildTransitions(
+      json,
+      created,
+      status,
+      statusCategory,
+    );
 
     const epicKey = json["fields"][this.epicLinkFieldId] as string;
     const parentKey = json["fields"][this.parentFieldId]?.key as string;
@@ -79,8 +89,13 @@ export class JiraIssueBuilder {
     return issue;
   }
 
-  buildTransitions(json: Version3Models.Issue): Transition[] {
-    const transitions: Transition[] = reject(isNil)(
+  private buildTransitions(
+    json: Version3Models.Issue,
+    created: Date,
+    status: string,
+    statusCategory: StatusCategory,
+  ): Transition[] {
+    const transitions: TransitionContext[] = reject(isNil)(
       json.changelog?.histories?.map((event) => {
         const statusChange = event.items?.find(
           (item) => item.field == "status",
@@ -120,10 +135,58 @@ export class JiraIssueBuilder {
       }),
     );
 
-    return transitions.sort((t1, t2) => t1.date.getTime() - t2.date.getTime());
+    return buildTransitions(transitions, created, status, statusCategory);
   }
 }
 
 const titleize = (text: string): string => {
   return text.toLowerCase().replaceAll(/(?:^|\s|-)\S/g, (x) => x.toUpperCase());
+};
+
+export const buildTransitions = (
+  transitions: TransitionContext[],
+  created: Date,
+  status: string,
+  statusCategory: StatusCategory,
+): Transition[] => {
+  const sortedTransitions = transitions.sort((t1, t2) =>
+    compareAsc(t1.date, t2.date.getTime()),
+  );
+
+  const createdTransition: TransitionContext =
+    sortedTransitions.length > 0
+      ? {
+          fromStatus: {
+            name: "Created",
+            category: StatusCategory.ToDo,
+          },
+          date: created,
+          toStatus: sortedTransitions[0].fromStatus,
+        }
+      : {
+          fromStatus: {
+            name: "Created",
+            category: StatusCategory.ToDo,
+          },
+          date: created,
+          toStatus: {
+            name: status,
+            category: statusCategory,
+          },
+        };
+
+  return [createdTransition, ...sortedTransitions].map(
+    (transition, index, transitions): Transition => {
+      const nextTransitionDate =
+        index < transitions.length - 1
+          ? transitions[index + 1].date
+          : new Date();
+      const timeInStatus =
+        differenceInSeconds(nextTransitionDate, transition.date) / secondsInDay;
+      return {
+        timeInStatus,
+        ...transition,
+      };
+    },
+  );
 };

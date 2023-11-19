@@ -1,12 +1,21 @@
 import { FC, useEffect, useState } from "react";
 import { HierarchyLevel, useDatasetStatuses } from "../../../../data/issues";
-import { Col, Form, Row, Select, SelectProps, Tag, Typography } from "antd";
+import {
+  Checkbox,
+  Col,
+  Form,
+  Row,
+  Select,
+  SelectProps,
+  Tag,
+  Typography,
+} from "antd";
 import { ExpandableOptions } from "../../../../components/expandable-options";
 
 export type DatasetOptions = {
-  // hierarchyLevel: HierarchyLevel;
   fromStatus?: string;
   toStatus?: string;
+  includeWaitTime: boolean;
 };
 
 type DatasetOptionsProps = {
@@ -21,6 +30,7 @@ export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
   const [statuses, setStatuses] = useState<SelectProps["options"]>();
   const [fromStatus, setFromStatus] = useState<string>();
   const [toStatus, setToStatus] = useState<string>();
+  const [includeWaitTime, setIncludeWaitTime] = useState(false);
 
   const { data: datasetStatuses } = useDatasetStatuses(datasetId);
 
@@ -37,8 +47,8 @@ export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
   }, [datasetStatuses, setStatuses]);
 
   useEffect(() => {
-    onOptionsChanged({ fromStatus, toStatus });
-  }, [fromStatus, toStatus, onOptionsChanged]);
+    onOptionsChanged({ fromStatus, toStatus, includeWaitTime });
+  }, [fromStatus, toStatus, includeWaitTime, onOptionsChanged]);
 
   const title = (expanded: boolean) => (
     <span>
@@ -53,6 +63,7 @@ export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
           )}
           to:{" "}
           {toStatus ? <Tag>{toStatus}</Tag> : <Tag>StatusCategory=Done</Tag>}
+          <Tag>{includeWaitTime ? "Include" : "Exclude"} wait time</Tag>
         </Typography.Text>
       ) : null}
     </span>
@@ -83,6 +94,14 @@ export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
               />
             </Form.Item>
           </Col>
+        </Row>
+        <Row gutter={[8, 8]}>
+          <Checkbox
+            checked={includeWaitTime}
+            onChange={(e) => setIncludeWaitTime(e.target.checked)}
+          >
+            Include wait time
+          </Checkbox>
         </Row>
       </Form>
     </ExpandableOptions>
