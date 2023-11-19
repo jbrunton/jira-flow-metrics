@@ -59,7 +59,12 @@ export const ThroughputPage = () => {
         showResolutionFilter={true}
       />
 
-      <ExpandableOptions title={() => "Chart Options"}>
+      <ExpandableOptions
+        header={{
+          title: "Chart Options",
+          options: [{ label: "time unit", value: timeUnit }],
+        }}
+      >
         <Row gutter={[8, 8]}>
           <Col span={4}>
             <Form.Item label="Time Unit">

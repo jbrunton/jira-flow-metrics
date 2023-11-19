@@ -1,15 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { HierarchyLevel, useDatasetStatuses } from "../../../../data/issues";
-import {
-  Checkbox,
-  Col,
-  Form,
-  Row,
-  Select,
-  SelectProps,
-  Tag,
-  Typography,
-} from "antd";
+import { Checkbox, Col, Form, Row, Select, SelectProps } from "antd";
 import { ExpandableOptions } from "../../../../components/expandable-options";
 
 export type DatasetOptions = {
@@ -50,26 +41,27 @@ export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
     onOptionsChanged({ fromStatus, toStatus, includeWaitTime });
   }, [fromStatus, toStatus, includeWaitTime, onOptionsChanged]);
 
-  const title = (expanded: boolean) => (
-    <span>
-      Dataset options &nbsp;
-      {expanded ? (
-        <Typography.Text type="secondary">
-          from:{" "}
-          {fromStatus ? (
-            <Tag>Status={fromStatus}</Tag>
-          ) : (
-            <Tag>StatusCategory=In Progress</Tag>
-          )}
-          to:{" "}
-          {toStatus ? <Tag>{toStatus}</Tag> : <Tag>StatusCategory=Done</Tag>}
-          <Tag>{includeWaitTime ? "Include" : "Exclude"} wait time</Tag>
-        </Typography.Text>
-      ) : null}
-    </span>
-  );
   return (
-    <ExpandableOptions title={title}>
+    <ExpandableOptions
+      header={{
+        title: "Dataset Options",
+        options: [
+          {
+            label: "from",
+            value: fromStatus
+              ? `Status=${fromStatus}`
+              : "StatusCategory=In Progress",
+          },
+          {
+            label: "to",
+            value: toStatus ? `Status=${toStatus}` : "StatusCategory=Done",
+          },
+          {
+            value: `${includeWaitTime ? "Include" : "Exclude"} wait time`,
+          },
+        ],
+      }}
+    >
       <Form layout="vertical">
         <Row gutter={[8, 8]}>
           <Col span={6}>

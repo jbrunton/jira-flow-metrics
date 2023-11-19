@@ -1,21 +1,16 @@
 import { FC, useEffect, useState } from "react";
 import { DateRange, HierarchyLevel, Issue } from "../../../../data/issues";
-import {
-  Col,
-  Collapse,
-  Form,
-  Row,
-  Select,
-  SelectProps,
-  Tag,
-  Typography,
-} from "antd";
+import { Col, Form, Row, Select, SelectProps } from "antd";
 import { RangeType } from "../date-picker";
 import { DateSelector } from "../date-selector";
 import { isNil, map, pipe, reject, uniq } from "rambda";
 import { formatDate } from "../../../../lib/format";
 import { useFilterContext } from "../../../../filter/context";
 import { defaultDateRange } from "../../../../lib/intervals";
+import {
+  ExpandableOptions,
+  ExpandableOptionsHeader,
+} from "../../../../components/expandable-options";
 
 export type FilterOptions = {
   hierarchyLevel?: HierarchyLevel;
@@ -93,119 +88,88 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
     selectedIssueTypes,
     hierarchyLevel,
   ]);
-  const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
-  const description = (
-    <span>
-      Filter options &nbsp;
-      {expandedKeys.length === 0 ? (
-        <Typography.Text type="secondary">
-          {dates ? (
-            <>
-              dates:{" "}
-              <Tag>
-                {formatDate(dates[0])}-{formatDate(dates[1])}
-              </Tag>
-            </>
-          ) : null}
-          {hierarchyLevel ? (
-            <>
-              hierarchy level: <Tag>{hierarchyLevel}</Tag>
-            </>
-          ) : null}
-          {selectedResolutions.length ? (
-            <>
-              resolutions: <Tag>{selectedResolutions.join()}</Tag>
-            </>
-          ) : null}
-          {selectedStatuses.length ? (
-            <>
-              statuses: <Tag>{selectedStatuses.join()}</Tag>
-            </>
-          ) : null}
-          {selectedIssueTypes.length ? (
-            <>
-              issue types: <Tag>{selectedIssueTypes.join()}</Tag>
-            </>
-          ) : null}
-        </Typography.Text>
-      ) : null}
-    </span>
-  );
+  const options: ExpandableOptionsHeader["options"][number][] = [];
+
+  if (dates) {
+    options.push({
+      label: "Dates",
+      value: `${formatDate(dates[0])}-${formatDate(dates[1])}`,
+    });
+  }
+  options.push({ label: "Hierarchy level", value: hierarchyLevel });
+  if (selectedResolutions.length) {
+    options.push({ label: "Resolutions", value: selectedResolutions.join() });
+  }
+  if (selectedStatuses.length) {
+    options.push({ label: "Statuses", value: selectedStatuses.join() });
+  }
+  if (selectedIssueTypes.length) {
+    options.push({ label: "Issue types", value: selectedIssueTypes.join() });
+  }
+
   return (
-    <Collapse
-      size="small"
-      style={{ marginBottom: 8 }}
-      bordered={false}
-      onChange={(keys) => setExpandedKeys(keys as string[])}
-      items={[
-        {
-          key: "filter",
-          label: description,
-          children: (
-            <Form layout="vertical">
-              <Row gutter={[8, 8]}>
-                {showDateSelector ? (
-                  <Col span={8}>
-                    <Form.Item label="Dates">
-                      <DateSelector dates={dates} onChange={setDates} />
-                    </Form.Item>
-                  </Col>
-                ) : null}
-                <Col span={4}>
-                  <Form.Item label="Hierarchy Level">
-                    <Select
-                      allowClear={true}
-                      value={hierarchyLevel}
-                      onChange={setHierarchyLevel}
-                    >
-                      <Select.Option value="Story">Story</Select.Option>
-                      <Select.Option value="Epic">Epic</Select.Option>
-                    </Select>
-                  </Form.Item>
-                </Col>
-                {showResolutionFilter ? (
-                  <Col span={4}>
-                    <Form.Item label="Resolution">
-                      <Select
-                        mode="multiple"
-                        allowClear={true}
-                        options={resolutions}
-                        value={selectedResolutions}
-                        onChange={setSelectedResolutions}
-                      />
-                    </Form.Item>
-                  </Col>
-                ) : null}
-                {showStatusFilter ? (
-                  <Col span={4}>
-                    <Form.Item label="Status">
-                      <Select
-                        mode="multiple"
-                        allowClear={true}
-                        options={statuses}
-                        value={selectedStatuses}
-                        onChange={setSelectedStatuses}
-                      />
-                    </Form.Item>
-                  </Col>
-                ) : null}
-                <Col span={4}>
-                  <Form.Item label="Issue Type">
-                    <Select
-                      mode="multiple"
-                      allowClear={true}
-                      options={issueTypes}
-                      value={selectedIssueTypes}
-                      onChange={setSelectedIssueTypes}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Form>
-          ),
-        },
-      ]}
-    />
+    <ExpandableOptions header={{ title: "Filter Options", options }}>
+      <Form layout="vertical">
+        <Row gutter={[8, 8]}>
+          {showDateSelector ? (
+            <Col span={8}>
+              <Form.Item label="Dates">
+                <DateSelector dates={dates} onChange={setDates} />
+              </Form.Item>
+            </Col>
+          ) : null}
+          <Col span={4}>
+            <Form.Item label="Hierarchy Level">
+              <Select
+                allowClear={true}
+                value={hierarchyLevel}
+                onChange={setHierarchyLevel}
+              >
+                <Select.Option value="Story">Story</Select.Option>
+                <Select.Option value="Epic">Epic</Select.Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          {showResolutionFilter ? (
+            <Col span={4}>
+              <Form.Item label="Resolution">
+                <Select
+                  mode="multiple"
+                  allowClear={true}
+                  options={resolutions}
+                  value={selectedResolutions}
+                  onChange={setSelectedResolutions}
+                />
+              </Form.Item>
+            </Col>
+          ) : null}
+          {showStatusFilter ? (
+            <Col span={4}>
+              <Form.Item label="Status">
+                <Select
+                  mode="multiple"
+                  allowClear={true}
+                  options={statuses}
+                  value={selectedStatuses}
+                  onChange={setSelectedStatuses}
+                />
+              </Form.Item>
+            </Col>
+          ) : null}
+          <Col span={4}>
+            <Form.Item label="Issue Type">
+              <Select
+                mode="multiple"
+                allowClear={true}
+                options={issueTypes}
+                value={selectedIssueTypes}
+                onChange={setSelectedIssueTypes}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
+    </ExpandableOptions>
   );
 };
 
