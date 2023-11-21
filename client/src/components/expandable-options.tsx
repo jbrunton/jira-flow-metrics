@@ -9,11 +9,13 @@ export type ExpandableOptionsHeader = {
 export type ExpandableOptionsProps = {
   header: ExpandableOptionsHeader;
   children: ReactNode;
+  extra?: ReactNode;
 };
 
 export const ExpandableOptions: FC<ExpandableOptionsProps> = ({
   header: { title, options },
   children,
+  extra,
 }) => {
   const [expandedKeys, setExpandedKeys] = useState<string[]>();
   const expanded = !expandedKeys?.length;
@@ -43,6 +45,7 @@ export const ExpandableOptions: FC<ExpandableOptionsProps> = ({
           key: "dataset",
           label: header,
           children,
+          extra,
         },
       ]}
     />

@@ -79,7 +79,8 @@ export const ForecastPage = () => {
   return (
     <>
       <FilterOptionsForm
-        issues={issues ?? []}
+        issues={issues}
+        filteredIssuesCount={filteredIssues.length}
         showDateSelector={true}
         showStatusFilter={false}
         showResolutionFilter={true}

@@ -63,7 +63,8 @@ export const WipPage = () => {
   return (
     <>
       <FilterOptionsForm
-        issues={issues ?? []}
+        issues={issues}
+        filteredIssuesCount={filteredIssues.length}
         showDateSelector={true}
         showStatusFilter={false}
         showResolutionFilter={false}

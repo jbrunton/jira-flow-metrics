@@ -1,7 +1,8 @@
 import { format } from "date-fns";
+import { isNil } from "rambda";
 
 export const formatNumber = (x?: number): string | undefined => {
-  if (x !== undefined) {
+  if (!isNil(x)) {
     return x.toFixed(1);
   }
 };
