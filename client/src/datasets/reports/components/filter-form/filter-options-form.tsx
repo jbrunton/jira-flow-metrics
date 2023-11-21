@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { DateRange, HierarchyLevel, Issue } from "../../../../data/issues";
-import { Col, Form, Row, Select, SelectProps } from "antd";
+import { Col, Form, Row, Select, SelectProps, Tag } from "antd";
 import { RangeType } from "../date-picker";
 import { DateSelector } from "../date-selector";
 import { isNil, map, pipe, reject, uniq } from "rambda";
@@ -21,7 +21,8 @@ export type FilterOptions = {
 };
 
 type FilterOptionsProps = {
-  issues: Issue[];
+  issues?: Issue[];
+  filteredIssuesCount?: number;
 
   showDateSelector: boolean;
   showResolutionFilter: boolean;
@@ -30,6 +31,7 @@ type FilterOptionsProps = {
 
 export const FilterOptionsForm: FC<FilterOptionsProps> = ({
   issues,
+  filteredIssuesCount,
   showDateSelector,
   showResolutionFilter,
   showStatusFilter,
@@ -108,7 +110,12 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
   }
 
   return (
-    <ExpandableOptions header={{ title: "Filter Options", options }}>
+    <ExpandableOptions
+      header={{ title: "Filter Options", options }}
+      extra={
+        filteredIssuesCount ? <Tag>{filteredIssuesCount} issues</Tag> : null
+      }
+    >
       <Form layout="vertical">
         <Row gutter={[8, 8]}>
           {showDateSelector ? (

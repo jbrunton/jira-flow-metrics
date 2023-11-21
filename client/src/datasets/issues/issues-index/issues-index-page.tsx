@@ -71,10 +71,11 @@ export const IssuesIndexPage = () => {
   return (
     <>
       <FilterOptionsForm
+        issues={issues}
+        filteredIssuesCount={filteredIssues.length}
         showDateSelector={false}
         showStatusFilter={true}
         showResolutionFilter={true}
-        issues={issues ?? []}
       />
       <Col span={6}>
         <Form.Item label="Search">

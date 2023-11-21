@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { HierarchyLevel, useDatasetStatuses } from "../../../../data/issues";
-import { Checkbox, Col, Form, Row, Select, SelectProps } from "antd";
+import { Checkbox, Col, Form, Row, Select, SelectProps, Tag } from "antd";
 import { ExpandableOptions } from "../../../../components/expandable-options";
 
 export type DatasetOptions = {
@@ -12,11 +12,13 @@ export type DatasetOptions = {
 type DatasetOptionsProps = {
   datasetId?: string;
   onOptionsChanged: (options: DatasetOptions) => void;
+  issuesCount?: number;
 };
 
 export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
   datasetId,
   onOptionsChanged,
+  issuesCount,
 }) => {
   const [statuses, setStatuses] = useState<SelectProps["options"]>();
   const [fromStatus, setFromStatus] = useState<string>();
@@ -61,6 +63,7 @@ export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
           },
         ],
       }}
+      extra={issuesCount ? <Tag>{issuesCount} issues</Tag> : null}
     >
       <Form layout="vertical">
         <Row gutter={[8, 8]}>
