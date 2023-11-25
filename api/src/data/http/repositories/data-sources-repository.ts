@@ -1,19 +1,16 @@
-import { Version3Client } from "jira.js";
 import { DataSource, DataSourcesRepository } from "@entities/datasets";
-import { Injectable, Scope } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
+import { createJiraClient } from "../client/jira-client";
 
-@Injectable({ scope: Scope.REQUEST })
+@Injectable()
 export class HttpJiraDataSourcesRepository extends DataSourcesRepository {
-  constructor(private readonly client: Version3Client) {
-    super();
-  }
-
-  async getDataSources(query: string): Promise<DataSource[]> {
-    const projectsPage = await this.client.projects.searchProjects({
+  async getDataSources({ domain, query }): Promise<DataSource[]> {
+    const client = createJiraClient(domain);
+    const projectsPage = await client.projects.searchProjects({
       query,
     });
 
-    const filtersPage = await this.client.filters.getFiltersPaginated({
+    const filtersPage = await client.filters.getFiltersPaginated({
       filterName: query,
       expand: "jql",
     });

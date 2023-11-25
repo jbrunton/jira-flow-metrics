@@ -2,8 +2,11 @@ import { generatePath } from "react-router-dom";
 import { NavigationContext } from "./context";
 
 const paths = {
+  domains: {
+    index: "/domains",
+    datasets: "/domains/:domainId/datasets",
+  },
   datasets: {
-    index: "/datasets",
     root: "/datasets/:datasetId",
   },
   issues: {
@@ -18,7 +21,9 @@ const paths = {
   },
 };
 
-export const datasetsIndexPath = () => paths.datasets.index;
+export const datasetsIndexPath = (
+  params: Pick<NavigationContext, "domainId">,
+) => generatePath(paths.domains.datasets, params);
 
 export const datasetRootPath = (params: Pick<NavigationContext, "datasetId">) =>
   generatePath(paths.datasets.root, params);

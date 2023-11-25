@@ -9,10 +9,10 @@ export class LocalIssuesRepository extends IssuesRepository {
     super();
   }
 
-  async getIssues(domainId: string, datasetId: string): Promise<Issue[]> {
+  async getIssues(datasetId: string): Promise<Issue[]> {
     try {
       const issues = await this.cache.getObject<Record<string, Issue>>(
-        issuesPath(domainId, datasetId),
+        issuesPath(datasetId),
       );
       return Object.values(issues);
     } catch (e) {
@@ -23,14 +23,13 @@ export class LocalIssuesRepository extends IssuesRepository {
     }
   }
 
-  async setIssues(domainId: string, datasetId: string, issues: Issue[]) {
-    await this.cache.delete(issuesPath(domainId, datasetId));
+  async setIssues(datasetId: string, issues: Issue[]) {
+    await this.cache.delete(issuesPath(datasetId));
     await this.cache.push(
-      issuesPath(domainId, datasetId),
+      issuesPath(datasetId),
       Object.fromEntries(issues.map((issue) => [issue.key, issue])),
     );
   }
 }
 
-const issuesPath = (domainId: string, datasetId: string) =>
-  `/issues/${domainId}/${datasetId}`;
+const issuesPath = (datasetId: string) => `/datasets/${datasetId}/issues`;

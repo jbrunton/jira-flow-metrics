@@ -3,15 +3,16 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { DatasetsModule } from "./datasets.module";
 import * as request from "supertest";
 import { INestApplication } from "@nestjs/common";
-import { DatasetsRepository } from "@entities/datasets";
-import { DomainsRepository } from "@entities/domains";
 import { StorageModule } from "@data/storage/storage-module";
 import { TestStorageModule } from "@fixtures/data/storage/test-storage-module";
+import { buildIssue } from "@fixtures/factories/issue-factory";
+import { IssuesRepository } from "@entities/issues";
+
+jest.useFakeTimers().setSystemTime(Date.parse("2023-01-01T13:00:00.000Z"));
 
 describe("DatasetsController", () => {
   let app: INestApplication;
-  let datasetsRepository: DatasetsRepository;
-  let domainId: string;
+  let issues: IssuesRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -24,44 +25,72 @@ describe("DatasetsController", () => {
     app = module.createNestApplication();
     await app.init();
 
-    const domainsRepository = await module.get(DomainsRepository);
-    const { id } = await domainsRepository.addDomain({
-      host: "https://my-domain.example.com",
-      email: "me@example.com",
-      token: "my-token",
-    });
-    domainId = id;
-
-    datasetsRepository = await module.get(DatasetsRepository);
+    issues = await module.get(IssuesRepository);
   });
 
-  describe("GET /datasets", () => {
-    it("returns stored datasets", async () => {
-      const dataset = await datasetsRepository.addDataset(domainId, {
-        name: "My Dataset",
-        jql: "proj = MyProject",
+  describe("GET /datasets/:datasetId/issues", () => {
+    it("returns issues in the dataset", async () => {
+      const datasetId = "123";
+
+      await issues.setIssues(datasetId, [
+        buildIssue({
+          transitions: [],
+          created: new Date("2023-01-01T07:00:00.000Z"),
+        }),
+      ]);
+
+      const { body } = await request(app.getHttpServer())
+        .get(`/datasets/${datasetId}/issues`)
+        .expect(200);
+
+      expect(body).toEqual([
+        {
+          created: "2023-01-01T07:00:00.000Z",
+          externalUrl: "https://jira.example.com/browse/TEST-101",
+          hierarchyLevel: "Story",
+          key: "TEST-101",
+          metrics: {},
+          status: "Backlog",
+          statusCategory: "To Do",
+          summary: "Some issue 101",
+          transitions: [
+            {
+              date: "2023-01-01T07:00:00.000Z",
+              fromStatus: {
+                category: "To Do",
+                name: "Created",
+              },
+              timeInStatus: 0.25,
+              toStatus: {
+                category: "To Do",
+                name: "Backlog",
+              },
+            },
+          ],
+        },
+      ]);
+    });
+  });
+
+  describe("GET /datasets/:datasetId/statuses", () => {
+    it("returns statuses for issues in the dataset", async () => {
+      const datasetId = "123";
+
+      await issues.setIssues(datasetId, [
+        buildIssue({
+          transitions: [],
+          created: new Date("2023-01-01T07:00:00.000Z"),
+        }),
+      ]);
+
+      const { body } = await request(app.getHttpServer())
+        .get(`/datasets/${datasetId}/statuses`)
+        .expect(200);
+
+      expect(body).toEqual({
+        Epic: [],
+        Story: ["Created", "Backlog"],
       });
-
-      await request(app.getHttpServer())
-        .get(`/datasets?domainId=${domainId}`)
-        .expect(200, [dataset]);
-    });
-  });
-
-  describe("POST /datasets", () => {
-    it("stores datasets", async () => {
-      const params = {
-        name: "My Dataset",
-        jql: "proj = MyProject",
-      };
-
-      await request(app.getHttpServer())
-        .post(`/datasets?domainId=${domainId}`)
-        .send(params)
-        .expect(201, {
-          id: "0EJs5gv4vHf5",
-          ...params,
-        });
     });
   });
 });

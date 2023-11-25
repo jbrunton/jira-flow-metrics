@@ -92,10 +92,6 @@ export const isCompleted = (issue: Issue): issue is CompletedIssue =>
   issue.metrics.cycleTime !== undefined;
 
 export abstract class IssuesRepository {
-  abstract getIssues(domainId: string, datasetId: string): Promise<Issue[]>;
-  abstract setIssues(
-    domainId: string,
-    datasetId: string,
-    issues: Issue[],
-  ): Promise<void>;
+  abstract getIssues(datasetId: string): Promise<Issue[]>;
+  abstract setIssues(datasetId: string, issues: Issue[]): Promise<void>;
 }

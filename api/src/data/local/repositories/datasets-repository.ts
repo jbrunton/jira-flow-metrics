@@ -17,9 +17,11 @@ export class LocalDatasetsRepository extends DatasetsRepository {
   async getDatasets(domainId: string): Promise<Dataset[]> {
     try {
       const datasets = await this.cache.getObject<Record<string, Dataset>>(
-        datasetsPath(domainId),
+        datasetsPath(),
       );
-      return Object.values(datasets);
+      return Object.values(datasets).filter(
+        (dataset) => dataset.domainId === domainId,
+      );
     } catch (e) {
       if (e instanceof DataError) {
         return [];
@@ -28,37 +30,32 @@ export class LocalDatasetsRepository extends DatasetsRepository {
     }
   }
 
-  getDataset(domainId: string, datasetId: string): Promise<Dataset> {
-    return this.cache.getObject<Dataset>(datasetPath(domainId, datasetId));
+  async getDataset(datasetId: string): Promise<Dataset> {
+    return this.cache.getObject<Dataset>(datasetPath(datasetId));
   }
 
-  async addDataset(
-    domainId: string,
-    params: CreateDatasetParams,
-  ): Promise<Dataset> {
+  async addDataset(params: CreateDatasetParams): Promise<Dataset> {
     const id = createId(params);
     const dataset = { ...params, id };
-    await this.cache.push(datasetPath(domainId, id), dataset);
+    await this.cache.push(datasetPath(id), dataset);
     return dataset;
   }
 
   async updateDataset(
-    domainId: string,
     datasetId: string,
     params: Partial<CreateDatasetParams>,
   ): Promise<Dataset> {
-    const dataset = await this.getDataset(domainId, datasetId);
+    const dataset = await this.getDataset(datasetId);
     Object.assign(dataset, params);
-    await this.cache.push(datasetPath(domainId, datasetId), dataset);
+    await this.cache.push(datasetPath(datasetId), dataset);
     return dataset;
   }
 
-  removeDataset(domainId: string, datasetId: string): Promise<void> {
-    return this.cache.delete(datasetPath(domainId, datasetId));
+  removeDataset(datasetId: string): Promise<void> {
+    return this.cache.delete(datasetPath(datasetId));
   }
 }
 
-const datasetsPath = (domainId: string): string => `/datasets/${domainId}`;
+const datasetsPath = (): string => `/datasets`;
 
-const datasetPath = (domainId: string, datasetId: string): string =>
-  `${datasetsPath(domainId)}/${datasetId}`;
+const datasetPath = (datasetId: string): string => `/datasets/${datasetId}`;

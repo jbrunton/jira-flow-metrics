@@ -1,10 +1,10 @@
 import { Button, Table } from "antd";
-import { useDomains, Domain } from "../data/domains";
+import { useDomains } from "../data/domains";
 import { PlusOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { AddDomainModal } from "./add-domain-modal";
 import { Link } from "react-router-dom";
-import { useDomainContext } from "./context";
+import { datasetsIndexPath } from "../navigation/paths";
 
 export const DomainsIndexPage = () => {
   const { data: domains } = useDomains();
@@ -41,20 +41,15 @@ export const DomainsIndexPage = () => {
           },
           {
             key: "actions",
-            render: (_, domain) => <SelectDomain domain={domain} />,
+            render: (_, domain) => (
+              <Link to={datasetsIndexPath({ domainId: domain.id })}>
+                Explore
+              </Link>
+            ),
           },
         ]}
       />
       <AddDomainModal isOpen={isModalOpen} close={hideModal} />
     </>
-  );
-};
-
-const SelectDomain: React.FC<{ domain: Domain }> = ({ domain }) => {
-  const { setDomainId } = useDomainContext();
-  return (
-    <Link to="/datasets" onClick={() => setDomainId(domain.id)}>
-      Explore
-    </Link>
   );
 };

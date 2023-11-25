@@ -1,6 +1,5 @@
 import { Link, Navigate, Route } from "react-router-dom";
 import { NavigationHandle } from "../navigation/breadcrumbs";
-import { DatasetsIndexPage } from "./index/datasets-index-page";
 import { issueRoutes } from "./issues/issue-routes";
 import { reportRoutes } from "./reports/report-routes";
 import { datasetRootPath } from "../navigation/paths";
@@ -46,7 +45,6 @@ const datasetHandle: NavigationHandle = {
 
 export const datasetRoutes = (
   <Route path="datasets" handle={datasetsHandle}>
-    <Route index element={<DatasetsIndexPage />} />
     <Route
       path=":datasetId"
       handle={datasetHandle}

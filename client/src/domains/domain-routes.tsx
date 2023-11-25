@@ -1,15 +1,10 @@
 import { Route } from "react-router-dom";
-import { NavigationHandle } from "../navigation/breadcrumbs";
 import { DomainsIndexPage } from "./domains-index-page";
-
-const domainsHandle: NavigationHandle = {
-  crumb: () => ({ title: "Domains" }),
-};
+import { DatasetsIndexPage } from "../datasets/index/datasets-index-page";
 
 export const domainRoutes = (
-  <Route
-    path="/domains"
-    element={<DomainsIndexPage />}
-    handle={domainsHandle}
-  />
+  <Route path="domains">
+    <Route index element={<DomainsIndexPage />} />
+    <Route path=":domainId/datasets" element={<DatasetsIndexPage />} index />
+  </Route>
 );

@@ -18,31 +18,39 @@ export type Dataset = {
   };
 };
 
-const datasetsQueryKey = "datasets";
+const datasetsQueryKey = (domainId?: string) => [
+  "domains",
+  domainId,
+  "datasets",
+];
 
 export const invalidateDataSourceQueries = () =>
   client.invalidateQueries([datasetsQueryKey]);
 
-const getDataSources = async (query: string): Promise<DataSource[]> => {
+const getDataSources = async (
+  domainId: string | undefined,
+  query: string,
+): Promise<DataSource[]> => {
   if (query.trim().length === 0) {
     return [];
   }
 
   const response = await axios.get(
-    `/datasets/sources?query=${encodeURI(query)}`,
+    `/domains/${domainId}/sources?query=${encodeURI(query)}`,
   );
   return response.data;
 };
 
-export const useDataSources = (query: string) => {
+export const useDataSources = (domainId: string | undefined, query: string) => {
   return useQuery({
-    queryKey: [datasetsQueryKey, query],
-    queryFn: () => getDataSources(query),
+    queryKey: [...datasetsQueryKey(domainId), query],
+    queryFn: () => getDataSources(domainId, query),
+    enabled: domainId !== undefined,
   });
 };
 
-const getDatasets = async (): Promise<Dataset[]> => {
-  const response = await axios.get(`/datasets`);
+const getDatasets = async (domainId?: string): Promise<Dataset[]> => {
+  const response = await axios.get(`/domains/${domainId}/datasets`);
   return response.data.map((dataset: Dataset) => {
     const lastSync = dataset.lastSync;
     return {
@@ -57,10 +65,11 @@ const getDatasets = async (): Promise<Dataset[]> => {
   });
 };
 
-export const useDatasets = () => {
+export const useDatasets = (domainId?: string) => {
   return useQuery({
-    queryKey: [datasetsQueryKey],
-    queryFn: () => getDatasets(),
+    queryKey: datasetsQueryKey(domainId),
+    queryFn: () => getDatasets(domainId),
+    enabled: domainId !== undefined,
   });
 };
 
@@ -72,8 +81,7 @@ export const useSyncDataset = () => {
   return useMutation({
     mutationFn: syncDataset,
     onSuccess: () => {
-      client.invalidateQueries(["issues"]);
-      client.invalidateQueries([datasetsQueryKey]);
+      client.invalidateQueries();
     },
   });
 };
@@ -86,26 +94,27 @@ export const useRemoveDataset = (datasetId?: string) => {
   return useMutation({
     mutationFn: () => removeDataset(datasetId ?? ""),
     onSuccess: () => {
-      client.invalidateQueries(["issues"]);
-      client.invalidateQueries([datasetsQueryKey]);
+      client.invalidateQueries();
     },
   });
 };
 
-export type CreateDatasetParams = Omit<Dataset, "id"> & {
-  domainId: string;
+export type CreateDatasetParams = {
+  domainId: string | undefined;
+  dataset: Omit<Dataset, "id">;
 };
 
-const createDataset = async (
-  dataset: CreateDatasetParams,
-): Promise<Dataset> => {
-  const response = await axios.post(`/datasets`, dataset);
+const createDataset = async (params: CreateDatasetParams): Promise<Dataset> => {
+  const response = await axios.post(
+    `/domains/${params.domainId}/datasets`,
+    params.dataset,
+  );
   return response.data;
 };
 
 export const useCreateDataset = () => {
   return useMutation({
     mutationFn: createDataset,
-    onSuccess: () => client.invalidateQueries([datasetsQueryKey]),
+    onSuccess: () => client.invalidateQueries(),
   });
 };

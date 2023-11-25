@@ -1,4 +1,4 @@
-import { Empty, Form, Input, Modal, Select, Space, Tag } from "antd";
+import { Empty, Form, Input, Modal, Select, Space, Spin, Tag } from "antd";
 import {
   DataSource,
   useCreateDataset,
@@ -21,7 +21,10 @@ export const AddDatasetModal: React.FC<AddDatasetModalParams> = ({
 
   const [dataSourceQuery, setDataSourceQuery] = useState<string>("");
 
-  const { data: dataSources } = useDataSources(dataSourceQuery);
+  const { data: dataSources, isLoading: isLoadingDataSources } = useDataSources(
+    domainId,
+    dataSourceQuery,
+  );
 
   const [dataSource, setDataSource] = useState<DataSource>();
 
@@ -31,7 +34,7 @@ export const AddDatasetModal: React.FC<AddDatasetModalParams> = ({
     try {
       const values = await form.validateFields();
       createDataset.mutate(
-        { jql: dataSource?.jql, domainId, ...values },
+        { domainId, dataset: { jql: dataSource?.jql, domainId, ...values } },
         {
           onSuccess: () => {
             form.resetFields();
@@ -65,22 +68,24 @@ export const AddDatasetModal: React.FC<AddDatasetModalParams> = ({
     option: { label: string; value: string } | undefined,
   ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
-  const notFoundContent =
-    dataSourceQuery.trim().length > 0 ? (
-      <Empty
-        image={Empty.PRESENTED_IMAGE_SIMPLE}
-        description="No data sources found"
-      />
-    ) : (
-      <Empty
-        image={Empty.PRESENTED_IMAGE_SIMPLE}
-        description="Type to search"
-      />
-    );
+  const notFoundContent = isLoadingDataSources ? (
+    <Empty
+      className="ant-empty-normal"
+      image={<Spin style={{ margin: 0 }} size="large" />}
+      description="Loading"
+    />
+  ) : dataSourceQuery.trim().length > 0 ? (
+    <Empty
+      image={Empty.PRESENTED_IMAGE_SIMPLE}
+      description="No data sources found"
+    />
+  ) : (
+    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Type to search" />
+  );
 
   return (
     <Modal
-      title="Add Domain"
+      title="Add Dataset"
       open={isOpen}
       onOk={onSubmit}
       onCancel={close}
