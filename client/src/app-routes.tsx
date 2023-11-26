@@ -15,7 +15,7 @@ const rootHandle: NavigationHandle = {
       return { title: "Loading" };
     }
 
-    if (path !== "/domains" && domain) {
+    if (domain) {
       const domainOptions = domains.map((domain) => ({
         key: domain.id,
         label: (

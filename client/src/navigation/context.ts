@@ -18,10 +18,12 @@ export const useNavigationContext = (): NavigationContext => {
   const { pathname: path } = useLocation();
   const { datasetId, domainId, issueKey, reportKey } = useParams();
 
-  const { data: domains } = useDomains();
-  const domain = domains?.find((domain) => domain.id === domainId);
-
   const { data: dataset } = useDataset(datasetId);
+
+  const { data: domains } = useDomains();
+  const domain = domains?.find(
+    (domain) => domain.id === (domainId ?? dataset?.domainId),
+  );
 
   const { data: datasets } = useDatasets(domainId ?? dataset?.domainId);
 
