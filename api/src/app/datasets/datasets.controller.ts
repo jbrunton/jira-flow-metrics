@@ -1,4 +1,4 @@
-import { DataSourcesRepository, DatasetsRepository } from "@entities/datasets";
+import { DatasetsRepository } from "@entities/datasets";
 import { HierarchyLevel, Issue, IssuesRepository } from "@entities/issues";
 import { Controller, Delete, Get, Param, Put, Query } from "@nestjs/common";
 import { SyncUseCase } from "@usecases/datasets/sync/sync-use-case";
@@ -9,11 +9,15 @@ import { flatten, isNil, reject, uniq } from "rambda";
 export class DatasetsController {
   constructor(
     private readonly datasets: DatasetsRepository,
-    private readonly dataSources: DataSourcesRepository,
     private readonly issues: IssuesRepository,
     private readonly sync: SyncUseCase,
     private readonly cycleTimes: CycleTimesUseCase,
   ) {}
+
+  @Get(":datasetId")
+  async getDataset(@Param("datasetId") datasetId: string) {
+    return this.datasets.getDataset(datasetId);
+  }
 
   @Delete(":datasetId")
   async removeDataset(@Param("datasetId") datasetId: string) {
