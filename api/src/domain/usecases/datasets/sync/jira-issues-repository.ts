@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { JiraIssueBuilder } from "./issue_builder";
 import { Field, Issue, Status } from "@entities/issues";
+import { Domain } from "@entities/domains";
 
 export type SearchParams = {
   jql: string;
@@ -10,7 +11,7 @@ export type SearchParams = {
 
 @Injectable()
 export abstract class JiraIssuesRepository {
-  abstract getFields(): Promise<Field[]>;
-  abstract getStatuses(): Promise<Status[]>;
-  abstract search(params: SearchParams): Promise<Issue[]>;
+  abstract getFields(domain: Domain): Promise<Field[]>;
+  abstract getStatuses(domain: Domain): Promise<Status[]>;
+  abstract search(domain: Domain, params: SearchParams): Promise<Issue[]>;
 }

@@ -22,6 +22,7 @@ export const buildIssue = (params: IssueParams): Issue => {
     statusCategory: StatusCategory.ToDo,
     transitions: [],
     metrics: {},
+    created: new Date(),
   };
 
   const result = {

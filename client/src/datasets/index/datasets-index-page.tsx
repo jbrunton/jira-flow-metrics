@@ -16,6 +16,7 @@ import { formatDate } from "../../lib/format";
 import { useNavigationContext } from "../../navigation/context";
 
 export const DatasetsIndexPage = () => {
+  const { domainId } = useNavigationContext();
   const [isAddDatasetModalOpen, setIsAddDatasetModalOpen] = useState(false);
   const showAddDatasetModal = () => setIsAddDatasetModalOpen(true);
   const hideAddDatasetModal = () => setIsAddDatasetModalOpen(false);
@@ -124,6 +125,7 @@ export const DatasetsIndexPage = () => {
       <AddDatasetModal
         isOpen={isAddDatasetModalOpen}
         close={hideAddDatasetModal}
+        domainId={domainId}
       />
       <RemoveDatasetModal
         dataset={datasetToRemove}

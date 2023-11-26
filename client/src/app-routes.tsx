@@ -3,9 +3,10 @@ import { NavigationHandle } from "./navigation/breadcrumbs";
 import { domainRoutes } from "./domains/domain-routes";
 import { datasetRoutes } from "./datasets/dataset-routes";
 import { AppLayout } from "./app-layout";
+import { datasetsIndexPath } from "./navigation/paths";
 
 const rootHandle: NavigationHandle = {
-  crumb({ domain, domains, path, setDomainId }) {
+  crumb({ domain, domains, path }) {
     if (path === "/domains") {
       return;
     }
@@ -18,7 +19,9 @@ const rootHandle: NavigationHandle = {
       const domainOptions = domains.map((domain) => ({
         key: domain.id,
         label: (
-          <span onClick={() => setDomainId(domain.id)}>{domain.host}</span>
+          <Link to={datasetsIndexPath({ domainId: domain.id })}>
+            {domain.host}
+          </Link>
         ),
       }));
 

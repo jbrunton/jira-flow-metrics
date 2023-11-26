@@ -1,10 +1,11 @@
-import { Version3Client } from "jira.js";
 import { mapLimit } from "async";
 import { isNil, range, reject } from "rambda";
 import { Injectable } from "@nestjs/common";
 import { Field, Issue, Status, StatusCategory } from "@entities/issues";
 import { JiraIssuesRepository } from "@usecases/datasets/sync/jira-issues-repository";
 import { JiraIssueBuilder } from "@usecases/datasets/sync/issue_builder";
+import { createJiraClient } from "../client/jira-client";
+import { Domain } from "@entities/domains";
 
 export type SearchParams = {
   jql: string;
@@ -14,12 +15,9 @@ export type SearchParams = {
 
 @Injectable()
 export class HttpJiraIssuesRepository extends JiraIssuesRepository {
-  constructor(private readonly client: Version3Client) {
-    super();
-  }
-
-  async getFields(): Promise<Field[]> {
-    const jiraFields = await this.client.issueFields.getFields();
+  async getFields(domain: Domain): Promise<Field[]> {
+    const client = createJiraClient(domain);
+    const jiraFields = await client.issueFields.getFields();
     return reject(isNil)(
       jiraFields.map((field) => {
         if (field.id === undefined) {
@@ -35,8 +33,9 @@ export class HttpJiraIssuesRepository extends JiraIssuesRepository {
     );
   }
 
-  async getStatuses(): Promise<Status[]> {
-    const jiraStatuses = await this.client.workflowStatuses.getStatuses();
+  async getStatuses(domain: Domain): Promise<Status[]> {
+    const client = createJiraClient(domain);
+    const jiraStatuses = await client.workflowStatuses.getStatuses();
     return reject(isNil)(
       jiraStatuses.map((status) => {
         if (status.id === undefined) {
@@ -55,7 +54,9 @@ export class HttpJiraIssuesRepository extends JiraIssuesRepository {
     );
   }
 
-  async search({ jql, onProgress, builder }: SearchParams): Promise<Issue[]> {
+  async search(domain, { jql, onProgress, builder }): Promise<Issue[]> {
+    const client = createJiraClient(domain);
+
     const searchParams = {
       jql,
       expand: ["changelog"],
@@ -65,7 +66,7 @@ export class HttpJiraIssuesRepository extends JiraIssuesRepository {
     onProgress(0, 1);
 
     const firstPage =
-      await this.client.issueSearch.searchForIssuesUsingJqlPost(searchParams);
+      await client.issueSearch.searchForIssuesUsingJqlPost(searchParams);
 
     const maxResults = firstPage.maxResults;
     const total = firstPage.total;
@@ -89,7 +90,7 @@ export class HttpJiraIssuesRepository extends JiraIssuesRepository {
       range(1, pageCount),
       5,
       async (pageIndex: number) => {
-        const page = await this.client.issueSearch.searchForIssuesUsingJqlPost({
+        const page = await client.issueSearch.searchForIssuesUsingJqlPost({
           ...searchParams,
           startAt: pageIndex * maxResults,
         });

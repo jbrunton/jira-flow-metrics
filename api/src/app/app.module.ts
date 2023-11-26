@@ -1,10 +1,11 @@
-import { Module } from "@nestjs/common";
+import { Module, NestModule, RequestMethod } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
 import { DomainsModule } from "./domains/domains.module";
 import { DatasetsModule } from "./datasets/datasets.module";
+import { LoggerMiddleware } from "./middleware/logger";
 
 @Module({
   imports: [
@@ -18,4 +19,10 @@ import { DatasetsModule } from "./datasets/datasets.module";
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes({ path: "*", method: RequestMethod.ALL });
+  }
+}

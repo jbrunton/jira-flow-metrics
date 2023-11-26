@@ -14,23 +14,25 @@ export class SyncUseCase {
     private readonly jiraIssues: JiraIssuesRepository,
   ) {}
 
-  async exec(domainId: string, datasetId: string) {
-    const [domain, dataset, fields, statuses] = await Promise.all([
-      this.domains.getDomain(domainId),
-      this.datasets.getDataset(domainId, datasetId),
-      this.jiraIssues.getFields(),
-      this.jiraIssues.getStatuses(),
+  async exec(datasetId: string) {
+    console.info("sync.exec", datasetId);
+    const dataset = await this.datasets.getDataset(datasetId);
+    const domain = await this.domains.getDomain(dataset.domainId);
+
+    const [fields, statuses] = await Promise.all([
+      this.jiraIssues.getFields(domain),
+      this.jiraIssues.getStatuses(domain),
     ]);
 
     const builder = new JiraIssueBuilder(fields, statuses, domain.host);
-    const issues = await this.jiraIssues.search({
+    const issues = await this.jiraIssues.search(domain, {
       jql: dataset.jql,
       onProgress: () => {},
       builder,
     });
 
-    await this.issues.setIssues(domainId, datasetId, issues);
-    await this.datasets.updateDataset(domainId, datasetId, {
+    await this.issues.setIssues(datasetId, issues);
+    await this.datasets.updateDataset(datasetId, {
       lastSync: {
         date: new Date(),
         issueCount: issues.length,
