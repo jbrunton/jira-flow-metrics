@@ -2,7 +2,7 @@ import { Link, Navigate, Route } from "react-router-dom";
 import { NavigationHandle } from "../navigation/breadcrumbs";
 import { issueRoutes } from "./issues/issue-routes";
 import { reportRoutes } from "./reports/report-routes";
-import { datasetRootPath } from "../navigation/paths";
+import { datasetRootPath, datasetsIndexPath } from "../navigation/paths";
 import { DatasetsLayout } from "./datasets-layout";
 import { DatasetProvider } from "./context/provider";
 
@@ -32,7 +32,14 @@ const datasetHandle: NavigationHandle = {
 
     const genericOptions = [
       { type: "divider" },
-      { key: "datasets", label: <Link to="/datasets">Manage Datasets</Link> },
+      {
+        key: "datasets",
+        label: (
+          <Link to={datasetsIndexPath({ domainId: dataset?.domainId })}>
+            Manage Datasets
+          </Link>
+        ),
+      },
     ];
 
     const items = [...datasetOptions, ...genericOptions];
