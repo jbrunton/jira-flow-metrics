@@ -12,6 +12,7 @@ export type Dataset = {
   id: string;
   name: string;
   jql: string;
+  domainId: string;
   lastSync?: {
     date: Date;
     issueCount: number;
@@ -46,6 +47,29 @@ export const useDataSources = (domainId: string | undefined, query: string) => {
     queryKey: [...datasetsQueryKey(domainId), query],
     queryFn: () => getDataSources(domainId, query),
     enabled: domainId !== undefined,
+  });
+};
+
+const getDataset = async (datasetId?: string): Promise<Dataset> => {
+  const response = await axios.get(`/datasets/${datasetId}`);
+  const dataset = response.data;
+  const lastSync = dataset.lastSync;
+  return {
+    ...dataset,
+    lastSync: lastSync
+      ? {
+          ...lastSync,
+          date: new Date(lastSync.date),
+        }
+      : undefined,
+  };
+};
+
+export const useDataset = (datasetId?: string) => {
+  return useQuery({
+    queryKey: ["datasets", datasetId],
+    queryFn: () => getDataset(datasetId),
+    enabled: datasetId !== undefined,
   });
 };
 
