@@ -30,6 +30,7 @@ export abstract class DatasetsRepository {
     params: UpdateDatasetParams,
   ): Promise<Dataset>;
   abstract removeDataset(datasetId: string): Promise<void>;
+  abstract removeDatasets(domainId: string): Promise<void>;
 }
 
 export type SearchDataSourcesParams = {
