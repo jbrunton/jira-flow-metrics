@@ -108,6 +108,7 @@ export const DatasetsIndexPage = () => {
             ),
           },
           {
+            title: "Actions",
             key: "actions",
             render: (_, dataset) => (
               <Space size="large">

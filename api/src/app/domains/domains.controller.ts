@@ -1,6 +1,6 @@
 import { DataSourcesRepository, DatasetsRepository } from "@entities/datasets";
 import { Domain, DomainsRepository } from "@entities/domains";
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
 import { URL } from "url";
 
@@ -42,6 +42,12 @@ export class DomainsController {
     const host = normaliseHost(params.host);
     const domain = await this.domains.addDomain({ ...params, host });
     return domainToResponse(domain);
+  }
+
+  @Delete(":domainId")
+  async deleteDomain(@Param("domainId") domainId) {
+    await this.datasets.removeDatasets(domainId);
+    await this.domains.removeDomain(domainId);
   }
 
   @Get(":domainId/datasets")

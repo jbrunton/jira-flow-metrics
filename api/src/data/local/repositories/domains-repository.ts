@@ -38,4 +38,8 @@ export class LocalDomainsRepository extends DomainsRepository {
     await this.cache.push(`/domains/${id}`, domain);
     return domain;
   }
+
+  async removeDomain(domainId: string): Promise<void> {
+    await this.cache.delete(`/domains/${domainId}`);
+  }
 }

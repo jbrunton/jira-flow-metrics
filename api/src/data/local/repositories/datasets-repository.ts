@@ -54,6 +54,13 @@ export class LocalDatasetsRepository extends DatasetsRepository {
   removeDataset(datasetId: string): Promise<void> {
     return this.cache.delete(datasetPath(datasetId));
   }
+
+  async removeDatasets(domainId: string): Promise<void> {
+    const datasets = await this.getDatasets(domainId);
+    for (const dataset of datasets) {
+      await this.removeDataset(dataset.id);
+    }
+  }
 }
 
 const datasetsPath = (): string => `/datasets`;

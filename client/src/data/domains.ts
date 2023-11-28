@@ -30,3 +30,16 @@ export const useCreateDomain = () => {
     onSuccess: () => client.invalidateQueries([domainsQueryKey]),
   });
 };
+
+const removeDomain = async (domainId?: string): Promise<void> => {
+  await axios.delete(`/domains/${domainId}`);
+};
+
+export const useRemoveDomain = (domainId?: string) => {
+  return useMutation({
+    mutationFn: () => removeDomain(domainId),
+    onSuccess: () => {
+      client.invalidateQueries();
+    },
+  });
+};
