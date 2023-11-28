@@ -255,23 +255,25 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
 
   const IssueProgress = ({ issue }: { issue: Issue }) => {
     if (!parentEpic) return null;
+
     const parentStarted = parentEpic.metrics.started;
-    const parentCompleted = parentEpic.metrics.completed;
-    if (!parentStarted || !parentCompleted) return null;
+    if (!parentStarted) return null;
+
+    const parentCompleted = parentEpic.metrics.completed ?? new Date();
 
     const issueStarted = issue.metrics.started;
     const issueCompleted = issue.metrics.completed;
 
     if (!issueStarted || !issueCompleted) return null;
 
-    const totalTime = differenceInMinutes(parentCompleted, parentStarted);
+    const totalDuration = differenceInMinutes(parentCompleted, parentStarted);
     const startedTime = differenceInMinutes(issueStarted, parentStarted);
     const completedTime = differenceInMinutes(issueCompleted, parentStarted);
     const progressTime = differenceInMinutes(issueCompleted, issueStarted);
 
-    const startedIndex = (startedTime / totalTime) * 100;
-    const completedIndex = (completedTime / totalTime) * 100;
-    const progressWidth = (progressTime / totalTime) * 100;
+    const startedIndex = (startedTime / totalDuration) * 100;
+    const completedIndex = (completedTime / totalDuration) * 100;
+    const progressWidth = (progressTime / totalDuration) * 100;
 
     return (
       <div

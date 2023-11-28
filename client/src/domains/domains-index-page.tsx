@@ -32,20 +32,19 @@ export const DomainsIndexPage = () => {
       <Table
         dataSource={dataSource}
         columns={[
-          { title: "Host", dataIndex: "host", key: "host" },
+          {
+            title: "Host",
+            key: "host",
+            render: (_, domain) => (
+              <Link to={datasetsIndexPath({ domainId: domain.id })}>
+                {domain.host}
+              </Link>
+            ),
+          },
           {
             title: "Credentials",
             dataIndex: "credentials",
             key: "credentials",
-          },
-          {
-            title: "Data",
-            key: "links",
-            render: (_, domain) => (
-              <Link to={datasetsIndexPath({ domainId: domain.id })}>
-                Datasets
-              </Link>
-            ),
           },
           {
             title: "Actions",
