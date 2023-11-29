@@ -5,7 +5,8 @@ import {
   exampleStatuses,
 } from "../../../../../test/fixtures/example-json";
 
-jest.useFakeTimers().setSystemTime(new Date("2023-09-07T10:30:00.000Z"));
+const now = new Date("2023-09-07T10:30:00.000Z");
+jest.useFakeTimers().setSystemTime(now);
 
 describe("JiraIssueBuilder", () => {
   it("builds the issue and transition history with the given statuses", () => {
@@ -39,6 +40,7 @@ describe("JiraIssueBuilder", () => {
             name: "Backlog",
             category: "To Do",
           },
+          until: new Date("2023-09-04T13:37:24.303Z"),
         },
         {
           timeInStatus: 1.0313310185185185,
@@ -51,6 +53,7 @@ describe("JiraIssueBuilder", () => {
             name: "Ready For Development",
             category: "To Do",
           },
+          until: new Date("2023-09-05T14:22:32.068Z"),
         },
         {
           timeInStatus: 0.7358680555555556,
@@ -63,6 +66,7 @@ describe("JiraIssueBuilder", () => {
             name: "In Progress",
             category: "In Progress",
           },
+          until: new Date("2023-09-06T08:02:11.840Z"),
         },
         {
           timeInStatus: 0.14631944444444445,
@@ -75,6 +79,7 @@ describe("JiraIssueBuilder", () => {
             name: "In Review",
             category: "In Progress",
           },
+          until: new Date("2023-09-06T11:32:54.488Z"),
         },
         {
           timeInStatus: 0.0002662037037037037,
@@ -87,6 +92,7 @@ describe("JiraIssueBuilder", () => {
             name: "In Staging",
             category: "In Progress",
           },
+          until: new Date("2023-09-06T11:33:17.923Z"),
         },
         {
           timeInStatus: 0.9560416666666667,
@@ -99,6 +105,7 @@ describe("JiraIssueBuilder", () => {
             name: "Done",
             category: "Done",
           },
+          until: now,
         },
       ],
       metrics: {},

@@ -1,15 +1,14 @@
-import { Link } from "react-router-dom";
 import { Issue } from "../data/issues";
 import { Checkbox, Space, Table, Tag, Typography } from "antd";
-import { ExportOutlined } from "@ant-design/icons";
 import { formatDate, formatNumber } from "../lib/format";
 import { compareAsc, differenceInMinutes } from "date-fns";
 import { ColumnType, ColumnsType, SortOrder } from "antd/es/table/interface";
 import { useEffect, useState } from "react";
 import { useNavigationContext } from "../navigation/context";
-import { issueDetailsPath } from "../navigation/paths";
 import { isNil } from "rambda";
 import { Percentile } from "../lib/cycle-times";
+import { IssueExternalLink, IssueLink } from "./issue-links";
+import { IssueResolution, IssueStatus } from "./issue-fields";
 
 export type SortState = {
   columnKey: "created" | "started" | "completed" | "cycleTime" | undefined;
@@ -72,12 +71,6 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
     onExcludedIssuesChanged?.(excludedIssueKeys);
   }, [excludedIssueKeys, issues, onExcludedIssuesChanged]);
 
-  const categoryColors = {
-    "To Do": "grey",
-    "In Progress": "blue",
-    Done: "green",
-  };
-
   const configureSort = (column: ColumnType<Issue>): ColumnType<Issue> => {
     const key = column.key as string;
 
@@ -103,23 +96,13 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
   const columns: ColumnsType<Issue> = [
     {
       title: "Key",
-      dataIndex: "key",
       key: "key",
-      render: (issueKey) => (
-        <Link
-          style={{ whiteSpace: "nowrap" }}
-          to={issueDetailsPath({ datasetId, issueKey })}
-        >
-          {issueKey}
-        </Link>
-      ),
+      render: (_, issue) => <IssueLink issue={issue} datasetId={datasetId} />,
     },
     {
       key: "open",
       render: (_, issue) => (
-        <Link to={issue.externalUrl} target="_blank">
-          <ExportOutlined />
-        </Link>
+        <IssueExternalLink externalUrl={issue.externalUrl} />
       ),
     },
     {
@@ -142,21 +125,13 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
     },
     {
       title: "Status",
-      dataIndex: "status",
       key: "status",
-      render: (status, issue) => {
-        return <Tag color={categoryColors[issue.statusCategory]}>{status}</Tag>;
-      },
+      render: (_, issue) => <IssueStatus {...issue} />,
     },
     {
       title: "Resolution",
-      dataIndex: "resolution",
       key: "resolution",
-      render: (resolution) => {
-        return resolution === undefined ? null : (
-          <Tag color="green">{resolution}</Tag>
-        );
-      },
+      render: (_, issue) => <IssueResolution {...issue} />,
     },
     configureSort({
       title: "Created",

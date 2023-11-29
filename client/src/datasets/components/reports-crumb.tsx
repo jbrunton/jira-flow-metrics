@@ -5,12 +5,19 @@ import {
   issuesIndexPath,
   scatterplotPath,
   throughputPath,
+  timeSpentPath,
   wipPath,
 } from "../../navigation/paths";
 
 export const reportsCrumb = (
   datasetId: string | undefined,
-  reportKey: "scatterplot" | "throughput" | "wip" | "forecast" | "issues",
+  reportKey:
+    | "scatterplot"
+    | "throughput"
+    | "wip"
+    | "forecast"
+    | "issues"
+    | "time-spent",
 ): ItemType => {
   const reportOptions = datasetId
     ? [
@@ -29,6 +36,10 @@ export const reportsCrumb = (
         {
           key: "forecast",
           label: <Link to={forecastPath({ datasetId })}>Forecast</Link>,
+        },
+        {
+          key: "time-spent",
+          label: <Link to={timeSpentPath({ datasetId })}>Time Spent</Link>,
         },
       ]
     : [];

@@ -1,12 +1,12 @@
 import React from "react";
-import { Issue, IssueStatus } from "../../../data/issues";
-import { Card, Descriptions, Space, Tag } from "antd";
-import { categoryColors } from "./status-colors";
+import { Issue } from "../../../data/issues";
+import { Card, Descriptions, Space } from "antd";
 import { formatTime } from "../../../lib/format";
 import { issueDetailsPath } from "../../../navigation/paths";
 import { useNavigationContext } from "../../../navigation/context";
 import { Link } from "react-router-dom";
 import { ExportOutlined } from "@ant-design/icons";
+import { IssueResolution, IssueStatus } from "../../../components/issue-fields";
 
 export type IssueDetailsCardProps = {
   issue: Issue;
@@ -16,10 +16,6 @@ export const IssueDetailsCard: React.FC<IssueDetailsCardProps> = ({
   issue,
 }) => {
   const { datasetId } = useNavigationContext();
-  const currentStatus: IssueStatus = {
-    name: issue.status,
-    category: issue.statusCategory,
-  };
   return (
     <Card title="Details" size="small">
       <Descriptions
@@ -43,12 +39,10 @@ export const IssueDetailsCard: React.FC<IssueDetailsCardProps> = ({
           {issue.issueType}
         </Descriptions.Item>
         <Descriptions.Item label="Status">
-          <Tag color={categoryColors[currentStatus.category]}>
-            {currentStatus.name}
-          </Tag>
+          <IssueStatus {...issue} />
         </Descriptions.Item>
         <Descriptions.Item label="Resolution">
-          {issue.resolution}
+          <IssueResolution {...issue} />
         </Descriptions.Item>
         <Descriptions.Item label="Created">
           {formatTime(issue.created)}

@@ -9,6 +9,7 @@ import {
   issuesIndexPath,
   scatterplotPath,
   throughputPath,
+  timeSpentPath,
   wipPath,
 } from "../../navigation/paths";
 import { RemoveDatasetModal } from "./remove-dataset-modal";
@@ -61,6 +62,18 @@ export const DatasetsIndexPage = () => {
         columns={[
           { title: "Name", dataIndex: "name", key: "name" },
           {
+            title: "Issues",
+            key: "issues",
+            render: (_, dataset) => (
+              <Link to={issuesIndexPath({ datasetId: dataset.id })}>
+                Issues{" "}
+                {dataset.lastSync ? (
+                  <span>({dataset.lastSync.issueCount})</span>
+                ) : null}
+              </Link>
+            ),
+          },
+          {
             title: "Reports",
             key: "reports",
             render: (_, dataset) => (
@@ -75,11 +88,8 @@ export const DatasetsIndexPage = () => {
                 <Link to={forecastPath({ datasetId: dataset.id })}>
                   Forecast
                 </Link>
-                <Link to={issuesIndexPath({ datasetId: dataset.id })}>
-                  Issues{" "}
-                  {dataset.lastSync ? (
-                    <span>({dataset.lastSync.issueCount})</span>
-                  ) : null}
+                <Link to={timeSpentPath({ datasetId: dataset.id })}>
+                  Time Spent
                 </Link>
               </Space>
             ),

@@ -5,6 +5,7 @@ import { client } from "./client.ts";
 import { ConfigProvider } from "antd";
 import App from "./app.tsx";
 import { FilterProvider } from "./filter/context/provider.tsx";
+import "./main.css";
 
 import {
   Chart as ChartJS,

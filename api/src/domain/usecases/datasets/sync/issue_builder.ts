@@ -10,7 +10,7 @@ import {
 } from "@entities/issues";
 import { compareAsc, differenceInSeconds } from "date-fns";
 
-export type TransitionContext = Omit<Transition, "timeInStatus">;
+export type TransitionContext = Omit<Transition, "timeInStatus" | "until">;
 
 const secondsInDay = 60 * 60 * 24;
 
@@ -184,8 +184,9 @@ export const buildTransitions = (
       const timeInStatus =
         differenceInSeconds(nextTransitionDate, transition.date) / secondsInDay;
       return {
-        timeInStatus,
         ...transition,
+        timeInStatus,
+        until: nextTransitionDate,
       };
     },
   );

@@ -15,7 +15,6 @@ export class SyncUseCase {
   ) {}
 
   async exec(datasetId: string) {
-    console.info("sync.exec", datasetId);
     const dataset = await this.datasets.getDataset(datasetId);
     const domain = await this.domains.getDomain(dataset.domainId);
 
