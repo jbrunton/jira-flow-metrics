@@ -5,11 +5,7 @@ import { NavigationContext } from "../navigation/context";
 
 export const domainRoutes = (
   <Route path="domains">
-    <Route
-      index
-      element={<DomainsIndexPage />}
-      handle={{ title: "Jira domains" }}
-    />
+    <Route index element={<DomainsIndexPage />} handle={{ title: "Domains" }} />
     <Route
       path=":domainId/datasets"
       element={<DatasetsIndexPage />}
