@@ -123,6 +123,7 @@ export const TimeSpentPage = () => {
         size="small"
         dataSource={result}
         defaultExpandedRowKeys={["epics", "unassigned"]}
+        indentSize={0}
       />
     </>
   );
