@@ -20,7 +20,6 @@ export const DomainsIndexPage = () => {
 
   return (
     <>
-      <h1>Jira domains</h1>
       <Button
         type="primary"
         icon={<PlusOutlined />}

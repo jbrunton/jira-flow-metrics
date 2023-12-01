@@ -10,7 +10,7 @@ export const issueRoutes = (
     handle={{
       crumb: ({ datasetId }: NavigationContext) =>
         reportsCrumb(datasetId, "issues"),
-      title: () => "Issues",
+      title: ({ dataset }: NavigationContext) => ["Issues", dataset?.name],
     }}
   >
     <Route index element={<IssuesIndexPage />} />
@@ -19,7 +19,10 @@ export const issueRoutes = (
       element={<IssueDetailsPage />}
       handle={{
         crumb: ({ issueKey }: NavigationContext) => ({ title: issueKey }),
-        title: ({ issueKey }: NavigationContext) => issueKey,
+        title: ({ dataset, issueKey }: NavigationContext) => [
+          issueKey,
+          dataset?.name,
+        ],
       }}
     />
   </Route>

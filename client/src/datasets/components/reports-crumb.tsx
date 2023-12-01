@@ -23,22 +23,27 @@ export const reportsCrumb = (
     ? [
         {
           key: "scatterplot",
+          title: "Scatterplot",
           label: <Link to={scatterplotPath({ datasetId })}>Scatterplot</Link>,
         },
         {
           key: "throughput",
+          title: "Throughput",
           label: <Link to={throughputPath({ datasetId })}>Throughput</Link>,
         },
         {
           key: "wip",
+          title: "WIP",
           label: <Link to={wipPath({ datasetId })}>WIP</Link>,
         },
         {
           key: "forecast",
+          title: "Forecast",
           label: <Link to={forecastPath({ datasetId })}>Forecast</Link>,
         },
         {
           key: "time-spent",
+          title: "Time Spent",
           label: <Link to={timeSpentPath({ datasetId })}>Time Spent</Link>,
         },
       ]
@@ -48,6 +53,7 @@ export const reportsCrumb = (
         { type: "divider" },
         {
           key: "issues",
+          title: "Issues",
           label: <Link to={issuesIndexPath({ datasetId })}>Issues</Link>,
         },
       ]
@@ -58,7 +64,7 @@ export const reportsCrumb = (
   const currentReport = items.find((report) => report.key === reportKey);
 
   return {
-    title: currentReport?.label,
+    title: currentReport?.title,
     menu: { items, selectedKeys: [reportKey] },
   };
 };
