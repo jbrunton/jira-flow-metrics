@@ -31,6 +31,7 @@ export type Issue = {
   created: Date;
   transitions: {
     date: Date;
+    until: Date;
     fromStatus: IssueStatus;
     toStatus: IssueStatus;
     timeInStatus: number;
@@ -80,6 +81,7 @@ const getIssues = async (
         ? issue.transitions.map((transition) => ({
             ...transition,
             date: new Date(transition.date),
+            until: new Date(transition.until),
           }))
         : undefined,
     };
@@ -111,6 +113,11 @@ export const useIssues = (
 
 export type DateRange = null | [Date, Date];
 
+export enum DateFilterType {
+  Completed,
+  Intersects,
+}
+
 export type IssueFilter = {
   hierarchyLevel?: HierarchyLevel;
   resolutions?: string[];
@@ -119,6 +126,7 @@ export type IssueFilter = {
   toStatus?: string;
   issueTypes?: string[];
   dates?: DateRange;
+  dateFilterType?: DateFilterType;
 };
 
 export const filterIssues = (issues: Issue[], filter: IssueFilter): Issue[] => {
@@ -148,16 +156,39 @@ export const filterIssues = (issues: Issue[], filter: IssueFilter): Issue[] => {
     }
 
     if (filter.dates) {
-      if (!issue.metrics.completed) {
-        return false;
-      }
+      if (
+        filter.dateFilterType === undefined ||
+        filter.dateFilterType === DateFilterType.Completed
+      ) {
+        if (!issue.metrics.completed) {
+          return false;
+        }
 
-      if (filter.dates[0] && issue.metrics.completed < filter.dates[0]) {
-        return false;
-      }
+        if (filter.dates[0] && issue.metrics.completed < filter.dates[0]) {
+          return false;
+        }
 
-      if (filter.dates[1] && issue.metrics.completed > filter.dates[1]) {
-        return false;
+        if (filter.dates[1] && issue.metrics.completed > filter.dates[1]) {
+          return false;
+        }
+      } else {
+        if (!issue.metrics.started) {
+          return false;
+        }
+
+        if (filter.dates[1] && issue.metrics.started > filter.dates[1]) {
+          return false;
+        }
+
+        if (
+          filter.dates[0] &&
+          issue.metrics.completed &&
+          issue.metrics.completed < filter.dates[0]
+        ) {
+          return false;
+        }
+
+        return true;
       }
     }
 

@@ -32,14 +32,11 @@ export type TransitionStatus = {
 
 export type Transition = {
   date: Date;
+  until: Date;
   fromStatus: TransitionStatus;
   toStatus: TransitionStatus;
   timeInStatus: number;
 };
-
-// export type SerializedTransition = Omit<Transition, "date"> & {
-//   date: string;
-// };
 
 export type JiraProject = {
   name: string;

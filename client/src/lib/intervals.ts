@@ -8,6 +8,8 @@ import {
   endOfDay,
   endOfMonth,
   endOfWeek,
+  max,
+  min,
   startOfDay,
   startOfMonth,
   startOfWeek,
@@ -59,6 +61,24 @@ export const getOverlappingInterval = (
 ): Interval => {
   const start = startOf(interval.start, unit);
   const end = overlappingEndOf(interval.end, start, unit);
+  return { start, end };
+};
+
+export const getOverlap = (
+  interval1: Interval,
+  interval2: Interval,
+): Interval | undefined => {
+  if (interval1.end < interval2.start) {
+    return undefined;
+  }
+
+  if (interval2.end < interval1.start) {
+    return undefined;
+  }
+
+  const start: Date = max([interval1.start, interval2.start]);
+  const end: Date = min([interval1.end, interval2.end]);
+
   return { start, end };
 };
 

@@ -5,6 +5,7 @@ import { ThroughputPage } from "./throughput/throughput-page";
 import { WipPage } from "./wip/wip-page";
 import { ForecastPage } from "./forecast/forecast-page";
 import { reportsCrumb } from "../components/reports-crumb";
+import { TimeSpentPage } from "./time-spent/time-spent-page";
 
 export const reportRoutes = (
   <Route path="reports">
@@ -45,6 +46,16 @@ export const reportRoutes = (
         crumb: ({ dataset }: NavigationContext) =>
           reportsCrumb(dataset?.id, "forecast"),
         title: ({ dataset }: NavigationContext) => `${dataset?.name} Forecast`,
+      }}
+    />
+    <Route
+      path="time-spent"
+      element={<TimeSpentPage />}
+      handle={{
+        crumb: ({ dataset }: NavigationContext) =>
+          reportsCrumb(dataset?.id, "time-spent"),
+        title: ({ dataset }: NavigationContext) =>
+          `${dataset?.name} Time Spent`,
       }}
     />
     <Route index element={<Navigate to="scatterplot" />} />

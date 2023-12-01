@@ -1,0 +1,21 @@
+.category-header {
+  font-weight: bold;
+  background-color: #eee;
+}
+
+.category-header td {
+  border-bottom-color: #ddd !important;
+}
+
+.epic-header {
+  background-color: #fafafa;
+  border-bottom-color: #eee;
+}
+
+.epic-header td {
+  border-bottom-color: #eee !important;
+}
+
+.story-header td {
+  border-bottom-color: #fafafa !important;
+}

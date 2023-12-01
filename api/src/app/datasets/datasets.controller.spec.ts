@@ -65,6 +65,7 @@ describe("DatasetsController", () => {
                 category: "To Do",
                 name: "Backlog",
               },
+              until: "2023-01-01T13:00:00.000Z",
             },
           ],
         },
