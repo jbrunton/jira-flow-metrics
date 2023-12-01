@@ -1,5 +1,6 @@
 import { RouteObject, useMatches } from "react-router-dom";
 import { useNavigationContext } from "./context";
+import { useEffect } from "react";
 
 export const Title = () => {
   const matches: RouteObject[] = useMatches();
@@ -7,10 +8,22 @@ export const Title = () => {
 
   const titles = matches
     .filter((match) => match.handle?.title)
-    .map((match) => match.handle.title(navigationContext))
+    .map((match) =>
+      typeof match.handle.title === "function"
+        ? match.handle.title(navigationContext)
+        : match.handle.title,
+    )
     .reverse();
 
-  if (titles.length) {
-    return <h1>{titles[0]}</h1>;
+  const title = titles[0];
+
+  useEffect(() => {
+    if (title) {
+      document.title = Array.isArray(title) ? title.join(" | ") : title;
+    }
+  }, [title]);
+
+  if (title) {
+    return <h1>{Array.isArray(title) ? title[0] : title}</h1>;
   }
 };

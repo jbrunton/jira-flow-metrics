@@ -15,8 +15,10 @@ export const reportRoutes = (
       handle={{
         crumb: ({ dataset }: NavigationContext) =>
           reportsCrumb(dataset?.id, "scatterplot"),
-        title: ({ dataset }: NavigationContext) =>
-          `${dataset?.name} Scatterplot`,
+        title: ({ dataset }: NavigationContext) => [
+          "Scatterplot",
+          dataset?.name,
+        ],
       }}
     />
     <Route
@@ -25,8 +27,10 @@ export const reportRoutes = (
       handle={{
         crumb: ({ dataset }: NavigationContext) =>
           reportsCrumb(dataset?.id, "throughput"),
-        title: ({ dataset }: NavigationContext) =>
-          `${dataset?.name} Throughput`,
+        title: ({ dataset }: NavigationContext) => [
+          "Throughput",
+          dataset?.name,
+        ],
       }}
     />
     <Route
@@ -35,8 +39,7 @@ export const reportRoutes = (
       handle={{
         crumb: ({ dataset }: NavigationContext) =>
           reportsCrumb(dataset?.id, "wip"),
-        title: ({ dataset }: NavigationContext) =>
-          `${dataset?.name} Throughput`,
+        title: ({ dataset }: NavigationContext) => ["WIP", dataset?.name],
       }}
     />
     <Route
@@ -45,7 +48,7 @@ export const reportRoutes = (
       handle={{
         crumb: ({ dataset }: NavigationContext) =>
           reportsCrumb(dataset?.id, "forecast"),
-        title: ({ dataset }: NavigationContext) => `${dataset?.name} Forecast`,
+        title: ({ dataset }: NavigationContext) => ["Forecast", dataset?.name],
       }}
     />
     <Route
@@ -54,8 +57,10 @@ export const reportRoutes = (
       handle={{
         crumb: ({ dataset }: NavigationContext) =>
           reportsCrumb(dataset?.id, "time-spent"),
-        title: ({ dataset }: NavigationContext) =>
-          `${dataset?.name} Time Spent`,
+        title: ({ dataset }: NavigationContext) => [
+          "Time Spent",
+          dataset?.name,
+        ],
       }}
     />
     <Route index element={<Navigate to="scatterplot" />} />
