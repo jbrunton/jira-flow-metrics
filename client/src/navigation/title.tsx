@@ -19,7 +19,8 @@ export const Title = () => {
 
   useEffect(() => {
     if (title) {
-      document.title = Array.isArray(title) ? title.join(" | ") : title;
+      const pageTitle = Array.isArray(title) ? title.join(" | ") : title;
+      document.title = `${pageTitle} | Jira Flow Metrics`;
     }
   }, [title]);
 
