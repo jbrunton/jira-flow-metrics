@@ -40,7 +40,7 @@ const startOf = (date: Date, unit: TimeUnit): Date => {
   }
 };
 
-const overlappingEndOf = (date: Date, start: Date, unit: TimeUnit): Date => {
+const endOf = (date: Date, start: Date, unit: TimeUnit): Date => {
   switch (unit) {
     case TimeUnit.Day:
       return endOfDay(date);
@@ -60,11 +60,11 @@ export const getOverlappingInterval = (
   unit: TimeUnit,
 ): Interval => {
   const start = startOf(interval.start, unit);
-  const end = overlappingEndOf(interval.end, start, unit);
+  const end = endOf(interval.end, start, unit);
   return { start, end };
 };
 
-export const getOverlap = (
+export const getIntersectingInterval = (
   interval1: Interval,
   interval2: Interval,
 ): Interval | undefined => {

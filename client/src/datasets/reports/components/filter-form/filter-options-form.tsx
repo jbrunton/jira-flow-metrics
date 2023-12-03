@@ -4,13 +4,13 @@ import { Col, Form, Row, Select, SelectProps, Tag } from "antd";
 import { RangeType } from "../date-picker";
 import { DateSelector } from "../date-selector";
 import { isNil, map, pipe, reject, uniq } from "rambda";
-import { formatDate } from "../../../../lib/format";
 import { useFilterContext } from "../../../../filter/context";
 import { defaultDateRange } from "../../../../lib/intervals";
 import {
   ExpandableOptions,
   ExpandableOptionsHeader,
 } from "../../../../components/expandable-options";
+import { formatDate } from "../../../../lib/format";
 
 export type FilterOptions = {
   hierarchyLevel?: HierarchyLevel;

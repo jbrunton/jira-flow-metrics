@@ -1,6 +1,6 @@
 import { isNil, pipe, reject, sortBy, sum } from "rambda";
 import { HierarchyLevel, Issue } from "../data/issues";
-import { Interval, getOverlap } from "./intervals";
+import { Interval, getIntersectingInterval } from "./intervals";
 import { differenceInSeconds } from "date-fns";
 
 export type TimeSpentRow = Pick<Issue, "key" | "summary"> &
@@ -30,7 +30,7 @@ export const timeSpentInPeriod = (
         const overlaps = reject(isNil)(
           issue.transitions.map((transition) =>
             transition.toStatus.category === "In Progress"
-              ? getOverlap(period, {
+              ? getIntersectingInterval(period, {
                   start: transition.date,
                   end: transition.until,
                 })
