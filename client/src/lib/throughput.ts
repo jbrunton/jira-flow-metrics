@@ -1,13 +1,7 @@
 import { range } from "rambda";
 import { quantileSeq } from "mathjs";
 import { CompletedIssue } from "../data/issues";
-import {
-  Interval,
-  TimeUnit,
-  addTime,
-  difference,
-  getOverlappingInterval,
-} from "./intervals";
+import { Interval, TimeUnit, addTime, difference } from "./intervals";
 
 export type CalculateThroughputParams = {
   issues: CompletedIssue[];
@@ -35,17 +29,16 @@ export type ThroughputResult = {
 
 export const calculateThroughput = ({
   issues,
-  interval,
+  interval: { start, end },
   timeUnit,
 }: CalculateThroughputParams): ThroughputResult => {
-  const { start, end } = getOverlappingInterval(interval, timeUnit);
-
-  const intervals = range(0, difference(end, start, timeUnit) + 1).map(
-    (index) => ({
-      start: addTime(start, index, timeUnit),
-      end: addTime(start, index + 1, timeUnit),
-    }),
-  );
+  const intervals = range(
+    0,
+    Math.floor(difference(end, start, timeUnit)) + 1,
+  ).map((index) => ({
+    start: addTime(start, index, timeUnit),
+    end: addTime(start, index + 1, timeUnit),
+  }));
 
   const data = intervals.map(({ start, end }) => {
     const intervalIssues = issues.filter(

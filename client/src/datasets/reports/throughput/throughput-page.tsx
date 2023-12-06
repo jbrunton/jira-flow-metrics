@@ -4,7 +4,11 @@ import {
   Issue,
   filterCompletedIssues,
 } from "../../../data/issues";
-import { Interval, TimeUnit } from "../../../lib/intervals";
+import {
+  Interval,
+  TimeUnit,
+  getOverlappingInterval,
+} from "../../../lib/intervals";
 import { ThroughputChart } from "./components/throughput-chart";
 import { Col, Form, Row, Select } from "antd";
 import { ThroughputResult, calculateThroughput } from "../../../lib/throughput";
@@ -16,30 +20,34 @@ import { useDatasetContext } from "../../context";
 
 export const ThroughputPage = () => {
   const { issues } = useDatasetContext();
-
   const { filter } = useFilterContext();
 
   const [timeUnit, setTimeUnit] = useState<TimeUnit>(TimeUnit.Day);
-
   const [filteredIssues, setFilteredIssues] = useState<CompletedIssue[]>([]);
-
   const [selectedIssues, setSelectedIssues] = useState<Issue[]>([]);
-
-  useEffect(() => {
-    if (filter && issues) {
-      const filteredIssues = filterCompletedIssues(issues, filter);
-      setFilteredIssues(filteredIssues);
-    }
-  }, [issues, filter, setFilteredIssues]);
-
   const [throughputResult, setThroughputResult] = useState<ThroughputResult>();
 
   useEffect(() => {
-    if (!filter || !filter.dates || !filter.dates[0] || !filter.dates[1]) {
+    if (
+      !filter ||
+      !filter.dates ||
+      !filter.dates[0] ||
+      !filter.dates[1] ||
+      !issues
+    ) {
       return;
     }
 
-    const interval: Interval = { start: filter.dates[0], end: filter.dates[1] };
+    const interval: Interval = getOverlappingInterval(
+      { start: filter.dates[0], end: filter.dates[1] },
+      timeUnit,
+    );
+
+    const filteredIssues = filterCompletedIssues(issues, {
+      ...filter,
+      dates: [interval.start, interval.end],
+    });
+    setFilteredIssues(filteredIssues);
 
     setThroughputResult(
       calculateThroughput({
@@ -48,7 +56,7 @@ export const ThroughputPage = () => {
         timeUnit,
       }),
     );
-  }, [filter, timeUnit, filteredIssues]);
+  }, [filter, timeUnit, issues]);
 
   return (
     <>
