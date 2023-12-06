@@ -9,6 +9,7 @@ import { isNil } from "rambda";
 import { Percentile } from "../lib/cycle-times";
 import { IssueExternalLink, IssueLink } from "./issue-links";
 import { IssueResolution, IssueStatus } from "./issue-fields";
+import { IssueParentLink } from "./issue-parent-link";
 
 export type SortState = {
   columnKey: "created" | "started" | "completed" | "cycleTime" | undefined;
@@ -271,6 +272,15 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       render: (_, issue) => {
         return <IssueProgress issue={issue} />;
       },
+    });
+  } else {
+    columns.splice(6, 0, {
+      title: "Parent",
+      key: "parent",
+      render: (_, issue) =>
+        issue.parent ? (
+          <IssueParentLink parent={issue.parent} datasetId={datasetId} />
+        ) : null,
     });
   }
 
