@@ -7,6 +7,7 @@ import { useNavigationContext } from "../../../navigation/context";
 import { Link } from "react-router-dom";
 import { ExportOutlined } from "@ant-design/icons";
 import { IssueResolution, IssueStatus } from "../../../components/issue-fields";
+import { IssueParentLink } from "../../../components/issue-parent-link";
 
 export type IssueDetailsCardProps = {
   issue: Issue;
@@ -49,14 +50,7 @@ export const IssueDetailsCard: React.FC<IssueDetailsCardProps> = ({
         </Descriptions.Item>
         {issue.parent ? (
           <Descriptions.Item label="Parent">
-            <Space direction="horizontal">
-              <Link
-                to={issueDetailsPath({ datasetId, issueKey: issue.parentKey })}
-              >
-                {issue.parentKey}
-              </Link>
-              {issue.parent.summary}
-            </Space>
+            <IssueParentLink parent={issue.parent} datasetId={datasetId} />
           </Descriptions.Item>
         ) : null}
       </Descriptions>
