@@ -13,7 +13,7 @@ import {
   wipPath,
 } from "../../navigation/paths";
 import { RemoveDatasetModal } from "./remove-dataset-modal";
-import { formatDate } from "../../../lib/format";
+import { formatDate } from "@lib/format";
 import { useNavigationContext } from "../../navigation/context";
 
 export const DatasetsIndexPage = () => {

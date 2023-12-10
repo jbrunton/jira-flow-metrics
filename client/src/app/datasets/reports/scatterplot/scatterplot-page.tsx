@@ -7,7 +7,7 @@ import { useFilterContext } from "../../../filter/context";
 import {
   Percentile,
   getCycleTimePercentiles,
-} from "../../../../lib/cycle-times";
+} from "@usecases/scatterplot/cycle-times";
 import { FilterOptionsForm } from "../components/filter-form/filter-options-form";
 import { useDatasetContext } from "../../context";
 import { Checkbox, Col, Row } from "antd";

@@ -3,7 +3,7 @@ import { Breadcrumbs } from "./navigation/breadcrumbs";
 import { Col, Layout, Row, Typography } from "antd";
 import { Title } from "./navigation/title";
 import { useNavigationContext } from "./navigation/context";
-import { formatDate } from "../lib/format";
+import { formatDate } from "@lib/format";
 
 const FooterContent = () => {
   const { dataset } = useNavigationContext();

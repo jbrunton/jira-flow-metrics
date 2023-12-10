@@ -1,6 +1,6 @@
 import { isNil, pipe, reject, sortBy, sum } from "rambda";
 import { HierarchyLevel, Issue } from "@entities/issues";
-import { Interval, getIntersectingInterval } from "./intervals";
+import { Interval, getIntersectingInterval } from "../../../lib/intervals";
 import { differenceInSeconds } from "date-fns";
 
 export type TimeSpentRow = Pick<Issue, "key" | "summary"> &

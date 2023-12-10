@@ -4,12 +4,12 @@ import { Col, Form, Row, Select, SelectProps, Space, Tag } from "antd";
 import { DateSelector } from "../date-selector";
 import { flatten, isNil, map, pipe, reject, uniq } from "rambda";
 import { useFilterContext } from "../../../../filter/context";
-import { Interval, defaultDateRange } from "../../../../../lib/intervals";
+import { Interval, defaultDateRange } from "@lib/intervals";
 import {
   ExpandableOptions,
   ExpandableOptionsHeader,
 } from "../../../../components/expandable-options";
-import { formatDate } from "../../../../../lib/format";
+import { formatDate } from "@lib/format";
 import { LabelFilterType } from "@data/issues";
 
 export type FilterOptions = {

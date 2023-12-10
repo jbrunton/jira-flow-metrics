@@ -5,7 +5,10 @@ import { FilterOptionsForm } from "../components/filter-form/filter-options-form
 import { useDatasetContext } from "../../context";
 import { Table } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { TimeSpentRow, timeSpentInPeriod } from "../../../../lib/time-spent";
+import {
+  TimeSpentRow,
+  timeSpentInPeriod,
+} from "@usecases/time-spent/time-spent";
 import { IssueExternalLink, IssueLink } from "../../../components/issue-links";
 import { useNavigationContext } from "../../../navigation/context";
 import { IssueResolution, IssueStatus } from "../../../components/issue-fields";

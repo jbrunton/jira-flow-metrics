@@ -3,8 +3,8 @@ import { Line } from "react-chartjs-2";
 import { ChartOptions } from "chart.js";
 import { AnnotationOptions } from "chartjs-plugin-annotation";
 import "chartjs-adapter-date-fns";
-import { ThroughputResult } from "../../../../../lib/throughput";
-import { TimeUnit } from "../../../../../lib/intervals";
+import { ThroughputResult } from "@usecases/throughput/throughput";
+import { TimeUnit } from "@lib/intervals";
 import { Issue } from "@entities/issues";
 
 type ThroughputChartProps = {

@@ -3,12 +3,12 @@ import { CompletedIssue, Issue } from "@entities/issues";
 import { ChartOptions } from "chart.js";
 import { Scatter } from "react-chartjs-2";
 import "chartjs-adapter-date-fns";
-import { formatDate } from "../../../../../lib/format";
+import { formatDate } from "@lib/format";
 import { compareAsc, startOfDay } from "date-fns";
 import { sort, uniqBy } from "rambda";
 import { AnnotationOptions } from "chartjs-plugin-annotation";
-import { Percentile } from "../../../../../lib/cycle-times";
-import { Interval } from "../../../../../lib/intervals";
+import { Percentile } from "@usecases/scatterplot/cycle-times";
+import { Interval } from "@lib/intervals";
 
 type ScatterplotProps = {
   issues: CompletedIssue[];
