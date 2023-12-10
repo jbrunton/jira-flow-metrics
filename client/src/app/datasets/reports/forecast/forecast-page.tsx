@@ -1,13 +1,6 @@
 import { useEffect, useState } from "react";
 import { CompletedIssue } from "@entities/issues";
 import { useFilterContext } from "../../../filter/context";
-import {
-  SummaryRow,
-  measure,
-  run,
-  summarize,
-} from "../../../../lib/simulation/run";
-import { newGenerator } from "../../../../lib/simulation/select";
 import { ForecastChart } from "./components/forecast-chart";
 import {
   Button,
@@ -26,6 +19,7 @@ import { ExpandableOptions } from "../../../components/expandable-options";
 import { useDatasetContext } from "../../context";
 import { formatDate } from "../../../../lib/format";
 import { filterCompletedIssues } from "@data/issues";
+import { SummaryRow, forecast } from "@usecases/forecast/forecast";
 
 export const ForecastPage = () => {
   const { issues } = useDatasetContext();
@@ -56,17 +50,16 @@ export const ForecastPage = () => {
 
   useEffect(() => {
     if (!filteredIssues || filteredIssues.length === 0) return;
-    const measurements = measure(filteredIssues, excludeOutliers);
-    const runs = run(
+    const result = forecast({
+      selectedIssues: filteredIssues,
       issueCount,
-      measurements,
-      10000,
       startDate,
+      includeLongTail,
       excludeLeadTimes,
-      newGenerator(seed),
-    );
-    const results = summarize(runs, startDate, includeLongTail);
-    setSummary(results);
+      excludeOutliers,
+      seed,
+    });
+    setSummary(result);
   }, [
     filteredIssues,
     issueCount,
