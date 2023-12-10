@@ -42,12 +42,13 @@ export class JiraIssueBuilder {
       "status",
       "resolution",
       "created",
+      "labels",
       this.epicLinkFieldId,
       this.parentFieldId,
     ];
   }
 
-  build(json: Version3Models.Issue) {
+  build(json: Version3Models.Issue): Issue {
     const key = json.key;
     const status = json.fields.status.name;
     const statusCategory = json.fields.status.statusCategory
@@ -57,6 +58,7 @@ export class JiraIssueBuilder {
     const created = new Date(json.fields.created);
     const hierarchyLevel =
       issueType === "Epic" ? HierarchyLevel.Epic : HierarchyLevel.Story;
+    const labels = json.fields.labels;
 
     if (!statusCategory) {
       throw new Error(`Status category for issue ${json.key} is undefined`);
@@ -84,6 +86,7 @@ export class JiraIssueBuilder {
       created,
       parentKey: epicKey ?? parentKey,
       transitions,
+      labels,
       metrics: {},
     };
     return issue;

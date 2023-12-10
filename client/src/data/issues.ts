@@ -36,6 +36,7 @@ export type Issue = {
     toStatus: IssueStatus;
     timeInStatus: number;
   }[];
+  labels: string[];
   metrics: IssueFlowMetrics;
   sortIndex?: number;
 };

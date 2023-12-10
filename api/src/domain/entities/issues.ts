@@ -70,6 +70,7 @@ export type Issue = {
   parentKey?: string;
   created?: Date;
   transitions: Transition[];
+  labels: string[];
   metrics: IssueFlowMetrics;
 };
 
