@@ -45,6 +45,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               Layout: {
                 headerBg: "#FFF",
                 bodyBg: "#FFF",
+                footerBg: "#FFF",
               },
             },
           }}
