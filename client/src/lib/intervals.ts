@@ -112,9 +112,9 @@ export const difference = (
   }
 };
 
-export const defaultDateRange = (): [Date, Date] => {
+export const defaultDateRange = (): Interval => {
   const today = new Date();
   const defaultStart = startOfDay(subDays(today, 30));
   const defaultEnd = endOfDay(today);
-  return [defaultStart, defaultEnd];
+  return { start: defaultStart, end: defaultEnd };
 };

@@ -101,10 +101,7 @@ export const TimeSpentPage = () => {
   ];
 
   const result = filter.dates
-    ? timeSpentInPeriod(filteredIssues, {
-        start: filter.dates[0],
-        end: filter.dates[1],
-      })
+    ? timeSpentInPeriod(filteredIssues, filter.dates)
     : [];
 
   return (

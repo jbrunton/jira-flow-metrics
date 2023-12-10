@@ -1,16 +1,14 @@
 import { FC, useEffect, useState } from "react";
 import {
-  DateRange,
   HierarchyLevel,
   Issue,
   LabelFilterType,
 } from "../../../../data/issues";
 import { Col, Form, Row, Select, SelectProps, Space, Tag } from "antd";
-import { RangeType } from "../date-picker";
 import { DateSelector } from "../date-selector";
 import { flatten, isNil, map, pipe, reject, uniq } from "rambda";
 import { useFilterContext } from "../../../../filter/context";
-import { defaultDateRange } from "../../../../lib/intervals";
+import { Interval, defaultDateRange } from "../../../../lib/intervals";
 import {
   ExpandableOptions,
   ExpandableOptionsHeader,
@@ -19,7 +17,7 @@ import { formatDate } from "../../../../lib/format";
 
 export type FilterOptions = {
   hierarchyLevel?: HierarchyLevel;
-  dates?: DateRange;
+  dates?: Interval;
   resolutions?: string[];
   statuses?: string[];
   issueTypes?: string[];
@@ -82,8 +80,10 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
     LabelFilterType.Include,
   );
 
-  const [dates, setDates] = useState<RangeType>(() => {
-    return showDateSelector ? initialFilter.dates ?? defaultDateRange() : null;
+  const [dates, setDates] = useState<Interval | undefined>(() => {
+    return showDateSelector
+      ? initialFilter.dates ?? defaultDateRange()
+      : undefined;
   });
 
   useEffect(() => {
@@ -111,7 +111,7 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
   if (dates) {
     options.push({
       label: "Dates",
-      value: `${formatDate(dates[0])}-${formatDate(dates[1])}`,
+      value: `${formatDate(dates.start)}-${formatDate(dates.end)}`,
     });
   }
   options.push({ label: "Hierarchy level", value: hierarchyLevel });

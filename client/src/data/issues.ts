@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { intersection } from "rambda";
+import { Interval } from "../lib/intervals";
 
 export enum HierarchyLevel {
   Story = "Story",
@@ -113,8 +114,6 @@ export const useIssues = (
   });
 };
 
-export type DateRange = null | [Date, Date];
-
 export enum DateFilterType {
   Completed,
   Intersects,
@@ -134,7 +133,7 @@ export type IssueFilter = {
   issueTypes?: string[];
   labels?: string[];
   labelFilterType?: LabelFilterType;
-  dates?: DateRange;
+  dates?: Interval;
   dateFilterType?: DateFilterType;
 };
 
@@ -182,11 +181,11 @@ export const filterIssues = (issues: Issue[], filter: IssueFilter): Issue[] => {
           return false;
         }
 
-        if (filter.dates[0] && issue.metrics.completed < filter.dates[0]) {
+        if (issue.metrics.completed < filter.dates.start) {
           return false;
         }
 
-        if (filter.dates[1] && issue.metrics.completed > filter.dates[1]) {
+        if (issue.metrics.completed > filter.dates.end) {
           return false;
         }
       } else {
@@ -194,14 +193,13 @@ export const filterIssues = (issues: Issue[], filter: IssueFilter): Issue[] => {
           return false;
         }
 
-        if (filter.dates[1] && issue.metrics.started > filter.dates[1]) {
+        if (issue.metrics.started > filter.dates.end) {
           return false;
         }
 
         if (
-          filter.dates[0] &&
           issue.metrics.completed &&
-          issue.metrics.completed < filter.dates[0]
+          issue.metrics.completed < filter.dates.start
         ) {
           return false;
         }
