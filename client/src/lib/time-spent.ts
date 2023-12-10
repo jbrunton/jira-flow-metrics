@@ -1,5 +1,5 @@
 import { isNil, pipe, reject, sortBy, sum } from "rambda";
-import { HierarchyLevel, Issue } from "../data/issues";
+import { HierarchyLevel, Issue } from "@entities/issues";
 import { Interval, getIntersectingInterval } from "./intervals";
 import { differenceInSeconds } from "date-fns";
 

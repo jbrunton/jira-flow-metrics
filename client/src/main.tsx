@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { client } from "./client.ts";
+import { client } from "./app/client.ts";
 import { ConfigProvider } from "antd";
-import App from "./app.tsx";
-import { FilterProvider } from "./filter/context/provider.tsx";
+import App from "./app/app.tsx";
+import { FilterProvider } from "./app/filter/context/provider.tsx";
 import "./main.css";
 
 import {

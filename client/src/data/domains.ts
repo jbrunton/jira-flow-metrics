@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { client } from "../client";
+import { client } from "../app/client";
 
 export type Domain = {
   id: string;

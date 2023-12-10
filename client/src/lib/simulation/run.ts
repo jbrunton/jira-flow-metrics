@@ -1,6 +1,6 @@
 import { groupBy, times } from "rambda";
 import { RandomGenerator, selectValue } from "./select";
-import { CompletedIssue } from "../../data/issues";
+import { CompletedIssue } from "@entities/issues";
 import {
   addDays,
   compareAsc,
