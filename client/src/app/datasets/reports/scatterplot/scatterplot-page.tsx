@@ -1,8 +1,4 @@
-import {
-  CompletedIssue,
-  Issue,
-  filterCompletedIssues,
-} from "../../../../data/issues";
+import { CompletedIssue, Issue } from "@entities/issues";
 import { Scatterplot } from "./components/scatterplot";
 import { useEffect, useState } from "react";
 import { IssueDetailsDrawer } from "./components/issue-details-drawer";
@@ -16,6 +12,7 @@ import { FilterOptionsForm } from "../components/filter-form/filter-options-form
 import { useDatasetContext } from "../../context";
 import { Checkbox, Col, Row } from "antd";
 import { ExpandableOptions } from "../../../components/expandable-options";
+import { filterCompletedIssues } from "@data/issues";
 
 export const ScatterplotPage = () => {
   const { issues } = useDatasetContext();

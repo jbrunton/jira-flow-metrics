@@ -3,7 +3,7 @@ import { Button, Space, Table } from "antd";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AddDatasetModal } from "./add-dataset-modal";
-import { Dataset, useSyncDataset } from "../../../data/datasets";
+import { Dataset, useSyncDataset } from "@data/datasets";
 import {
   forecastPath,
   issuesIndexPath,

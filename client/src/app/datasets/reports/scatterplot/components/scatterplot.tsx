@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { CompletedIssue, Issue } from "../../../../../data/issues";
+import { CompletedIssue, Issue } from "@entities/issues";
 import { ChartOptions } from "chart.js";
 import { Scatter } from "react-chartjs-2";
 import "chartjs-adapter-date-fns";

@@ -1,6 +1,6 @@
 import { Modal, Typography } from "antd";
 import { useEffect } from "react";
-import { Domain, useRemoveDomain } from "../../data/domains";
+import { Domain, useRemoveDomain } from "@data/domains";
 
 export type RemoveDomainModalParams = {
   isOpen: boolean;

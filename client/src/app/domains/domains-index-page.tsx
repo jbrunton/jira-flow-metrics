@@ -1,5 +1,5 @@
 import { Button, Table } from "antd";
-import { Domain, useDomains } from "../../data/domains";
+import { Domain, useDomains } from "@data/domains";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { AddDomainModal } from "./add-domain-modal";

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigationContext } from "../../navigation/context";
 import { DatasetContext, DatasetContextType } from "./context";
 import { DatasetOptions } from "../reports/components/filter-form/dataset-options-form";
-import { useIssues } from "../../../data/issues";
+import { useIssues } from "@data/issues";
 
 export const DatasetProvider: React.FC<{ children: React.ReactNode }> = ({
   children,

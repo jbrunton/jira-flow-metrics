@@ -1,5 +1,5 @@
 import { range } from "rambda";
-import { Issue } from "../data/issues";
+import { Issue } from "@entities/issues";
 import { addDays, differenceInDays } from "date-fns";
 import { Interval } from "./intervals";
 

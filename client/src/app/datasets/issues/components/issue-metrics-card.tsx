@@ -1,5 +1,5 @@
 import { Card, Descriptions } from "antd";
-import { Issue } from "../../../../data/issues";
+import { Issue } from "@entities/issues";
 import { formatNumber, formatTime } from "../../../../lib/format";
 
 export type IssueMetricsCardProps = {

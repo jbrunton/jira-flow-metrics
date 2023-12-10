@@ -1,5 +1,5 @@
 import { Modal, Typography } from "antd";
-import { Dataset, useRemoveDataset } from "../../../data/datasets";
+import { Dataset, useRemoveDataset } from "@data/datasets";
 import { useEffect } from "react";
 
 export type RemoveDatasetModalParams = {

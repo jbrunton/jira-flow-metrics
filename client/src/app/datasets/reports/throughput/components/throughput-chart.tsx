@@ -5,7 +5,7 @@ import { AnnotationOptions } from "chartjs-plugin-annotation";
 import "chartjs-adapter-date-fns";
 import { ThroughputResult } from "../../../../../lib/throughput";
 import { TimeUnit } from "../../../../../lib/intervals";
-import { Issue } from "../../../../../data/issues";
+import { Issue } from "@entities/issues";
 
 type ThroughputChartProps = {
   result: ThroughputResult;

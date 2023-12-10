@@ -1,4 +1,4 @@
-import { DateFilterType, Issue, filterIssues } from "../../../../data/issues";
+import { Issue } from "@entities/issues";
 import { useEffect, useState } from "react";
 import { useFilterContext } from "../../../filter/context";
 import { FilterOptionsForm } from "../components/filter-form/filter-options-form";
@@ -9,6 +9,7 @@ import { TimeSpentRow, timeSpentInPeriod } from "../../../../lib/time-spent";
 import { IssueExternalLink, IssueLink } from "../../../components/issue-links";
 import { useNavigationContext } from "../../../navigation/context";
 import { IssueResolution, IssueStatus } from "../../../components/issue-fields";
+import { DateFilterType, filterIssues } from "@data/issues";
 
 export const TimeSpentPage = () => {
   const { datasetId } = useNavigationContext();

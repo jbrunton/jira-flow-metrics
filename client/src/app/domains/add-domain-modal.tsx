@@ -1,5 +1,5 @@
 import { Form, Input, Modal } from "antd";
-import { useCreateDomain } from "../../data/domains";
+import { useCreateDomain } from "@data/domains";
 import { useEffect } from "react";
 
 export type AddDomainModalParams = {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CompletedIssue, filterCompletedIssues } from "../../../../data/issues";
+import { CompletedIssue } from "@entities/issues";
 import { useFilterContext } from "../../../filter/context";
 import {
   SummaryRow,
@@ -25,6 +25,7 @@ import { FilterOptionsForm } from "../components/filter-form/filter-options-form
 import { ExpandableOptions } from "../../../components/expandable-options";
 import { useDatasetContext } from "../../context";
 import { formatDate } from "../../../../lib/format";
+import { filterCompletedIssues } from "@data/issues";
 
 export const ForecastPage = () => {
   const { issues } = useDatasetContext();

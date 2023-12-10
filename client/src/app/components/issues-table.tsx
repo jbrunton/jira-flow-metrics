@@ -1,4 +1,4 @@
-import { Issue } from "../../data/issues";
+import { Issue } from "@entities/issues";
 import { Checkbox, Space, Table, Tag, Typography } from "antd";
 import { formatDate, formatNumber } from "../../lib/format";
 import { compareAsc, differenceInMinutes } from "date-fns";

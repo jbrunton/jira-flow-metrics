@@ -1,5 +1,5 @@
 import React from "react";
-import { Issue } from "../../../../data/issues";
+import { Issue } from "@entities/issues";
 import { Card, Descriptions, Space, Tag } from "antd";
 import { formatTime } from "../../../../lib/format";
 import { issueDetailsPath } from "../../../navigation/paths";

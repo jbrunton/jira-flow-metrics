@@ -3,7 +3,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import { configureDefaults } from "../data/config";
+import { configureDefaults } from "@data/config";
 import { appRoutes } from "./app-routes";
 
 const App = () => {

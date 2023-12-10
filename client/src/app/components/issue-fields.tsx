@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Issue } from "../../data/issues";
+import { Issue } from "@entities/issues";
 import { Tag } from "antd";
 import { categoryColors } from "./category-colors";
 

@@ -1,5 +1,5 @@
+import { IssueFilter } from "@data/issues";
 import { createContext } from "react";
-import { IssueFilter } from "../../../data/issues";
 
 export type FilterContextType = {
   filter: IssueFilter;

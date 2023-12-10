@@ -1,6 +1,6 @@
 import { Card, Timeline, Tooltip } from "antd";
 import { formatNumber, formatTime } from "../../../../lib/format";
-import { Issue } from "../../../../data/issues";
+import { Issue } from "@entities/issues";
 import { categoryColors } from "../../../components/category-colors";
 
 export type IssueTransitionsCardProps = {

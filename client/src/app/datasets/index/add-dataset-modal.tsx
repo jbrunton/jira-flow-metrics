@@ -1,9 +1,5 @@
 import { Empty, Form, Input, Modal, Select, Space, Spin, Tag } from "antd";
-import {
-  DataSource,
-  useCreateDataset,
-  useDataSources,
-} from "../../../data/datasets";
+import { DataSource, useCreateDataset, useDataSources } from "@data/datasets";
 import { useEffect, useState } from "react";
 
 export type AddDatasetModalParams = {

@@ -1,9 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import {
-  HierarchyLevel,
-  Issue,
-  LabelFilterType,
-} from "../../../../../data/issues";
+import { HierarchyLevel, Issue } from "@entities/issues";
 import { Col, Form, Row, Select, SelectProps, Space, Tag } from "antd";
 import { DateSelector } from "../date-selector";
 import { flatten, isNil, map, pipe, reject, uniq } from "rambda";
@@ -14,6 +10,7 @@ import {
   ExpandableOptionsHeader,
 } from "../../../../components/expandable-options";
 import { formatDate } from "../../../../../lib/format";
+import { LabelFilterType } from "@data/issues";
 
 export type FilterOptions = {
   hierarchyLevel?: HierarchyLevel;

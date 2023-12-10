@@ -1,6 +1,6 @@
 import { Tag } from "antd";
 import { Link } from "react-router-dom";
-import { Issue } from "../../data/issues";
+import { Issue } from "@entities/issues";
 import { FC } from "react";
 import { issueDetailsPath } from "../navigation/paths";
 

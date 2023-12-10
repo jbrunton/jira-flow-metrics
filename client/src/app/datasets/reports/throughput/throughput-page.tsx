@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  CompletedIssue,
-  Issue,
-  filterCompletedIssues,
-} from "../../../../data/issues";
+import { CompletedIssue, Issue } from "@entities/issues";
 import {
   Interval,
   TimeUnit,
@@ -20,6 +16,7 @@ import { useFilterContext } from "../../../filter/context";
 import { ExpandableOptions } from "../../../components/expandable-options";
 import { FilterOptionsForm } from "../components/filter-form/filter-options-form";
 import { useDatasetContext } from "../../context";
+import { filterCompletedIssues } from "@data/issues";
 
 export const ThroughputPage = () => {
   const { issues } = useDatasetContext();

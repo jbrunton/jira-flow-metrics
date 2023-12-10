@@ -1,7 +1,8 @@
 import { FC, useEffect, useState } from "react";
-import { HierarchyLevel, useDatasetStatuses } from "../../../../../data/issues";
+import { HierarchyLevel } from "@entities/issues";
 import { Checkbox, Col, Form, Row, Select, SelectProps, Tag } from "antd";
 import { ExpandableOptions } from "../../../../components/expandable-options";
+import { useDatasetStatuses } from "@data/issues";
 
 export type DatasetOptions = {
   fromStatus?: string;

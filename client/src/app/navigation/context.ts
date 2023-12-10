@@ -1,6 +1,6 @@
 import { useLocation, useParams } from "react-router-dom";
-import { Dataset, useDataset, useDatasets } from "../../data/datasets";
-import { Domain, useDomains } from "../../data/domains";
+import { Dataset, useDataset, useDatasets } from "@data/datasets";
+import { Domain, useDomains } from "@data/domains";
 
 export type NavigationContext = {
   path: string;

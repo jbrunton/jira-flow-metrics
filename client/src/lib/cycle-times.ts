@@ -1,5 +1,5 @@
 import { quantileSeq } from "mathjs";
-import { CompletedIssue } from "../data/issues";
+import { CompletedIssue } from "@entities/issues";
 
 export type Percentile = {
   percentile: number;

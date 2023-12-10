@@ -1,4 +1,4 @@
-import { CompletedIssue, HierarchyLevel, Issue } from "../../src/data/issues";
+import { CompletedIssue, HierarchyLevel, Issue } from "@entities/issues";
 
 let issueCount = 100;
 

@@ -1,7 +1,7 @@
 import { Route } from "react-router-dom";
 import { DomainsIndexPage } from "./domains-index-page";
-import { DatasetsIndexPage } from "../datasets/index/datasets-index-page";
 import { NavigationContext } from "../navigation/context";
+import { DatasetsIndexPage } from "@app/datasets/index/datasets-index-page";
 
 export const domainRoutes = (
   <Route path="domains">
