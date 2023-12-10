@@ -21,6 +21,7 @@ export const buildIssue = (params: IssueParams): Issue => {
     status: "Backlog",
     statusCategory: StatusCategory.ToDo,
     transitions: [],
+    labels: [],
     metrics: {},
     created: new Date(),
   };

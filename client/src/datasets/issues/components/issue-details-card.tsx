@@ -1,6 +1,6 @@
 import React from "react";
 import { Issue } from "../../../data/issues";
-import { Card, Descriptions, Space } from "antd";
+import { Card, Descriptions, Space, Tag } from "antd";
 import { formatTime } from "../../../lib/format";
 import { issueDetailsPath } from "../../../navigation/paths";
 import { useNavigationContext } from "../../../navigation/context";
@@ -53,6 +53,13 @@ export const IssueDetailsCard: React.FC<IssueDetailsCardProps> = ({
             <IssueParentLink parent={issue.parent} datasetId={datasetId} />
           </Descriptions.Item>
         ) : null}
+        <Descriptions.Item label="Labels">
+          <Space>
+            {issue.labels.map((label) => (
+              <Tag key={`label-${label}`}>{label}</Tag>
+            ))}
+          </Space>
+        </Descriptions.Item>
       </Descriptions>
     </Card>
   );
