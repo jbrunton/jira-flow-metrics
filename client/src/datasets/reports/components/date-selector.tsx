@@ -1,6 +1,6 @@
 import { CalendarOutlined, DownOutlined } from "@ant-design/icons";
 import { Button, Dropdown, Form, Space } from "antd";
-import { DatePicker, RangeType } from "./date-picker";
+import { DatePicker } from "./date-picker";
 import {
   addDays,
   addMonths,
@@ -11,10 +11,11 @@ import {
   subDays,
 } from "date-fns";
 import { useState } from "react";
+import { Interval } from "../../../lib/intervals";
 
 export type DateSelectorProps = {
-  dates: RangeType;
-  onChange: (dates: RangeType) => void;
+  dates?: Interval;
+  onChange: (dates: Interval) => void;
 };
 
 export const DateSelector: React.FC<DateSelectorProps> = ({
@@ -30,7 +31,7 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
             items,
             onClick: (info) => {
               const range = ranges[info.key];
-              onChange(range);
+              onChange({ start: range[0], end: range[1] });
             },
           }}
         >
@@ -44,12 +45,12 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
           suffixIcon={false}
           style={{ width: "100%" }}
           allowClear={false}
-          value={dates}
+          value={dates ? [dates.start, dates.end] : undefined}
           onChange={(range) => {
             if (range) {
               const [start, end] = range;
               if (start && end) {
-                onChange([start, endOfDay(end)]);
+                onChange({ start, end: endOfDay(end) });
               }
             }
           }}

@@ -28,24 +28,15 @@ export const ThroughputPage = () => {
   const [throughputResult, setThroughputResult] = useState<ThroughputResult>();
 
   useEffect(() => {
-    if (
-      !filter ||
-      !filter.dates ||
-      !filter.dates[0] ||
-      !filter.dates[1] ||
-      !issues
-    ) {
+    if (!filter?.dates || !issues) {
       return;
     }
 
-    const interval: Interval = getOverlappingInterval(
-      { start: filter.dates[0], end: filter.dates[1] },
-      timeUnit,
-    );
+    const interval: Interval = getOverlappingInterval(filter.dates, timeUnit);
 
     const filteredIssues = filterCompletedIssues(issues, {
       ...filter,
-      dates: [interval.start, interval.end],
+      dates: interval,
     });
     setFilteredIssues(filteredIssues);
 

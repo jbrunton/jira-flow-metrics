@@ -4,5 +4,3 @@ import dateFnsGenerateConfig from "rc-picker/lib/generate/dateFns";
 export const DatePicker = AntDatePicker.generatePicker<Date>(
   dateFnsGenerateConfig,
 );
-
-export type RangeType = [Date, Date] | null;

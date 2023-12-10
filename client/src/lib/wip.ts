@@ -1,10 +1,11 @@
 import { range } from "rambda";
-import { DateRange, Issue } from "../data/issues";
+import { Issue } from "../data/issues";
 import { addDays, differenceInDays } from "date-fns";
+import { Interval } from "./intervals";
 
 export type CalculateWipParams = {
   issues: Issue[];
-  range: DateRange;
+  range: Interval;
 };
 
 export type WipResult = {
@@ -21,8 +22,8 @@ export const calculateWip = ({
     return [];
   }
 
-  const dates = range(0, differenceInDays(dateRange[1], dateRange[0])).map(
-    (index) => addDays(dateRange[0], index),
+  const dates = range(0, differenceInDays(dateRange.end, dateRange.start)).map(
+    (index) => addDays(dateRange.start, index),
   );
 
   const result: WipResult = dates.map((date) => {

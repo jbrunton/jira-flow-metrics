@@ -3,17 +3,17 @@ import { CompletedIssue, Issue } from "../../../../data/issues";
 import { ChartOptions } from "chart.js";
 import { Scatter } from "react-chartjs-2";
 import "chartjs-adapter-date-fns";
-import { RangeType } from "../../components/date-picker";
 import { formatDate } from "../../../../lib/format";
 import { compareAsc, startOfDay } from "date-fns";
 import { sort, uniqBy } from "rambda";
 import { AnnotationOptions } from "chartjs-plugin-annotation";
 import { Percentile } from "../../../../lib/cycle-times";
+import { Interval } from "../../../../lib/intervals";
 
 type ScatterplotProps = {
   issues: CompletedIssue[];
   percentiles?: Percentile[];
-  range: RangeType;
+  range: Interval;
   showPercentileLabels: boolean;
   setSelectedIssues: (issues: Issue[]) => void;
 };
@@ -78,8 +78,8 @@ export const Scatterplot = ({
       )
     : undefined;
 
-  const minDate = range?.[0]?.toISOString();
-  const maxDate = range?.[1]?.toISOString();
+  const minDate = range.start.toISOString();
+  const maxDate = range.end.toISOString();
 
   const options: ChartOptions<"scatter"> = {
     onClick,

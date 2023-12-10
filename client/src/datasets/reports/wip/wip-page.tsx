@@ -48,7 +48,7 @@ export const WipPage = () => {
   const [wipResult, setWipResult] = useState<WipResult>();
 
   useEffect(() => {
-    if (!filter || !filter.dates || !filter.dates[0] || !filter.dates[1]) {
+    if (!filter?.dates) {
       return;
     }
 

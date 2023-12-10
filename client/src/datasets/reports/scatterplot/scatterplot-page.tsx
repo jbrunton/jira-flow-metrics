@@ -70,15 +70,17 @@ export const ScatterplotPage = () => {
         </Row>
       </ExpandableOptions>
 
-      <Scatterplot
-        issues={filteredIssues.filter(
-          (issue) => !excludedIssues.includes(issue.key),
-        )}
-        percentiles={percentiles}
-        range={filter?.dates ?? null}
-        setSelectedIssues={setSelectedIssues}
-        showPercentileLabels={showPercentileLabels}
-      />
+      {filter.dates ? (
+        <Scatterplot
+          issues={filteredIssues.filter(
+            (issue) => !excludedIssues.includes(issue.key),
+          )}
+          percentiles={percentiles}
+          range={filter.dates}
+          setSelectedIssues={setSelectedIssues}
+          showPercentileLabels={showPercentileLabels}
+        />
+      ) : null}
       <IssuesTable
         issues={filteredIssues}
         onExcludedIssuesChanged={setExcludedIssues}
