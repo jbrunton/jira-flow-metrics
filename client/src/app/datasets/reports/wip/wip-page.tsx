@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Issue } from "@entities/issues";
 import { IssuesTable } from "../../../components/issues-table";
 import { useFilterContext } from "../../../filter/context";
-import { WipResult, calculateWip } from "../../../../lib/wip";
+import { WipResult, calculateWip } from "@usecases/wip/wip";
 import { WipChart } from "./components/wip-chart";
 import { omit } from "rambda";
 import { Checkbox, Col, Row } from "antd";

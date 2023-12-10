@@ -1,7 +1,7 @@
 import { range } from "rambda";
 import { Issue } from "@entities/issues";
 import { addDays, differenceInDays } from "date-fns";
-import { Interval } from "./intervals";
+import { Interval } from "../../../lib/intervals";
 
 export type CalculateWipParams = {
   issues: Issue[];

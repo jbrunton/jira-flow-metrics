@@ -24,19 +24,19 @@ module.exports = {
         rules: [
           {
             from: "entities",
-            allow: ["entities"],
+            allow: ["entities", "lib"],
           },
           {
             from: "usecases",
-            allow: ["entities", "usecases"],
+            allow: ["entities", "lib", "usecases"],
           },
           {
             from: "data",
-            allow: ["entities", "usecases", "data"],
+            allow: ["entities", "lib", "usecases", "data"],
           },
           {
             from: "app",
-            allow: ["entities", "usecases", "data", "app"],
+            allow: ["entities", "lib", "usecases", "data", "app"],
           },
           {
             from: "main",
@@ -54,12 +54,16 @@ module.exports = {
     },
     "boundaries/elements": [
       {
+        type: "lib",
+        pattern: "src/lib",
+      },
+      {
         type: "entities",
         pattern: "src/domain/entities",
       },
       {
         type: "usecases",
-        pattern: ["src/domain/usecases", "src/lib"],
+        pattern: ["src/domain/usecases"],
       },
       {
         type: "data",

@@ -12,6 +12,7 @@ export default defineConfig({
       "@data": path.resolve(__dirname, "src/data"),
       "@entities": path.resolve(__dirname, "src/domain/entities"),
       "@usecases": path.resolve(__dirname, "src/domain/usecases"),
+      "@lib": path.resolve(__dirname, "src/lib"),
     },
   },
   test: {

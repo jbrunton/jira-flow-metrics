@@ -1,12 +1,12 @@
 import { Issue } from "@entities/issues";
 import { Checkbox, Space, Table, Tag, Typography } from "antd";
-import { formatDate, formatNumber } from "../../lib/format";
+import { formatDate, formatNumber } from "@lib/format";
 import { compareAsc, differenceInMinutes } from "date-fns";
 import { ColumnType, ColumnsType, SortOrder } from "antd/es/table/interface";
 import { useEffect, useState } from "react";
 import { useNavigationContext } from "../navigation/context";
 import { isNil } from "rambda";
-import { Percentile } from "../../lib/cycle-times";
+import { Percentile } from "@usecases/scatterplot/cycle-times";
 import { IssueExternalLink, IssueLink } from "./issue-links";
 import { IssueResolution, IssueStatus } from "./issue-fields";
 import { IssueParentLink } from "./issue-parent-link";

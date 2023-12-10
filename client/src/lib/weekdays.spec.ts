@@ -1,4 +1,4 @@
-import { categorizeWeekday } from "@usecases/common/weekdays";
+import { categorizeWeekday } from "@lib/weekdays";
 import { describe, expect, it } from "vitest";
 
 describe("categorizeWeekday", () => {

@@ -3,7 +3,7 @@ import { Line } from "react-chartjs-2";
 import { ChartOptions } from "chart.js";
 import "chartjs-adapter-date-fns";
 import { Issue } from "@entities/issues";
-import { WipResult } from "../../../../../lib/wip";
+import { WipResult } from "@usecases/wip/wip";
 
 type WipChartProps = {
   result: WipResult;

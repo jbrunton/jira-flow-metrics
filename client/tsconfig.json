@@ -25,7 +25,8 @@
       "@app/*": ["src/app/*"],
       "@data/*": ["src/data/*"],
       "@entities/*": ["src/domain/entities/*"],
-      "@usecases/*": ["src/domain/usecases/*"]
+      "@usecases/*": ["src/domain/usecases/*"],
+      "@lib/*": ["src/lib/*"]
     }
   },
   "include": ["src", "test"],

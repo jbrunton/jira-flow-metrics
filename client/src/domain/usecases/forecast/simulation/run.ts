@@ -1,6 +1,6 @@
 import { times } from "rambda";
 import { RandomGenerator, selectValue } from "./select";
-import { categorizeWeekday } from "@usecases/common/weekdays";
+import { categorizeWeekday } from "@lib/weekdays";
 
 export type InputMeasurements = {
   cycleTimes: number[];

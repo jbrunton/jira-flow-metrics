@@ -1,16 +1,12 @@
 import { useEffect, useState } from "react";
 import { CompletedIssue, Issue } from "@entities/issues";
-import {
-  Interval,
-  TimeUnit,
-  getOverlappingInterval,
-} from "../../../../lib/intervals";
+import { Interval, TimeUnit, getOverlappingInterval } from "@lib/intervals";
 import { ThroughputChart } from "./components/throughput-chart";
 import { Col, Form, Row, Select } from "antd";
 import {
   ThroughputResult,
   calculateThroughput,
-} from "../../../../lib/throughput";
+} from "@usecases/throughput/throughput";
 import { IssuesTable } from "../../../components/issues-table";
 import { useFilterContext } from "../../../filter/context";
 import { ExpandableOptions } from "../../../components/expandable-options";

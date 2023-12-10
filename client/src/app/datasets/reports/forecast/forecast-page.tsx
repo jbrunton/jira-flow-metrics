@@ -17,7 +17,7 @@ import { RedoOutlined } from "@ant-design/icons";
 import { FilterOptionsForm } from "../components/filter-form/filter-options-form";
 import { ExpandableOptions } from "../../../components/expandable-options";
 import { useDatasetContext } from "../../context";
-import { formatDate } from "../../../../lib/format";
+import { formatDate } from "@lib/format";
 import { filterCompletedIssues } from "@data/issues";
 import { SummaryRow, forecast } from "@usecases/forecast/forecast";
 

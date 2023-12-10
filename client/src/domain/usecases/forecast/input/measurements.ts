@@ -1,8 +1,8 @@
 import { CompletedIssue } from "@entities/issues";
 import { eachDayOfInterval, endOfDay, getISODay, startOfDay } from "date-fns";
 import { InputMeasurements } from "../simulation/run";
-import { excludeOutliersFromSeq } from "../../../../lib/outliers";
-import { categorizeWeekday } from "@usecases/common/weekdays";
+import { excludeOutliersFromSeq } from "@lib/outliers";
+import { categorizeWeekday } from "@lib/weekdays";
 
 export const computeThroughput = (
   issues: CompletedIssue[],

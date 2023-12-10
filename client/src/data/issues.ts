@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { intersection } from "rambda";
-import { Interval } from "../lib/intervals";
+import { Interval } from "@lib/intervals";
 import {
   CompletedIssue,
   HierarchyLevel,

@@ -1,5 +1,5 @@
 import { Card, Timeline, Tooltip } from "antd";
-import { formatNumber, formatTime } from "../../../../lib/format";
+import { formatNumber, formatTime } from "@lib/format";
 import { Issue } from "@entities/issues";
 import { categoryColors } from "../../../components/category-colors";
 
