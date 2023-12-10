@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { intersection } from "rambda";
 
 export enum HierarchyLevel {
   Story = "Story",
@@ -119,6 +120,11 @@ export enum DateFilterType {
   Intersects,
 }
 
+export enum LabelFilterType {
+  Include = "include",
+  Exclude = "exclude",
+}
+
 export type IssueFilter = {
   hierarchyLevel?: HierarchyLevel;
   resolutions?: string[];
@@ -126,6 +132,8 @@ export type IssueFilter = {
   fromStatus?: string;
   toStatus?: string;
   issueTypes?: string[];
+  labels?: string[];
+  labelFilterType?: LabelFilterType;
   dates?: DateRange;
   dateFilterType?: DateFilterType;
 };
@@ -146,6 +154,15 @@ export const filterIssues = (issues: Issue[], filter: IssueFilter): Issue[] => {
 
     if (filter.issueTypes && filter.issueTypes.length > 0) {
       if (!filter.issueTypes.includes(issue.issueType)) {
+        return false;
+      }
+    }
+
+    if (filter.labels && filter.labels.length > 0) {
+      const intersects = intersection(filter.labels, issue.labels).length > 0;
+      if (filter.labelFilterType === "include" && !intersects) {
+        return false;
+      } else if (filter.labelFilterType === "exclude" && intersects) {
         return false;
       }
     }

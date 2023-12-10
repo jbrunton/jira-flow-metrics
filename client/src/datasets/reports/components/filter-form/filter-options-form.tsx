@@ -1,9 +1,14 @@
 import { FC, useEffect, useState } from "react";
-import { DateRange, HierarchyLevel, Issue } from "../../../../data/issues";
-import { Col, Form, Row, Select, SelectProps, Tag } from "antd";
+import {
+  DateRange,
+  HierarchyLevel,
+  Issue,
+  LabelFilterType,
+} from "../../../../data/issues";
+import { Col, Form, Row, Select, SelectProps, Space, Tag } from "antd";
 import { RangeType } from "../date-picker";
 import { DateSelector } from "../date-selector";
-import { isNil, map, pipe, reject, uniq } from "rambda";
+import { flatten, isNil, map, pipe, reject, uniq } from "rambda";
 import { useFilterContext } from "../../../../filter/context";
 import { defaultDateRange } from "../../../../lib/intervals";
 import {
@@ -41,6 +46,7 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
   const [resolutions, setResolutions] = useState<SelectProps["options"]>();
   const [statuses, setStatuses] = useState<SelectProps["options"]>();
   const [issueTypes, setIssueTypes] = useState<SelectProps["options"]>();
+  const [labels, setLabels] = useState<SelectProps["options"]>();
 
   const [hierarchyLevel, setHierarchyLevel] = useState<HierarchyLevel>(
     initialFilter.hierarchyLevel ?? HierarchyLevel.Story,
@@ -58,6 +64,7 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
     setResolutions(makeFilterOptions(filteredIssues, "resolution"));
     setIssueTypes(makeFilterOptions(filteredIssues, "issueType"));
     setStatuses(makeFilterOptions(filteredIssues, "status"));
+    setLabels(makeLabelOptions(filteredIssues));
   }, [issues, hierarchyLevel, setResolutions, setIssueTypes, setStatuses]);
 
   const [selectedResolutions, setSelectedResolutions] = useState<string[]>(
@@ -70,6 +77,11 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
     initialFilter.issueTypes ?? [],
   );
 
+  const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
+  const [labelFilterType, setLabelFilterType] = useState<LabelFilterType>(
+    LabelFilterType.Include,
+  );
+
   const [dates, setDates] = useState<RangeType>(() => {
     return showDateSelector ? initialFilter.dates ?? defaultDateRange() : null;
   });
@@ -80,6 +92,8 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
       resolutions: selectedResolutions,
       statuses: selectedStatuses,
       issueTypes: selectedIssueTypes,
+      labels: selectedLabels,
+      labelFilterType: labelFilterType,
       hierarchyLevel,
     });
   }, [
@@ -88,6 +102,8 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
     selectedResolutions,
     selectedStatuses,
     selectedIssueTypes,
+    selectedLabels,
+    labelFilterType,
     hierarchyLevel,
   ]);
   const options: ExpandableOptionsHeader["options"][number][] = [];
@@ -107,6 +123,15 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
   }
   if (selectedIssueTypes.length) {
     options.push({ label: "Issue types", value: selectedIssueTypes.join() });
+  }
+  if (selectedLabels.length) {
+    options.push({
+      label:
+        labelFilterType === LabelFilterType.Include
+          ? "Include labels"
+          : "Exclude labels",
+      value: selectedLabels.join(),
+    });
   }
 
   return (
@@ -175,6 +200,33 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
             </Form.Item>
           </Col>
         </Row>
+        <Row gutter={[8, 8]}>
+          <Col span={8}>
+            <Form.Item label="Labels" style={{ width: "100%" }}>
+              <Space.Compact style={{ width: "100%" }}>
+                <Form.Item style={{ width: "25%" }}>
+                  <Select
+                    value={labelFilterType}
+                    onChange={setLabelFilterType}
+                    options={[
+                      { value: "include", label: "Include" },
+                      { value: "exclude", label: "Exclude" },
+                    ]}
+                  />
+                </Form.Item>
+                <Form.Item style={{ width: "75%" }}>
+                  <Select
+                    mode="multiple"
+                    allowClear={true}
+                    options={labels}
+                    value={selectedLabels}
+                    onChange={setSelectedLabels}
+                  />
+                </Form.Item>
+              </Space.Compact>
+            </Form.Item>
+          </Col>
+        </Row>
       </Form>
     </ExpandableOptions>
   );
@@ -185,6 +237,14 @@ const makeFilterOptions = (
   property: keyof Issue,
 ): SelectProps["options"] => {
   const options = getUniqueValues(issues, property);
+  return options?.map((option) => ({
+    label: option,
+    value: option,
+  }));
+};
+
+const makeLabelOptions = (issues: Issue[]): SelectProps["options"] => {
+  const options: string[] = uniq(flatten(issues.map((issue) => issue.labels)));
   return options?.map((option) => ({
     label: option,
     value: option,
