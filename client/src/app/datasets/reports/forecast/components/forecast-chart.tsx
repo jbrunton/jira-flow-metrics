@@ -1,9 +1,7 @@
 import { Bar } from "react-chartjs-2";
-import {
-  SummaryRow,
-  getColorForPercentile,
-} from "../../../../../lib/simulation/run";
 import { ChartData, ChartOptions } from "chart.js";
+import { SummaryRow } from "@usecases/forecast/forecast";
+import { getColorForPercentile } from "@usecases/forecast/simulation/run";
 
 export type ForecastChartProps = {
   summary: SummaryRow[];
