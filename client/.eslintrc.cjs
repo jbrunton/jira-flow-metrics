@@ -6,15 +6,85 @@ module.exports = {
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended",
     "plugin:prettier/recommended",
+    "plugin:boundaries/strict",
   ],
   ignorePatterns: ["dist", ".eslintrc.cjs"],
   parser: "@typescript-eslint/parser",
-  plugins: ["react-refresh"],
+  plugins: ["react-refresh", "boundaries"],
   rules: {
     "react-refresh/only-export-components": [
       "warn",
       { allowConstantExport: true },
     ],
     "no-console": "error",
+    "boundaries/element-types": [
+      2,
+      {
+        default: "disallow",
+        rules: [
+          {
+            from: "entities",
+            allow: ["entities"],
+          },
+          {
+            from: "usecases",
+            allow: ["entities", "usecases"],
+          },
+          {
+            from: "data",
+            allow: ["entities", "usecases", "data"],
+          },
+          {
+            from: "app",
+            allow: ["entities", "usecases", "data", "app"],
+          },
+          {
+            from: "main",
+            allow: ["app", "data", "main"],
+          },
+        ],
+      },
+    ],
+  },
+  settings: {
+    "import/resolver": {
+      typescript: {
+        alwaysTryTypes: true,
+      },
+    },
+    "boundaries/elements": [
+      {
+        type: "entities",
+        pattern: "src/domain/entities",
+      },
+      {
+        type: "usecases",
+        pattern: ["src/domain/usecases", "src/lib"],
+      },
+      {
+        type: "data",
+        pattern: "src/data",
+      },
+      {
+        type: "app",
+        pattern: ["src/app"],
+      },
+      {
+        type: "main",
+        pattern: ["src/main.tsx", "src/main.css"],
+        mode: "file",
+      },
+      {
+        type: "test",
+        pattern: ["test"],
+      },
+    ],
+    "boundaries/ignore": [
+      "**/*.spec.ts",
+      "**/*.e2e-spec.ts",
+      "test/**/*",
+      "vite.config.ts",
+      "src/vite-env.d.ts",
+    ],
   },
 };
