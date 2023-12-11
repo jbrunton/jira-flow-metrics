@@ -1,18 +1,34 @@
 import { Outlet } from "react-router-dom";
 import { Breadcrumbs } from "./navigation/breadcrumbs";
-import { Col, Layout, Row, Typography } from "antd";
+import { Button, Col, Layout, Row, Space, Typography } from "antd";
 import { Title } from "./navigation/title";
 import { useNavigationContext } from "./navigation/context";
 import { formatDate } from "@lib/format";
+import { useSyncDataset } from "@data/datasets";
 
 const FooterContent = () => {
   const { dataset } = useNavigationContext();
+  const syncDataset = useSyncDataset();
+
   if (dataset) {
     return (
-      <Typography.Text type="secondary">
-        {dataset.name} last synced:{" "}
-        {formatDate(dataset.lastSync?.date) ?? "never"}
-      </Typography.Text>
+      <Space>
+        <Typography.Text type="secondary">{dataset.name}</Typography.Text>
+        &middot;
+        <Typography.Text type="secondary">
+          last synced: {formatDate(dataset.lastSync?.date) ?? "never"}
+        </Typography.Text>
+        &middot;
+        <Button
+          type="dashed"
+          size="small"
+          disabled={syncDataset.isLoading}
+          loading={syncDataset.isLoading}
+          onClick={() => syncDataset.mutate(dataset?.id)}
+        >
+          Sync
+        </Button>
+      </Space>
     );
   }
 };
