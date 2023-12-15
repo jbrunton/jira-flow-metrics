@@ -1,9 +1,11 @@
 import { DatasetsRepository } from "@entities/datasets";
-import { IssuesRepository } from "@entities/issues";
+import { HierarchyLevel, IssuesRepository } from "@entities/issues";
 import { Injectable } from "@nestjs/common";
 import { JiraIssuesRepository } from "./jira-issues-repository";
 import { JiraIssueBuilder } from "./issue_builder";
 import { DomainsRepository } from "@entities/domains";
+import { sortStatuses } from "./sort-statuses";
+import { StatusBuilder } from "./status-builder-spec";
 
 @Injectable()
 export class SyncUseCase {
@@ -18,12 +20,15 @@ export class SyncUseCase {
     const dataset = await this.datasets.getDataset(datasetId);
     const domain = await this.domains.getDomain(dataset.domainId);
 
-    const [fields, statuses] = await Promise.all([
+    const [fields, jiraStatuses] = await Promise.all([
       this.jiraIssues.getFields(domain),
       this.jiraIssues.getStatuses(domain),
     ]);
 
-    const builder = new JiraIssueBuilder(fields, statuses, domain.host);
+    const statusMap = new StatusBuilder(jiraStatuses);
+
+    const builder = new JiraIssueBuilder(fields, statusMap, domain.host);
+
     const issues = await this.jiraIssues.search(domain, {
       jql: dataset.jql,
       onProgress: () => {},
@@ -31,11 +36,22 @@ export class SyncUseCase {
     });
 
     await this.issues.setIssues(datasetId, issues);
+
+    const stories = issues.filter(
+      (issue) => issue.hierarchyLevel === HierarchyLevel.Story,
+    );
+    const canonicalStatuses = statusMap.getStatuses();
+
+    const sortedStatuses = sortStatuses(stories).map((name) =>
+      canonicalStatuses.find((status) => status.name === name),
+    );
+
     await this.datasets.updateDataset(datasetId, {
       lastSync: {
         date: new Date(),
         issueCount: issues.length,
       },
+      statuses: sortedStatuses,
     });
 
     return issues;

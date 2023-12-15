@@ -4,30 +4,25 @@ import {
   Field,
   HierarchyLevel,
   Issue,
-  Status,
   StatusCategory,
   Transition,
 } from "@entities/issues";
 import { compareAsc, differenceInSeconds } from "date-fns";
+import { StatusBuilder } from "./status-builder-spec";
 
 export type TransitionContext = Omit<Transition, "timeInStatus" | "until">;
 
 const secondsInDay = 60 * 60 * 24;
 
 export class JiraIssueBuilder {
-  private readonly statusCategories: { [externalId: string]: string } = {};
   private readonly epicLinkFieldId?: string;
   private readonly parentFieldId?: string;
 
   constructor(
     fields: Field[],
-    statuses: Status[],
+    private readonly statusBuilder: StatusBuilder,
     private readonly host: string,
   ) {
-    for (const status of statuses) {
-      this.statusCategories[status.jiraId] = status.category;
-    }
-
     this.epicLinkFieldId = fields.find((field) => field.name === "Epic Link")
       ?.jiraId;
     this.parentFieldId = fields.find((field) => field.name === "Parent")
@@ -107,29 +102,16 @@ export class JiraIssueBuilder {
           return null;
         }
 
-        const fromStatus = {
-          name: titleize(statusChange.fromString),
-          category: this.statusCategories[
-            statusChange.from ?? ""
-          ] as StatusCategory,
-        };
+        const fromStatus = this.statusBuilder.getStatus(
+          statusChange.from,
+          statusChange.fromString,
+        );
 
-        const toStatus = {
-          name: titleize(statusChange.toString),
-          category: this.statusCategories[
-            statusChange.to ?? ""
-          ] as StatusCategory,
-        };
-        if (!fromStatus.category) {
-          // console.warn(
-          //   `Could not find status with id ${statusChange.from} (${statusChange.fromString})`
-          // );
-        }
-        if (!toStatus.category) {
-          // console.warn(
-          //   `Could not find status with id ${statusChange.to} (${statusChange.toString})`
-          // );
-        }
+        const toStatus = this.statusBuilder.getStatus(
+          statusChange.to,
+          statusChange.toString,
+        );
+
         return {
           date: new Date(Date.parse(event.created ?? "")),
           fromStatus,
@@ -141,10 +123,6 @@ export class JiraIssueBuilder {
     return buildTransitions(transitions, created, status, statusCategory);
   }
 }
-
-const titleize = (text: string): string => {
-  return text.toLowerCase().replaceAll(/(?:^|\s|-)\S/g, (x) => x.toUpperCase());
-};
 
 export const buildTransitions = (
   transitions: TransitionContext[],

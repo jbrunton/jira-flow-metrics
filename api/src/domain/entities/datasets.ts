@@ -1,4 +1,5 @@
 import { Domain } from "./domains";
+import { TransitionStatus } from "./issues";
 
 export type Dataset = {
   id: string;
@@ -9,6 +10,7 @@ export type Dataset = {
     date: Date;
     issueCount: number;
   };
+  statuses: TransitionStatus[];
 };
 
 export type DataSource = {

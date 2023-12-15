@@ -1,9 +1,8 @@
 import { DatasetsRepository } from "@entities/datasets";
-import { HierarchyLevel, Issue, IssuesRepository } from "@entities/issues";
+import { IssuesRepository } from "@entities/issues";
 import { Controller, Delete, Get, Param, Put, Query } from "@nestjs/common";
 import { SyncUseCase } from "@usecases/datasets/sync/sync-use-case";
 import { CycleTimesUseCase } from "@usecases/issues/metrics/cycle-times-use-case";
-import { flatten, isNil, reject, uniq } from "rambda";
 
 @Controller("datasets")
 export class DatasetsController {
@@ -55,26 +54,10 @@ export class DatasetsController {
 
   @Get(":datasetId/statuses")
   async getStatuses(@Param("datasetId") datasetId: string) {
-    const issues = await this.issues.getIssues(datasetId);
-    const getStatuses = (issues: Issue[]) =>
-      reject(isNil)(
-        uniq(
-          flatten(
-            issues.flatMap((issue) =>
-              issue.transitions.map((t) => [
-                t.fromStatus.name,
-                t.toStatus.name,
-              ]),
-            ),
-          ),
-        ),
-      );
-    const storyStatuses = getStatuses(
-      issues.filter((issue) => issue.hierarchyLevel === HierarchyLevel.Story),
-    );
-    const epicStatuses = getStatuses(
-      issues.filter((issue) => issue.hierarchyLevel === HierarchyLevel.Epic),
-    );
+    const dataset = await this.datasets.getDataset(datasetId);
+    const storyStatuses = dataset.statuses.map((status) => status.name);
+    // TODO: epic cycle time policies
+    const epicStatuses = [];
     return {
       Story: storyStatuses,
       Epic: epicStatuses,
