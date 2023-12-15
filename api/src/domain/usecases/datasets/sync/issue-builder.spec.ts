@@ -4,15 +4,17 @@ import {
   exampleIssue,
   exampleStatuses,
 } from "../../../../../test/fixtures/example-json";
+import { StatusBuilder } from "./status-builder-spec";
 
 const now = new Date("2023-09-07T10:30:00.000Z");
 jest.useFakeTimers().setSystemTime(now);
 
 describe("JiraIssueBuilder", () => {
   it("builds the issue and transition history with the given statuses", () => {
+    const statusBuilder = new StatusBuilder(exampleStatuses);
     const builder = new JiraIssueBuilder(
       exampleFields,
-      exampleStatuses,
+      statusBuilder,
       "example.atlassian.net",
     );
 

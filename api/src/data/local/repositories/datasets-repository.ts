@@ -7,6 +7,7 @@ import {
 import { DataError } from "node-json-db";
 import { DataCache } from "@data/storage/storage";
 import { createId } from "@data/local/id";
+import { pick } from "rambda";
 
 @Injectable()
 export class LocalDatasetsRepository extends DatasetsRepository {
@@ -35,7 +36,7 @@ export class LocalDatasetsRepository extends DatasetsRepository {
   }
 
   async addDataset(params: CreateDatasetParams): Promise<Dataset> {
-    const id = createId(params);
+    const id = createId(pick(["domainId", "name", "jql"], params));
     const dataset = { ...params, id };
     await this.cache.push(datasetPath(id), dataset);
     return dataset;

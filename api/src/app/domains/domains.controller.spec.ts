@@ -81,6 +81,7 @@ describe("DomainsController", () => {
         domainId,
         name: "My Dataset",
         jql: "proj = MyProject",
+        statuses: [],
       });
 
       await request(app.getHttpServer())
@@ -102,6 +103,7 @@ describe("DomainsController", () => {
         .expect(201, {
           id: "LO9BX58c5htj",
           domainId,
+          statuses: [],
           ...params,
         });
     });
