@@ -31,9 +31,23 @@ describe("DatasetsController", () => {
     datasets = await module.get(DatasetsRepository);
   });
 
+  const createDataset = async () => {
+    return datasets.addDataset({
+      domainId: "123",
+      name: "My Dataset",
+      jql: "proj=PROJ",
+      statuses: [
+        {
+          name: "In Progress",
+          category: StatusCategory.InProgress,
+        },
+      ],
+    });
+  };
+
   describe("GET /datasets/:datasetId/issues", () => {
     it("returns issues in the dataset", async () => {
-      const datasetId = "123";
+      const { id: datasetId } = await createDataset();
 
       await issues.setIssues(datasetId, [
         buildIssue({
@@ -79,17 +93,7 @@ describe("DatasetsController", () => {
 
   describe("GET /datasets/:datasetId/statuses", () => {
     it("returns statuses for issues in the dataset", async () => {
-      const { id: datasetId } = await datasets.addDataset({
-        domainId: "123",
-        name: "My Dataset",
-        jql: "proj=PROJ",
-        statuses: [
-          {
-            name: "In Progress",
-            category: StatusCategory.InProgress,
-          },
-        ],
-      });
+      const { id: datasetId } = await createDataset();
 
       const { body } = await request(app.getHttpServer())
         .get(`/datasets/${datasetId}/statuses`)

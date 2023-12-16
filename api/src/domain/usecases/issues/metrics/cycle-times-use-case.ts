@@ -1,4 +1,4 @@
-import { map, path, pipe, reverse, sort, sum } from "rambda";
+import { isNil, map, path, pipe, reverse, sort, sum } from "rambda";
 import {
   HierarchyLevel,
   Issue,
@@ -16,6 +16,7 @@ export class CycleTimesUseCase {
   exec(
     issues: Issue[],
     includeWaitTime: boolean,
+    orderedStatuses: string[],
     fromStatus?: string,
     toStatus?: string,
   ): Issue[] {
@@ -31,6 +32,7 @@ export class CycleTimesUseCase {
       const metrics = getStoryFlowMetrics(
         story,
         includeWaitTime,
+        orderedStatuses,
         fromStatus,
         toStatus,
       );
@@ -54,25 +56,27 @@ export class CycleTimesUseCase {
 
 const getStartedDateIndex = (
   transitions: Array<Transition>,
-  fromStatus?: string,
+  orderedStatuses: string[],
+  fromStatusIndex?: number,
 ): number => {
   return transitions.findIndex((transition) =>
-    fromStatus
-      ? transition.toStatus.name === fromStatus
-      : transition.toStatus.category === StatusCategory.InProgress,
+    isNil(fromStatusIndex)
+      ? transition.toStatus.category === StatusCategory.InProgress
+      : orderedStatuses.indexOf(transition.toStatus.name) >= fromStatusIndex,
   );
 };
 
 const getCompletedDateIndex = (
   transitions: Array<Transition>,
-  toStatus?: string,
+  orderedStatuses: string[],
+  toStatusIndex?: number,
 ): number => {
   const index = reverse(transitions).findIndex((transition) =>
-    toStatus
-      ? transition.toStatus.name === toStatus &&
-        transition.fromStatus.name !== toStatus
-      : transition.toStatus.category === StatusCategory.Done &&
-        transition.fromStatus.category !== StatusCategory.Done,
+    isNil(toStatusIndex)
+      ? transition.toStatus.category === StatusCategory.Done &&
+        transition.fromStatus.category !== StatusCategory.Done
+      : orderedStatuses.indexOf(transition.toStatus.name) === toStatusIndex &&
+        transition.fromStatus.name !== transition.toStatus.name,
   );
 
   return index === -1 ? -1 : transitions.length - index - 1;
@@ -96,11 +100,26 @@ export const getCycleTime = (
 const getStoryFlowMetrics = (
   story: Issue,
   includeWaitTime: boolean,
+  orderedStatuses: string[],
   fromStatus?: string,
   toStatus?: string,
 ): IssueFlowMetrics => {
-  const startedIndex = getStartedDateIndex(story.transitions, fromStatus);
-  const completedIndex = getCompletedDateIndex(story.transitions, toStatus);
+  const fromStatusIndex = isNil(fromStatus)
+    ? undefined
+    : orderedStatuses.indexOf(fromStatus);
+  const toStatusIndex = isNil(toStatus)
+    ? undefined
+    : orderedStatuses.indexOf(toStatus);
+  const startedIndex = getStartedDateIndex(
+    story.transitions,
+    orderedStatuses,
+    fromStatusIndex,
+  );
+  const completedIndex = getCompletedDateIndex(
+    story.transitions,
+    orderedStatuses,
+    toStatusIndex,
+  );
 
   if (startedIndex === -1 && completedIndex === -1) {
     return {};

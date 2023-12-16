@@ -36,10 +36,14 @@ export class DatasetsController {
     @Query("toStatus") toStatus?: string,
   ) {
     let issues = await this.issues.getIssues(datasetId);
+    const dataset = await this.datasets.getDataset(datasetId);
+
+    const orderedStatuses = dataset.statuses.map((status) => status.name);
 
     issues = this.cycleTimes.exec(
       issues,
       ["true", "1"].includes(includeWaitTime),
+      orderedStatuses,
       fromStatus,
       toStatus,
     );
