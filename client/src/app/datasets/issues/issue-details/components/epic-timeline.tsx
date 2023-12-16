@@ -6,7 +6,7 @@ import { Issue, Transition } from "@entities/issues";
 import { FC } from "react";
 import { formatDate } from "@lib/format";
 import { dropWhile, equals, flatten, sortBy, times, uniq } from "rambda";
-import { addDays } from "date-fns";
+import { addHours } from "date-fns";
 
 const statusCategoryColors = {
   "To Do": "#ddd",
@@ -146,10 +146,12 @@ export const EpicTimeline: FC<EpicTimelineProps> = ({
 }: EpicTimelineProps) => {
   const completedDate = epic.metrics?.completed;
   const now = new Date();
-  const truncateBy = epic.metrics.cycleTime ? epic.metrics.cycleTime / 20 : 0;
+  const truncateBy = epic.metrics.cycleTime
+    ? (epic.metrics.cycleTime / 20) * 24
+    : 0;
   const truncateDate =
-    completedDate && addDays(completedDate, truncateBy) < now
-      ? addDays(completedDate, truncateBy)
+    completedDate && addHours(completedDate, truncateBy) < now
+      ? addHours(completedDate, truncateBy)
       : undefined;
   const dropDoneStatuses = (
     transitions: Transition[],
