@@ -27,6 +27,7 @@ type FilterOptionsProps = {
   showDateSelector: boolean;
   showResolutionFilter: boolean;
   showStatusFilter: boolean;
+  clearHierarchyLevelByDefault?: boolean;
 };
 
 export const FilterOptionsForm: FC<FilterOptionsProps> = ({
@@ -35,6 +36,7 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
   showDateSelector,
   showResolutionFilter,
   showStatusFilter,
+  clearHierarchyLevelByDefault,
 }) => {
   const { filter: initialFilter, setFilter } = useFilterContext();
 
@@ -43,9 +45,9 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
   const [issueTypes, setIssueTypes] = useState<SelectProps["options"]>();
   const [labels, setLabels] = useState<SelectProps["options"]>();
 
-  const [hierarchyLevel, setHierarchyLevel] = useState<HierarchyLevel>(
-    initialFilter.hierarchyLevel ?? HierarchyLevel.Story,
-  );
+  const [hierarchyLevel, setHierarchyLevel] = useState<
+    HierarchyLevel | undefined
+  >(clearHierarchyLevelByDefault ? undefined : initialFilter.hierarchyLevel);
 
   useEffect(() => {
     if (!issues) {
@@ -111,7 +113,9 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
       value: `${formatDate(dates.start)}-${formatDate(dates.end)}`,
     });
   }
-  options.push({ label: "Hierarchy level", value: hierarchyLevel });
+  if (hierarchyLevel) {
+    options.push({ label: "Hierarchy level", value: hierarchyLevel });
+  }
   if (selectedResolutions.length) {
     options.push({ label: "Resolutions", value: selectedResolutions.join() });
   }

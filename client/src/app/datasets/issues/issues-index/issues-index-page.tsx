@@ -77,6 +77,7 @@ export const IssuesIndexPage = () => {
         showDateSelector={false}
         showStatusFilter={true}
         showResolutionFilter={true}
+        clearHierarchyLevelByDefault={true}
       />
       <Col span={6}>
         <Form.Item label="Search">
