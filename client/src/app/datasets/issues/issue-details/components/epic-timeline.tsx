@@ -270,7 +270,7 @@ export const EpicTimeline: FC<EpicTimelineProps> = ({
   );
   return (
     <>
-      <Bar height={issues.length * 40 + 20} options={options} data={data} />
+      <Bar height={issues.length * 28 + 112} options={options} data={data} />
       <IssueDetailsDrawer
         selectedIssues={selectedIssue ? [selectedIssue] : []}
         onClose={() => setSelectedIssue(null)}
