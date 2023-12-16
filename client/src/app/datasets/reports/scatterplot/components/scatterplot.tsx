@@ -87,6 +87,9 @@ export const Scatterplot = ({
       annotation: {
         annotations,
       },
+      datalabels: {
+        display: false,
+      },
       tooltip: {
         callbacks: {
           title: (ctx) => {
