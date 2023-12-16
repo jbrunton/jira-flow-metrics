@@ -23,6 +23,7 @@ type TimelineEvent = {
   end: Date;
   startTime: number;
   endTime: number;
+  isCompletedStatus: boolean;
 };
 
 Tooltip.positioners.custom = (_, eventPosition) => {
@@ -52,9 +53,10 @@ const getOptions = (issues: Issue[], testData: TimelineEvent[]) => {
         return null;
       }
 
-      const tooltipLabel = `${event.status} (${formatDate(
-        event.start,
-      )}-${formatDate(event.end)})`;
+      const tooltipDates = event.isCompletedStatus
+        ? formatDate(event.start)
+        : `${formatDate(event.start)}-${formatDate(event.end)}`;
+      const tooltipLabel = `${event.status} (${tooltipDates})`;
 
       return [event.startTime, event.endTime, tooltipLabel];
     }, labels.length);
@@ -187,13 +189,14 @@ export const EpicTimeline: FC<EpicTimelineProps> = ({
     }
   };
 
-  const events = issues.map((i) => {
+  const events = issues.map((issue) => {
     const transitions = dropWhile(
       (t) => t.toStatus.category !== "In Progress",
-      i.transitions,
+      issue.transitions,
     )
       .reduce<Transition[]>(mergeStatuses, [])
       .reduce<Transition[]>(dropDoneStatuses, []);
+
     const events = transitions.map((t, index) => {
       const prevTransition = index > 0 ? transitions[index - 1] : undefined;
       const startTime = prevTransition ? 0 : t.date.getTime();
@@ -201,16 +204,19 @@ export const EpicTimeline: FC<EpicTimelineProps> = ({
         ? t.until.getTime() - t.date.getTime()
         : t.until.getTime();
       return {
-        issueKey: i.key,
-        summary: i.summary,
+        issueKey: issue.key,
+        summary: issue.summary,
         start: t.date,
         end: t.until,
         startTime,
         endTime,
         status: t.toStatus.name,
         category: t.toStatus.category,
+        isCompletedStatus:
+          issue.metrics.completed && index === transitions.length - 1,
       };
     });
+
     return events;
   });
   const { options, data } = getOptions(issues, flatten(events));
