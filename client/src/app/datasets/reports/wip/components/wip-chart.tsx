@@ -54,6 +54,11 @@ export const WipChart = ({
   const options: ChartOptions<"line"> = {
     onClick,
     scales,
+    plugins: {
+      datalabels: {
+        display: false,
+      },
+    },
   };
 
   return <Line data={data} options={options} />;

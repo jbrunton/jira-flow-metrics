@@ -87,6 +87,9 @@ export const ThroughputChart = ({
       annotation: {
         annotations,
       },
+      datalabels: {
+        display: false,
+      },
     },
   };
 
