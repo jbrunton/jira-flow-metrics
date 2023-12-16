@@ -14,6 +14,14 @@ export type CompletedIssueMetrics = IssueFlowMetrics & {
   cycleTime: number;
 };
 
+export type Transition = {
+  date: Date;
+  until: Date;
+  fromStatus: IssueStatus;
+  toStatus: IssueStatus;
+  timeInStatus: number;
+};
+
 export type Issue = {
   key: string;
   externalUrl: string;
@@ -26,13 +34,7 @@ export type Issue = {
   statusCategory: "To Do" | "In Progress" | "Done";
   hierarchyLevel: HierarchyLevel;
   created: Date;
-  transitions: {
-    date: Date;
-    until: Date;
-    fromStatus: IssueStatus;
-    toStatus: IssueStatus;
-    timeInStatus: number;
-  }[];
+  transitions: Transition[];
   labels: string[];
   metrics: IssueFlowMetrics;
   sortIndex?: number;

@@ -59,7 +59,7 @@ export const IssueDetailsPage = () => {
           >
             <Layout style={{ maxWidth: "1440px", margin: "auto" }}>
               <Layout.Content style={{ margin: "0 50px" }}>
-                <EpicTimeline issues={children ?? []} />
+                <EpicTimeline issues={children ?? []} epic={issue} />
               </Layout.Content>
             </Layout>
           </Drawer>

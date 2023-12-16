@@ -2,7 +2,7 @@ import { Tooltip, ChartOptions } from "chart.js";
 
 import { Bar } from "react-chartjs-2";
 import "chartjs-adapter-date-fns";
-import { Issue } from "@entities/issues";
+import { Issue, Transition } from "@entities/issues";
 import { FC } from "react";
 import { formatDate } from "@lib/format";
 import { dropWhile, equals, flatten, sortBy, times, uniq } from "rambda";
@@ -132,29 +132,68 @@ const getOptions = (issues: Issue[], testData: TimelineEvent[]) => {
 };
 
 export type EpicTimelineProps = {
+  epic: Issue;
   issues: Issue[];
 };
 
 export const EpicTimeline: FC<EpicTimelineProps> = ({
+  epic,
   issues,
 }: EpicTimelineProps) => {
+  const dropDoneStatuses = (
+    transitions: Transition[],
+    transition: Transition,
+  ) => {
+    // incomplete epic, don't drop any statuses
+    if (!epic?.metrics?.completed) {
+      return [...transitions, transition];
+    }
+
+    // status is before completed date, keep it
+    if (transition.until < epic.metrics.completed) {
+      return [...transitions, transition];
+    }
+
+    // status begins after it was completed, discard it
+    if (transition.date > epic.metrics.completed) {
+      return transitions;
+    }
+
+    // status spans the completed date, truncate it
+    return [
+      ...transitions,
+      {
+        ...transition,
+        until: epic.metrics.completed,
+      },
+    ];
+  };
+
+  const mergeStatuses = (
+    transitions: Transition[],
+    transition: Transition,
+    index: number,
+  ) => {
+    const prevTransition = index > 0 ? transitions[index - 1] : undefined;
+    if (
+      prevTransition &&
+      equals(prevTransition.toStatus, transition.toStatus)
+    ) {
+      // merge adjacent transitions to the same status
+      prevTransition.until = transition.until;
+      return transitions;
+    } else {
+      return [...transitions, transition];
+    }
+  };
+
   const events = issues.map((i) => {
     const transitions = dropWhile(
       (t) => t.toStatus.category !== "In Progress",
       i.transitions,
-    ).reduce<Issue["transitions"]>((transitions, transition, index) => {
-      const prevTransition = index > 0 ? transitions[index - 1] : undefined;
-      if (
-        prevTransition &&
-        equals(prevTransition.toStatus, transition.toStatus)
-      ) {
-        // merge adjacent transitions to the same status
-        prevTransition.until = transition.until;
-        return transitions;
-      } else {
-        return [...transitions, transition];
-      }
-    }, []);
+    )
+      .reduce<Transition[]>(mergeStatuses, [])
+      .reduce<Transition[]>(dropDoneStatuses, []);
     const events = transitions.map((t, index) => {
       const prevTransition = index > 0 ? transitions[index - 1] : undefined;
       const startTime = prevTransition ? 0 : t.date.getTime();
