@@ -112,6 +112,7 @@ const getOptions = (issues: Issue[], testData: TimelineEvent[]) => {
     },
     resizeDelay: 20,
     responsive: true,
+    maintainAspectRatio: false,
     scales: {
       x: {
         min: Math.min(...testData.map((event) => event.start.getTime())),
@@ -228,5 +229,12 @@ export const EpicTimeline: FC<EpicTimelineProps> = ({
     return events;
   });
   const { options, data } = getOptions(issues, flatten(events));
-  return <Bar options={options} data={data} />;
+  return (
+    <Bar
+      // width="100%"
+      height={issues.length * 40 + 20}
+      options={options}
+      data={data}
+    />
+  );
 };
