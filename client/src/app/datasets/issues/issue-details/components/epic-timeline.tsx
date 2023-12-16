@@ -3,10 +3,20 @@ import { Tooltip, ChartOptions } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import "chartjs-adapter-date-fns";
 import { Issue, Transition } from "@entities/issues";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { formatDate } from "@lib/format";
-import { dropWhile, equals, flatten, sortBy, times, uniq } from "rambda";
+import {
+  dropWhile,
+  equals,
+  flatten,
+  isNil,
+  reject,
+  sortBy,
+  times,
+  uniq,
+} from "rambda";
 import { addHours } from "date-fns";
+import { IssueDetailsDrawer } from "@app/datasets/reports/scatterplot/components/issue-details-drawer";
 
 const statusCategoryColors = {
   "To Do": "#ddd",
@@ -34,7 +44,11 @@ Tooltip.positioners.custom = (_, eventPosition) => {
   };
 };
 
-const getOptions = (issues: Issue[], testData: TimelineEvent[]) => {
+const getOptions = (
+  issues: Issue[],
+  testData: TimelineEvent[],
+  setSelectedIssue: (issue: Issue) => void,
+) => {
   const groups = uniq(testData.map((event) => event.issueKey));
   const labels = sortBy(
     (group) =>
@@ -44,6 +58,9 @@ const getOptions = (issues: Issue[], testData: TimelineEvent[]) => {
           .map((event) => event.start.getTime()),
       ),
     groups,
+  );
+  const sortedIssues = reject(isNil)(
+    labels.map((key) => issues.find((issue) => issue.key === key)),
   );
 
   const datasets = testData.map((event) => {
@@ -85,8 +102,16 @@ const getOptions = (issues: Issue[], testData: TimelineEvent[]) => {
     datasets: datasets,
   };
 
+  const onClick: ChartOptions<"bar">["onClick"] = (_, elements) => {
+    if (elements.length) {
+      const selectedIssue = sortedIssues[elements[0].index];
+      setSelectedIssue(selectedIssue);
+    }
+  };
+
   const options: ChartOptions<"bar"> = {
     indexAxis: "y" as const,
+    onClick,
     plugins: {
       tooltip: {
         callbacks: {
@@ -144,6 +169,8 @@ export const EpicTimeline: FC<EpicTimelineProps> = ({
   epic,
   issues,
 }: EpicTimelineProps) => {
+  const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
+
   const completedDate = epic.metrics?.completed;
   const now = new Date();
   const truncateBy = epic.metrics.cycleTime
@@ -153,6 +180,7 @@ export const EpicTimeline: FC<EpicTimelineProps> = ({
     completedDate && addHours(completedDate, truncateBy) < now
       ? addHours(completedDate, truncateBy)
       : undefined;
+
   const dropDoneStatuses = (
     transitions: Transition[],
     transition: Transition,
@@ -230,13 +258,19 @@ export const EpicTimeline: FC<EpicTimelineProps> = ({
 
     return events;
   });
-  const { options, data } = getOptions(issues, flatten(events));
+  const { options, data } = getOptions(
+    issues,
+    flatten(events),
+    setSelectedIssue,
+  );
   return (
-    <Bar
-      // width="100%"
-      height={issues.length * 40 + 20}
-      options={options}
-      data={data}
-    />
+    <>
+      <Bar height={issues.length * 40 + 20} options={options} data={data} />
+      <IssueDetailsDrawer
+        selectedIssues={selectedIssue ? [selectedIssue] : []}
+        onClose={() => setSelectedIssue(null)}
+        open={selectedIssue !== null}
+      />
+    </>
   );
 };
