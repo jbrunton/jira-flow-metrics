@@ -25,9 +25,9 @@ export class SyncUseCase {
       this.jiraIssues.getStatuses(domain),
     ]);
 
-    const statusMap = new StatusBuilder(jiraStatuses);
+    const statusBuilder = new StatusBuilder(jiraStatuses);
 
-    const builder = new JiraIssueBuilder(fields, statusMap, domain.host);
+    const builder = new JiraIssueBuilder(fields, statusBuilder, domain.host);
 
     const issues = await this.jiraIssues.search(domain, {
       jql: dataset.jql,
@@ -40,7 +40,7 @@ export class SyncUseCase {
     const stories = issues.filter(
       (issue) => issue.hierarchyLevel === HierarchyLevel.Story,
     );
-    const canonicalStatuses = statusMap.getStatuses();
+    const canonicalStatuses = statusBuilder.getStatuses();
 
     const sortedStatuses = sortStatuses(stories).map((name) =>
       canonicalStatuses.find((status) => status.name === name),
