@@ -55,6 +55,7 @@ export const IssueDetailsPage = () => {
             placement="bottom"
             onClose={() => setShowTimeline(false)}
             open={showTimeline}
+            push={false}
             height="100%"
           >
             <Layout style={{ maxWidth: "1440px", margin: "auto" }}>

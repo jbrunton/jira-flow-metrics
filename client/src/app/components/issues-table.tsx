@@ -1,5 +1,5 @@
 import { Issue } from "@entities/issues";
-import { Checkbox, Space, Table, Tag, Typography } from "antd";
+import { Button, Checkbox, Space, Table, Tag, Typography } from "antd";
 import { formatDate, formatNumber } from "@lib/format";
 import { compareAsc, differenceInMinutes } from "date-fns";
 import { ColumnType, ColumnsType, SortOrder } from "antd/es/table/interface";
@@ -10,6 +10,8 @@ import { Percentile } from "@usecases/scatterplot/cycle-times";
 import { IssueExternalLink, IssueLink } from "./issue-links";
 import { IssueResolution, IssueStatus } from "./issue-fields";
 import { IssueParentLink } from "./issue-parent-link";
+import { IssueDetailsDrawer } from "@app/datasets/reports/scatterplot/components/issue-details-drawer";
+import { ZoomInOutlined } from "@ant-design/icons";
 
 export type SortState = {
   columnKey: "created" | "started" | "completed" | "cycleTime" | undefined;
@@ -38,6 +40,8 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
   const { datasetId } = useNavigationContext();
 
   const [excludedIssueKeys, setExcludedIssueKeys] = useState<string[]>([]);
+
+  const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
 
   const onSelectIssueChanged = (key: string, checked: boolean) => {
     const includeIssue = () =>
@@ -103,7 +107,14 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
     {
       key: "open",
       render: (_, issue) => (
-        <IssueExternalLink externalUrl={issue.externalUrl} />
+        <Space>
+          <IssueExternalLink externalUrl={issue.externalUrl} />
+          <Button
+            type="link"
+            icon={<ZoomInOutlined />}
+            onClick={() => setSelectedIssue(issue)}
+          />
+        </Space>
       ),
     },
     {
@@ -287,25 +298,32 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
   const [pageSize, setPageSize] = useState(20);
 
   return (
-    <Table
-      dataSource={issues}
-      size="small"
-      columns={columns}
-      onChange={(_pagination, _filters, sorter) => {
-        if ("columnKey" in sorter) {
-          const sortState = {
-            columnKey: sorter.columnKey,
-            sortOrder: sorter.order,
-          } as SortState;
-          onSortStateChanged?.(sortState);
-        }
-      }}
-      pagination={{
-        pageSize,
-        showSizeChanger: true,
-        onChange: (_, pageSize) => setPageSize(pageSize),
-      }}
-    />
+    <>
+      <Table
+        dataSource={issues}
+        size="small"
+        columns={columns}
+        onChange={(_pagination, _filters, sorter) => {
+          if ("columnKey" in sorter) {
+            const sortState = {
+              columnKey: sorter.columnKey,
+              sortOrder: sorter.order,
+            } as SortState;
+            onSortStateChanged?.(sortState);
+          }
+        }}
+        pagination={{
+          pageSize,
+          showSizeChanger: true,
+          onChange: (_, pageSize) => setPageSize(pageSize),
+        }}
+      />
+      <IssueDetailsDrawer
+        selectedIssues={selectedIssue ? [selectedIssue] : []}
+        onClose={() => setSelectedIssue(null)}
+        open={selectedIssue !== null}
+      />
+    </>
   );
 };
 
