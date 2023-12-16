@@ -6,6 +6,7 @@ import { Issue, Transition } from "@entities/issues";
 import { FC } from "react";
 import { formatDate } from "@lib/format";
 import { dropWhile, equals, flatten, sortBy, times, uniq } from "rambda";
+import { addDays } from "date-fns";
 
 const statusCategoryColors = {
   "To Do": "#ddd",
@@ -142,22 +143,29 @@ export const EpicTimeline: FC<EpicTimelineProps> = ({
   epic,
   issues,
 }: EpicTimelineProps) => {
+  const completedDate = epic.metrics?.completed;
+  const now = new Date();
+  const truncateBy = epic.metrics.cycleTime ? epic.metrics.cycleTime / 20 : 0;
+  const truncateDate =
+    completedDate && addDays(completedDate, truncateBy) < now
+      ? addDays(completedDate, truncateBy)
+      : undefined;
   const dropDoneStatuses = (
     transitions: Transition[],
     transition: Transition,
   ) => {
     // incomplete epic, don't drop any statuses
-    if (!epic?.metrics?.completed) {
+    if (!truncateDate) {
       return [...transitions, transition];
     }
 
     // status is before completed date, keep it
-    if (transition.until < epic.metrics.completed) {
+    if (transition.until < truncateDate) {
       return [...transitions, transition];
     }
 
     // status begins after it was completed, discard it
-    if (transition.date > epic.metrics.completed) {
+    if (transition.date > truncateDate) {
       return transitions;
     }
 
@@ -166,7 +174,7 @@ export const EpicTimeline: FC<EpicTimelineProps> = ({
       ...transitions,
       {
         ...transition,
-        until: epic.metrics.completed,
+        until: truncateDate,
       },
     ];
   };
