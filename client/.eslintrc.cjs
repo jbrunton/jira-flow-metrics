@@ -89,6 +89,7 @@ module.exports = {
       "test/**/*",
       "vite.config.ts",
       "src/vite-env.d.ts",
+      "src/chartjs.d.ts",
     ],
   },
 };

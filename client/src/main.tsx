@@ -18,9 +18,12 @@ import {
   Title,
   BarController,
   BarElement,
+  CategoryScale,
+  Legend,
 } from "chart.js";
 import "chartjs-adapter-date-fns";
 import annotationPlugin from "chartjs-plugin-annotation";
+import datalabelsPlugin from "chartjs-plugin-datalabels";
 // TODO: do we need all of these?
 ChartJS.register(
   LineController,
@@ -32,6 +35,9 @@ ChartJS.register(
   Title,
   TimeScale,
   Tooltip,
+  CategoryScale,
+  Legend,
+  datalabelsPlugin,
   annotationPlugin,
 );
 
