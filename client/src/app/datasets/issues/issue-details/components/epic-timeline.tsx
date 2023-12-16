@@ -2,10 +2,11 @@ import { Tooltip, ChartOptions } from "chart.js";
 
 import { Bar } from "react-chartjs-2";
 import "chartjs-adapter-date-fns";
-import { Issue } from "@entities/issues";
+import { Issue, Transition } from "@entities/issues";
 import { FC } from "react";
 import { formatDate } from "@lib/format";
 import { dropWhile, equals, flatten, sortBy, times, uniq } from "rambda";
+import { addHours } from "date-fns";
 
 const statusCategoryColors = {
   "To Do": "#ddd",
@@ -23,6 +24,7 @@ type TimelineEvent = {
   end: Date;
   startTime: number;
   endTime: number;
+  isCompletedStatus: boolean;
 };
 
 Tooltip.positioners.custom = (_, eventPosition) => {
@@ -52,9 +54,10 @@ const getOptions = (issues: Issue[], testData: TimelineEvent[]) => {
         return null;
       }
 
-      const tooltipLabel = `${event.status} (${formatDate(
-        event.start,
-      )}-${formatDate(event.end)})`;
+      const tooltipDates = event.isCompletedStatus
+        ? formatDate(event.start)
+        : `${formatDate(event.start)}-${formatDate(event.end)}`;
+      const tooltipLabel = `${event.status} (${tooltipDates})`;
 
       return [event.startTime, event.endTime, tooltipLabel];
     }, labels.length);
@@ -109,6 +112,7 @@ const getOptions = (issues: Issue[], testData: TimelineEvent[]) => {
     },
     resizeDelay: 20,
     responsive: true,
+    maintainAspectRatio: false,
     scales: {
       x: {
         min: Math.min(...testData.map((event) => event.start.getTime())),
@@ -132,29 +136,78 @@ const getOptions = (issues: Issue[], testData: TimelineEvent[]) => {
 };
 
 export type EpicTimelineProps = {
+  epic: Issue;
   issues: Issue[];
 };
 
 export const EpicTimeline: FC<EpicTimelineProps> = ({
+  epic,
   issues,
 }: EpicTimelineProps) => {
-  const events = issues.map((i) => {
+  const completedDate = epic.metrics?.completed;
+  const now = new Date();
+  const truncateBy = epic.metrics.cycleTime
+    ? (epic.metrics.cycleTime / 20) * 24
+    : 0;
+  const truncateDate =
+    completedDate && addHours(completedDate, truncateBy) < now
+      ? addHours(completedDate, truncateBy)
+      : undefined;
+  const dropDoneStatuses = (
+    transitions: Transition[],
+    transition: Transition,
+  ) => {
+    // incomplete epic, don't drop any statuses
+    if (!truncateDate) {
+      return [...transitions, transition];
+    }
+
+    // status is before completed date, keep it
+    if (transition.until < truncateDate) {
+      return [...transitions, transition];
+    }
+
+    // status begins after it was completed, discard it
+    if (transition.date > truncateDate) {
+      return transitions;
+    }
+
+    // status spans the completed date, truncate it
+    return [
+      ...transitions,
+      {
+        ...transition,
+        until: truncateDate,
+      },
+    ];
+  };
+
+  const mergeStatuses = (
+    transitions: Transition[],
+    transition: Transition,
+    index: number,
+  ) => {
+    const prevTransition = index > 0 ? transitions[index - 1] : undefined;
+    if (
+      prevTransition &&
+      equals(prevTransition.toStatus, transition.toStatus)
+    ) {
+      // merge adjacent transitions to the same status
+      prevTransition.until = transition.until;
+      return transitions;
+    } else {
+      return [...transitions, transition];
+    }
+  };
+
+  const events = issues.map((issue) => {
     const transitions = dropWhile(
       (t) => t.toStatus.category !== "In Progress",
-      i.transitions,
-    ).reduce<Issue["transitions"]>((transitions, transition, index) => {
-      const prevTransition = index > 0 ? transitions[index - 1] : undefined;
-      if (
-        prevTransition &&
-        equals(prevTransition.toStatus, transition.toStatus)
-      ) {
-        // merge adjacent transitions to the same status
-        prevTransition.until = transition.until;
-        return transitions;
-      } else {
-        return [...transitions, transition];
-      }
-    }, []);
+      issue.transitions,
+    )
+      .reduce<Transition[]>(mergeStatuses, [])
+      .reduce<Transition[]>(dropDoneStatuses, []);
+
     const events = transitions.map((t, index) => {
       const prevTransition = index > 0 ? transitions[index - 1] : undefined;
       const startTime = prevTransition ? 0 : t.date.getTime();
@@ -162,18 +215,28 @@ export const EpicTimeline: FC<EpicTimelineProps> = ({
         ? t.until.getTime() - t.date.getTime()
         : t.until.getTime();
       return {
-        issueKey: i.key,
-        summary: i.summary,
+        issueKey: issue.key,
+        summary: issue.summary,
         start: t.date,
         end: t.until,
         startTime,
         endTime,
         status: t.toStatus.name,
         category: t.toStatus.category,
+        isCompletedStatus:
+          issue.metrics.completed && index === transitions.length - 1,
       };
     });
+
     return events;
   });
   const { options, data } = getOptions(issues, flatten(events));
-  return <Bar options={options} data={data} />;
+  return (
+    <Bar
+      // width="100%"
+      height={issues.length * 40 + 20}
+      options={options}
+      data={data}
+    />
+  );
 };
