@@ -50,6 +50,7 @@ const getOptions = (
   setSelectedIssue: (issue: Issue) => void,
 ) => {
   const groups = uniq(testData.map((event) => event.issueKey));
+
   const labels = sortBy(
     (group) =>
       Math.min(
@@ -59,6 +60,7 @@ const getOptions = (
       ),
     groups,
   );
+
   const sortedIssues = reject(isNil)(
     labels.map((key) => issues.find((issue) => issue.key === key)),
   );
@@ -138,6 +140,9 @@ const getOptions = (
     resizeDelay: 20,
     responsive: true,
     maintainAspectRatio: false,
+    animation: {
+      duration: 0,
+    },
     scales: {
       x: {
         min: Math.min(...testData.map((event) => event.start.getTime())),
@@ -265,7 +270,7 @@ export const EpicTimeline: FC<EpicTimelineProps> = ({
   );
   return (
     <>
-      <Bar height={issues.length * 40 + 20} options={options} data={data} />
+      <Bar height={issues.length * 28 + 112} options={options} data={data} />
       <IssueDetailsDrawer
         selectedIssues={selectedIssue ? [selectedIssue] : []}
         onClose={() => setSelectedIssue(null)}
