@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useFilterContext } from "../../../filter/context";
 import { FilterOptionsForm } from "../components/filter-form/filter-options-form";
 import { useDatasetContext } from "../../context";
-import { Table } from "antd";
+import { Space, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import {
   TimeSpentRow,
@@ -13,6 +13,8 @@ import { IssueExternalLink, IssueLink } from "../../../components/issue-links";
 import { useNavigationContext } from "../../../navigation/context";
 import { IssueResolution, IssueStatus } from "../../../components/issue-fields";
 import { DateFilterType, filterIssues } from "@data/issues";
+import { IssueDetailsDrawer } from "../scatterplot/components/issue-details-drawer";
+import { ZoomInOutlined } from "@ant-design/icons";
 
 export const TimeSpentPage = () => {
   const { datasetId } = useNavigationContext();
@@ -21,6 +23,7 @@ export const TimeSpentPage = () => {
   const { filter } = useFilterContext();
 
   const [filteredIssues, setFilteredIssues] = useState<Issue[]>([]);
+  const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
 
   useEffect(() => {
     if (filter && issues) {
@@ -51,11 +54,21 @@ export const TimeSpentPage = () => {
     },
     {
       key: "open",
-      render: (_, { externalUrl }) => {
-        return externalUrl ? (
-          <IssueExternalLink externalUrl={externalUrl} />
-        ) : null;
-      },
+      render: (_, { key, externalUrl }) =>
+        externalUrl ? (
+          <Space>
+            <IssueExternalLink externalUrl={externalUrl} />
+            <a
+              onClick={() =>
+                setSelectedIssue(
+                  issues?.find((issue) => issue.key === key) ?? null,
+                )
+              }
+            >
+              <ZoomInOutlined />
+            </a>
+          </Space>
+        ) : null,
     },
     {
       title: "Summary",
@@ -125,6 +138,12 @@ export const TimeSpentPage = () => {
         dataSource={result}
         defaultExpandedRowKeys={["epics", "unassigned"]}
         indentSize={0}
+      />
+
+      <IssueDetailsDrawer
+        selectedIssues={selectedIssue ? [selectedIssue] : []}
+        onClose={() => setSelectedIssue(null)}
+        open={selectedIssue !== null}
       />
     </>
   );
