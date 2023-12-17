@@ -14,6 +14,7 @@ const config = {
     "^@data/(.*)$": ["<rootDir>/src/data/$1"],
     "^@entities/(.*)$": ["<rootDir>/src/domain/entities/$1"],
     "^@usecases/(.*)$": ["<rootDir>/src/domain/usecases/$1"],
+    "^@lib/(.*)$": ["<rootDir>/src/lib/$1"],
     "^@fixtures/(.*)$": ["<rootDir>/test/fixtures/$1"],
   },
 };

@@ -1,6 +1,7 @@
 import { Card, Descriptions } from "antd";
 import { Issue } from "@entities/issues";
 import { formatNumber, formatTime } from "@lib/format";
+import { isNil } from "rambda";
 
 export type IssueMetricsCardProps = {
   issue: Issue;
@@ -19,14 +20,16 @@ export const IssueMetricsCard: React.FC<IssueMetricsCardProps> = ({
         labelStyle={{ width: "35%", fontWeight: 500 }}
       >
         <Descriptions.Item label="Started">
-          {formatTime(issue.metrics.started)}
+          {formatTime(issue.metrics.started) ?? "-"}
         </Descriptions.Item>
         <Descriptions.Item label="Completed">
-          {formatTime(issue.metrics.completed)}
+          {formatTime(issue.metrics.completed) ?? "-"}
         </Descriptions.Item>
-        <Descriptions.Item label="Cycle Time">
-          {formatNumber(issue.metrics.cycleTime)} days
-        </Descriptions.Item>
+        {!isNil(issue.metrics.cycleTime) ? (
+          <Descriptions.Item label="Cycle Time">
+            {formatNumber(issue.metrics.cycleTime)} days
+          </Descriptions.Item>
+        ) : null}
       </Descriptions>
     </Card>
   );

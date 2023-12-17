@@ -7,12 +7,11 @@ import {
   StatusCategory,
   Transition,
 } from "@entities/issues";
-import { compareAsc, differenceInSeconds } from "date-fns";
+import { compareAsc } from "date-fns";
 import { StatusBuilder } from "./status-builder-spec";
+import { getDifferenceInDays } from "@lib/dates";
 
 export type TransitionContext = Omit<Transition, "timeInStatus" | "until">;
-
-const secondsInDay = 60 * 60 * 24;
 
 export class JiraIssueBuilder {
   private readonly epicLinkFieldId?: string;
@@ -162,8 +161,10 @@ export const buildTransitions = (
         index < transitions.length - 1
           ? transitions[index + 1].date
           : new Date();
-      const timeInStatus =
-        differenceInSeconds(nextTransitionDate, transition.date) / secondsInDay;
+      const timeInStatus = getDifferenceInDays(
+        nextTransitionDate,
+        transition.date,
+      );
       return {
         ...transition,
         timeInStatus,

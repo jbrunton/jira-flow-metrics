@@ -2,6 +2,8 @@ import { HierarchyLevel, Status, StatusCategory } from "@entities/issues";
 import { CycleTimesUseCase } from "./cycle-times-use-case";
 import { buildIssue } from "@fixtures/factories/issue-factory";
 
+jest.useFakeTimers();
+
 describe("CycleTimesUseCase", () => {
   const cycleTimes = new CycleTimesUseCase();
 
@@ -122,7 +124,7 @@ describe("CycleTimesUseCase", () => {
       });
     });
 
-    describe("when the issue is paused", () => {
+    describe("when the issue was paused", () => {
       const firstStartedDate = new Date("2023-01-01T10:30:00.000Z");
       const stoppedDate = new Date("2023-01-01T12:30:00.000Z");
       const secondStartedDate = new Date("2023-01-01T14:30:00.000Z");
@@ -185,7 +187,7 @@ describe("CycleTimesUseCase", () => {
       });
     });
 
-    describe("when the issue is restarted", () => {
+    describe("when the issue was restarted", () => {
       const startedDate = new Date("2023-01-01T10:30:00.000Z");
       const firstCompletedDate = new Date("2023-01-01T12:30:00.000Z");
       const restartedDate = new Date("2023-01-01T14:30:00.000Z");
@@ -279,6 +281,46 @@ describe("CycleTimesUseCase", () => {
         started: startedDate,
         completed: devCompletedDate,
         cycleTime: 0.125,
+      });
+    });
+
+    describe("when the issue is in progress", () => {
+      const startedDate = new Date("2023-01-01T10:30:00.000Z");
+      const pausedDate = new Date("2023-01-01T13:30:00.000Z");
+      const now = new Date("2023-01-02T10:30:00.000Z");
+      jest.setSystemTime(now);
+
+      const issue = buildIssue({
+        transitions: [
+          {
+            date: startedDate,
+            fromStatus: backlog,
+            toStatus: inProgress,
+          },
+          {
+            date: pausedDate,
+            fromStatus: inProgress,
+            toStatus: backlog,
+          },
+        ],
+      });
+
+      it("returns the age of the issue", () => {
+        const [result] = cycleTimes.exec([issue], true, orderedStatuses);
+
+        expect(result.metrics).toEqual({
+          started: startedDate,
+          cycleTime: 1,
+        });
+      });
+
+      it("excludes the current status when includeWaitTime is false", () => {
+        const [result] = cycleTimes.exec([issue], false, orderedStatuses);
+
+        expect(result.metrics).toEqual({
+          started: startedDate,
+          cycleTime: 0.125,
+        });
       });
     });
 
