@@ -3,7 +3,7 @@ import { Tooltip, ChartOptions } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import "chartjs-adapter-date-fns";
 import { Issue, Transition } from "@entities/issues";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { formatDate } from "@lib/format";
 import {
   dropWhile,
@@ -17,6 +17,7 @@ import {
 } from "rambda";
 import { addHours } from "date-fns";
 import { IssueDetailsDrawer } from "@app/datasets/reports/scatterplot/components/issue-details-drawer";
+import { IssuesTable } from "@app/components/issues-table";
 
 const statusCategoryColors = {
   "To Do": "#ddd",
@@ -170,12 +171,7 @@ export type EpicTimelineProps = {
   issues: Issue[];
 };
 
-export const EpicTimeline: FC<EpicTimelineProps> = ({
-  epic,
-  issues,
-}: EpicTimelineProps) => {
-  const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
-
+const getTimelineEvents = (epic: Issue, issues: Issue[]): TimelineEvent[] => {
   const completedDate = epic.metrics?.completed;
   const now = new Date();
   const truncateBy = epic.metrics.cycleTime
@@ -263,14 +259,51 @@ export const EpicTimeline: FC<EpicTimelineProps> = ({
 
     return events;
   });
+
+  return flatten(events);
+};
+
+export const EpicTimeline: FC<EpicTimelineProps> = ({
+  epic,
+  issues,
+}: EpicTimelineProps) => {
+  const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
+  const [excludedIssues, setExcludedIssues] = useState<string[]>([]);
+  const [timelineIssues, setTimelineIssues] = useState<Issue[]>(issues);
+  const [timelineEvents, setTimelineEvents] = useState<TimelineEvent[]>([]);
+
+  useEffect(() => {
+    const timelineIssues = issues.filter(
+      (issue) =>
+        !excludedIssues.includes(issue.key) &&
+        issue.transitions.some((t) => t.toStatus.category === "In Progress"),
+    );
+
+    const events = getTimelineEvents(epic, timelineIssues);
+
+    setTimelineIssues(timelineIssues);
+    setTimelineEvents(events);
+  }, [issues, excludedIssues, epic, setTimelineIssues]);
+
   const { options, data } = getOptions(
-    issues,
-    flatten(events),
+    timelineIssues,
+    timelineEvents,
     setSelectedIssue,
   );
   return (
     <>
-      <Bar height={issues.length * 28 + 112} options={options} data={data} />
+      <div
+        style={{ height: timelineIssues.length * 30 + 120, marginBottom: 8 }}
+      >
+        <Bar options={options} data={data} />
+      </div>
+      <IssuesTable
+        issues={issues.filter((issue) =>
+          issue.transitions.some((t) => t.toStatus.category !== "In Progress"),
+        )}
+        defaultSortField="started"
+        onExcludedIssuesChanged={setExcludedIssues}
+      />
       <IssueDetailsDrawer
         selectedIssues={selectedIssue ? [selectedIssue] : []}
         onClose={() => setSelectedIssue(null)}
