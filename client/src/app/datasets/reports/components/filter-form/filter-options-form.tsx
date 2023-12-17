@@ -42,6 +42,7 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
 
   const [resolutions, setResolutions] = useState<SelectProps["options"]>();
   const [statuses, setStatuses] = useState<SelectProps["options"]>();
+  const [components, setComponents] = useState<SelectProps["options"]>();
   const [issueTypes, setIssueTypes] = useState<SelectProps["options"]>();
   const [labels, setLabels] = useState<SelectProps["options"]>();
 
@@ -62,6 +63,7 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
     setIssueTypes(makeFilterOptions(filteredIssues, "issueType"));
     setStatuses(makeFilterOptions(filteredIssues, "status"));
     setLabels(makeLabelOptions(filteredIssues));
+    setComponents(makeComponentOptions(filteredIssues));
   }, [issues, hierarchyLevel, setResolutions, setIssueTypes, setStatuses]);
 
   const [selectedResolutions, setSelectedResolutions] = useState<string[]>(
@@ -79,6 +81,8 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
     LabelFilterType.Include,
   );
 
+  const [selectedComponents, setSelectedComponents] = useState<string[]>([]);
+
   const [dates, setDates] = useState<Interval | undefined>(() => {
     return showDateSelector
       ? initialFilter.dates ?? defaultDateRange()
@@ -92,6 +96,7 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
       statuses: selectedStatuses,
       issueTypes: selectedIssueTypes,
       labels: selectedLabels,
+      components: selectedComponents,
       labelFilterType: labelFilterType,
       hierarchyLevel,
     });
@@ -102,6 +107,7 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
     selectedStatuses,
     selectedIssueTypes,
     selectedLabels,
+    selectedComponents,
     labelFilterType,
     hierarchyLevel,
   ]);
@@ -132,6 +138,12 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
           ? "Include labels"
           : "Exclude labels",
       value: selectedLabels.join(),
+    });
+  }
+  if (selectedComponents.length) {
+    options.push({
+      label: "Components",
+      value: selectedComponents.join(),
     });
   }
 
@@ -227,6 +239,17 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
               </Space.Compact>
             </Form.Item>
           </Col>
+          <Col span={6}>
+            <Form.Item label="Components">
+              <Select
+                mode="multiple"
+                allowClear={true}
+                options={components}
+                value={selectedComponents}
+                onChange={setSelectedComponents}
+              />
+            </Form.Item>
+          </Col>
         </Row>
       </Form>
     </ExpandableOptions>
@@ -246,6 +269,16 @@ const makeFilterOptions = (
 
 const makeLabelOptions = (issues: Issue[]): SelectProps["options"] => {
   const options: string[] = uniq(flatten(issues.map((issue) => issue.labels)));
+  return options?.map((option) => ({
+    label: option,
+    value: option,
+  }));
+};
+
+const makeComponentOptions = (issues: Issue[]): SelectProps["options"] => {
+  const options: string[] = uniq(
+    flatten(issues.map((issue) => issue.components)),
+  );
   return options?.map((option) => ({
     label: option,
     value: option,

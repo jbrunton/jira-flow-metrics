@@ -85,6 +85,7 @@ export type IssueFilter = {
   toStatus?: string;
   issueTypes?: string[];
   labels?: string[];
+  components?: string[];
   labelFilterType?: LabelFilterType;
   dates?: Interval;
   dateFilterType?: DateFilterType;
@@ -117,6 +118,12 @@ export const filterIssues = (issues: Issue[], filter: IssueFilter): Issue[] => {
       } else if (filter.labelFilterType === "exclude" && intersects) {
         return false;
       }
+    }
+
+    if (filter.components && filter.components.length > 0) {
+      const intersects =
+        intersection(filter.components, issue.components).length > 0;
+      return intersects;
     }
 
     if (filter.statuses && filter.statuses.length > 0) {

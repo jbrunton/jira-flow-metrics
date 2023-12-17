@@ -209,6 +209,7 @@ export const exampleIssue: Version3Models.Issue = {
       name: "Done",
     },
     labels: ["my-label"],
+    components: [{ name: "my-component" }],
     customfield_10014: null,
     status: {
       self: "https://example.atlassian.net/rest/api/3/status/10068",

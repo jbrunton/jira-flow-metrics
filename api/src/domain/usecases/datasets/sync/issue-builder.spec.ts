@@ -31,6 +31,7 @@ describe("JiraIssueBuilder", () => {
       statusCategory: "Done",
       created: new Date("2023-09-04T10:03:25.333Z"),
       labels: ["my-label"],
+      components: ["my-component"],
       transitions: [
         {
           timeInStatus: 0.14858796296296295,

@@ -71,6 +71,7 @@ describe("DatasetsController", () => {
           statusCategory: "To Do",
           summary: "Some issue 101",
           labels: [],
+          components: [],
           transitions: [
             {
               date: "2023-01-01T07:00:00.000Z",
