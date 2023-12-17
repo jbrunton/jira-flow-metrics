@@ -25,9 +25,9 @@ const getIssues = async (
   const response = await axios.get(url);
   return response.data.map((issue: Issue) => {
     const metrics: IssueFlowMetrics = {
+      ...issue.metrics,
       started: parseDate(issue.metrics.started),
       completed: parseDate(issue.metrics.completed),
-      cycleTime: issue.metrics.cycleTime,
     };
     return {
       ...issue,

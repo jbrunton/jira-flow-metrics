@@ -22,6 +22,7 @@
       "@data/*": ["src/data/*"],
       "@entities/*": ["src/domain/entities/*"],
       "@usecases/*": ["src/domain/usecases/*"],
+      "@lib/*": ["src/lib/*"],
       "@fixtures/*": ["test/fixtures/*"]
     }
   }

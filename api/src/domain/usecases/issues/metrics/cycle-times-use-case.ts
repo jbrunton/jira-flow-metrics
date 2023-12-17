@@ -8,9 +8,8 @@ import {
   isCompleted,
   isStarted,
 } from "@entities/issues";
-import { compareAsc, compareDesc, differenceInSeconds } from "date-fns";
-
-const secondsInDay = 60 * 60 * 24;
+import { compareAsc, compareDesc } from "date-fns";
+import { getDifferenceInDays } from "@lib/dates";
 
 export class CycleTimesUseCase {
   exec(
@@ -94,7 +93,7 @@ export const getCycleTime = (
     return 0;
   }
 
-  return differenceInSeconds(completed, started) / secondsInDay;
+  return getDifferenceInDays(completed, started);
 };
 
 const getStoryFlowMetrics = (
@@ -104,6 +103,7 @@ const getStoryFlowMetrics = (
   fromStatus?: string,
   toStatus?: string,
 ): IssueFlowMetrics => {
+  const now = new Date();
   const fromStatusIndex = isNil(fromStatus)
     ? undefined
     : orderedStatuses.indexOf(fromStatus);
@@ -133,30 +133,42 @@ const getStoryFlowMetrics = (
     };
   }
 
+  const getCycleTime = (transitions: Transition[]) => {
+    return sum(
+      transitions.slice(0, transitions.length - 1).map((transition) => {
+        if (includeWaitTime) {
+          return transition.timeInStatus;
+        } else {
+          return transition.toStatus.category === StatusCategory.InProgress
+            ? transition.timeInStatus
+            : 0;
+        }
+      }),
+    );
+  };
+
   if (completedIndex === -1) {
     // started but not yet completed
+    const lastTransition = story.transitions[story.transitions.length - 1];
+    const timeInLastTransition =
+      lastTransition.toStatus.category === StatusCategory.InProgress ||
+      includeWaitTime
+        ? getDifferenceInDays(now, lastTransition.date)
+        : 0;
+    const cycleTime =
+      timeInLastTransition +
+      getCycleTime(story.transitions.slice(startedIndex));
     return {
       started: story.transitions[startedIndex].date,
-      cycleTime: undefined,
+      cycleTime,
     };
   }
 
   const transitions = story.transitions.slice(startedIndex, completedIndex + 1);
+  const cycleTime = getCycleTime(transitions);
 
   const started = transitions[0].date;
   const completed = transitions[transitions.length - 1].date;
-
-  const cycleTime = sum(
-    transitions.slice(0, transitions.length - 1).map((transition) => {
-      if (includeWaitTime) {
-        return transition.timeInStatus;
-      } else {
-        return transition.toStatus.category === StatusCategory.InProgress
-          ? transition.timeInStatus
-          : 0;
-      }
-    }),
-  );
 
   return {
     started,

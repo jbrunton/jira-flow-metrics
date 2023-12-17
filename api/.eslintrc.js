@@ -32,16 +32,20 @@ module.exports = {
             allow: ["entities"],
           },
           {
+            from: "lib",
+            allow: ["lib"],
+          },
+          {
             from: "usecases",
-            allow: ["entities", "usecases"],
+            allow: ["entities", "usecases", "lib"],
           },
           {
             from: "data",
-            allow: ["entities", "usecases", "data"],
+            allow: ["entities", "usecases", "lib", "data"],
           },
           {
             from: "app",
-            allow: ["entities", "usecases", "app"],
+            allow: ["entities", "usecases", "lib", "app"],
           },
           {
             from: "main",
@@ -65,6 +69,10 @@ module.exports = {
       {
         type: "usecases",
         pattern: "src/domain/usecases",
+      },
+      {
+        type: "lib",
+        pattern: "src/lib",
       },
       {
         type: "data",
