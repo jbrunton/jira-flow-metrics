@@ -17,6 +17,7 @@ export const buildIssue = (params: Partial<Issue>): Issue => {
     issueType: "Story",
     created: new Date(),
     labels: [],
+    components: [],
   };
   return {
     ...defaults,

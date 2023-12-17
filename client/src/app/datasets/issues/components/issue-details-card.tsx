@@ -53,6 +53,13 @@ export const IssueDetailsCard: React.FC<IssueDetailsCardProps> = ({
             <IssueParentLink parent={issue.parent} datasetId={datasetId} />
           </Descriptions.Item>
         ) : null}
+        <Descriptions.Item label="Components">
+          <Space>
+            {issue.components.map((component) => (
+              <Tag key={`component-${component}`}>{component}</Tag>
+            ))}
+          </Space>
+        </Descriptions.Item>
         <Descriptions.Item label="Labels">
           <Space>
             {issue.labels.map((label) => (

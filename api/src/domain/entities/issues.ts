@@ -71,6 +71,7 @@ export type Issue = {
   created?: Date;
   transitions: Transition[];
   labels: string[];
+  components: string[];
   metrics: IssueFlowMetrics;
 };
 
