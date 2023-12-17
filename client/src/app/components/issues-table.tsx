@@ -1,5 +1,5 @@
 import { Issue } from "@entities/issues";
-import { Button, Checkbox, Space, Table, Tag, Typography } from "antd";
+import { Checkbox, Space, Table, Tag, Typography } from "antd";
 import { formatDate, formatNumber } from "@lib/format";
 import { compareAsc, differenceInMinutes } from "date-fns";
 import { ColumnType, ColumnsType, SortOrder } from "antd/es/table/interface";
@@ -109,11 +109,9 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       render: (_, issue) => (
         <Space>
           <IssueExternalLink externalUrl={issue.externalUrl} />
-          <Button
-            type="link"
-            icon={<ZoomInOutlined />}
-            onClick={() => setSelectedIssue(issue)}
-          />
+          <a onClick={() => setSelectedIssue(issue)}>
+            <ZoomInOutlined />
+          </a>
         </Space>
       ),
     },
