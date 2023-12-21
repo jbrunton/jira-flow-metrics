@@ -64,7 +64,7 @@ export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
           },
         ],
       }}
-      extra={issuesCount ? <Tag>{issuesCount} issues</Tag> : null}
+      extra={<Tag>{issuesCount} issues</Tag>}
     >
       <Form layout="vertical">
         <Row gutter={[8, 8]}>

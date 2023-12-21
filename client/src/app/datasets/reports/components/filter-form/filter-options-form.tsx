@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { HierarchyLevel, Issue } from "@entities/issues";
-import { Col, Form, Row, Select, SelectProps, Space, Tag } from "antd";
+import { Button, Col, Form, Row, Select, SelectProps, Space, Tag } from "antd";
 import { DateSelector } from "../date-selector";
 import { flatten, isNil, map, pipe, reject, uniq } from "rambda";
 import { useFilterContext } from "../../../../filter/context";
@@ -10,7 +10,7 @@ import {
   ExpandableOptionsHeader,
 } from "../../../../components/expandable-options";
 import { formatDate } from "@lib/format";
-import { LabelFilterType } from "@data/issues";
+import { IssueFilter, LabelFilterType } from "@data/issues";
 
 export type FilterOptions = {
   hierarchyLevel?: HierarchyLevel;
@@ -40,6 +40,30 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
 }) => {
   const { filter: initialFilter, setFilter } = useFilterContext();
 
+  const defaultFilter: Required<
+    Omit<IssueFilter, "hierarchyLevel" | "dates" | "fromStatus" | "toStatus">
+  > &
+    Pick<IssueFilter, "hierarchyLevel" | "dates"> = {
+    hierarchyLevel: clearHierarchyLevelByDefault
+      ? undefined
+      : initialFilter.hierarchyLevel,
+    resolutions: showResolutionFilter ? initialFilter.resolutions ?? [] : [],
+    statuses: showStatusFilter ? initialFilter.statuses ?? [] : [],
+    issueTypes: initialFilter.issueTypes ?? [],
+    assignees: initialFilter.assignees ?? [],
+    dates: showDateSelector
+      ? initialFilter.dates ?? defaultDateRange()
+      : undefined,
+  };
+
+  const clearFilter = () => {
+    setHierarchyLevel(defaultFilter.hierarchyLevel);
+    setSelectedResolutions(defaultFilter.resolutions);
+    setSelectedStatuses(defaultFilter.statuses);
+    setSelectedIssueTypes(defaultFilter.issueTypes);
+    setSelectedAssignees(defaultFilter.assignees);
+  };
+
   const [resolutions, setResolutions] = useState<SelectProps["options"]>();
   const [statuses, setStatuses] = useState<SelectProps["options"]>();
   const [components, setComponents] = useState<SelectProps["options"]>();
@@ -49,7 +73,7 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
 
   const [hierarchyLevel, setHierarchyLevel] = useState<
     HierarchyLevel | undefined
-  >(clearHierarchyLevelByDefault ? undefined : initialFilter.hierarchyLevel);
+  >(defaultFilter.hierarchyLevel);
 
   useEffect(() => {
     if (!issues) {
@@ -69,16 +93,16 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
   }, [issues, hierarchyLevel, setResolutions, setIssueTypes, setStatuses]);
 
   const [selectedResolutions, setSelectedResolutions] = useState<string[]>(
-    showResolutionFilter ? initialFilter.resolutions ?? [] : [],
+    defaultFilter.resolutions,
   );
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>(
-    showStatusFilter ? initialFilter.statuses ?? [] : [],
+    defaultFilter.statuses,
   );
   const [selectedIssueTypes, setSelectedIssueTypes] = useState<string[]>(
-    initialFilter.issueTypes ?? [],
+    defaultFilter.issueTypes,
   );
   const [selectedAssignees, setSelectedAssignees] = useState<string[]>(
-    initialFilter.assignees ?? [],
+    defaultFilter.assignees,
   );
 
   const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
@@ -88,11 +112,7 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
 
   const [selectedComponents, setSelectedComponents] = useState<string[]>([]);
 
-  const [dates, setDates] = useState<Interval | undefined>(() => {
-    return showDateSelector
-      ? initialFilter.dates ?? defaultDateRange()
-      : undefined;
-  });
+  const [dates, setDates] = useState<Interval | undefined>(defaultFilter.dates);
 
   useEffect(() => {
     setFilter({
@@ -157,11 +177,27 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
     });
   }
 
+  const ClearFiltersButton = () => (
+    <Button
+      type="text"
+      size="small"
+      onClick={(e) => {
+        clearFilter();
+        e.stopPropagation();
+      }}
+    >
+      Clear All
+    </Button>
+  );
+
   return (
     <ExpandableOptions
       header={{ title: "Filter Options", options }}
       extra={
-        filteredIssuesCount ? <Tag>{filteredIssuesCount} issues</Tag> : null
+        <Space>
+          {options.length ? <ClearFiltersButton /> : null}
+          <Tag>{filteredIssuesCount} issues</Tag>
+        </Space>
       }
     >
       <Form layout="vertical">
