@@ -23,6 +23,7 @@ export const buildIssue = (params: IssueParams): Issue => {
     transitions: [],
     labels: [],
     components: [],
+    assignee: undefined,
     metrics: {},
     created: new Date(),
   };

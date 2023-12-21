@@ -5,6 +5,8 @@ import { Title } from "./navigation/title";
 import { useNavigationContext } from "./navigation/context";
 import { formatDate } from "@lib/format";
 import { useSyncDataset } from "@data/datasets";
+import { useState } from "react";
+import { ArrowsAltOutlined, ShrinkOutlined } from "@ant-design/icons";
 
 const FooterContent = () => {
   const { dataset } = useNavigationContext();
@@ -33,21 +35,33 @@ const FooterContent = () => {
   }
 };
 
-export const AppLayout = () => (
-  <Layout style={{ maxWidth: "1440px", margin: "auto" }}>
-    <Layout.Header>
-      <Row>
-        <Col flex="auto">
-          <Breadcrumbs />
-        </Col>
-      </Row>
-    </Layout.Header>
-    <Layout.Content style={{ margin: "0 50px" }}>
-      <Title />
-      <Outlet />
-    </Layout.Content>
-    <Layout.Footer style={{ textAlign: "center" }}>
-      <FooterContent />
-    </Layout.Footer>
-  </Layout>
-);
+export const AppLayout = () => {
+  const [fullscreen, setFullscreen] = useState(true);
+  return (
+    <Layout
+      style={{ maxWidth: fullscreen ? "1440px" : undefined, margin: "auto" }}
+    >
+      <Layout.Header>
+        <Row>
+          <Col flex="auto">
+            <Breadcrumbs />
+          </Col>
+          <Col>
+            <Button
+              type="text"
+              icon={fullscreen ? <ArrowsAltOutlined /> : <ShrinkOutlined />}
+              onClick={() => setFullscreen(!fullscreen)}
+            />
+          </Col>
+        </Row>
+      </Layout.Header>
+      <Layout.Content style={{ margin: "0 50px" }}>
+        <Title />
+        <Outlet />
+      </Layout.Content>
+      <Layout.Footer style={{ textAlign: "center" }}>
+        <FooterContent />
+      </Layout.Footer>
+    </Layout>
+  );
+};

@@ -67,6 +67,7 @@ export const IssueDetailsCard: React.FC<IssueDetailsCardProps> = ({
             ))}
           </Space>
         </Descriptions.Item>
+        <Descriptions.Item label="Assignee">{issue.assignee}</Descriptions.Item>
       </Descriptions>
     </Card>
   );

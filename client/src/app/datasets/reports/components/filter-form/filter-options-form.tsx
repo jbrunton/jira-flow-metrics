@@ -44,6 +44,7 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
   const [statuses, setStatuses] = useState<SelectProps["options"]>();
   const [components, setComponents] = useState<SelectProps["options"]>();
   const [issueTypes, setIssueTypes] = useState<SelectProps["options"]>();
+  const [assignees, setAssignees] = useState<SelectProps["options"]>();
   const [labels, setLabels] = useState<SelectProps["options"]>();
 
   const [hierarchyLevel, setHierarchyLevel] = useState<
@@ -62,6 +63,7 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
     setResolutions(makeFilterOptions(filteredIssues, "resolution"));
     setIssueTypes(makeFilterOptions(filteredIssues, "issueType"));
     setStatuses(makeFilterOptions(filteredIssues, "status"));
+    setAssignees(makeFilterOptions(filteredIssues, "assignee"));
     setLabels(makeLabelOptions(filteredIssues));
     setComponents(makeComponentOptions(filteredIssues));
   }, [issues, hierarchyLevel, setResolutions, setIssueTypes, setStatuses]);
@@ -74,6 +76,9 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
   );
   const [selectedIssueTypes, setSelectedIssueTypes] = useState<string[]>(
     initialFilter.issueTypes ?? [],
+  );
+  const [selectedAssignees, setSelectedAssignees] = useState<string[]>(
+    initialFilter.assignees ?? [],
   );
 
   const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
@@ -95,6 +100,7 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
       resolutions: selectedResolutions,
       statuses: selectedStatuses,
       issueTypes: selectedIssueTypes,
+      assignees: selectedAssignees,
       labels: selectedLabels,
       components: selectedComponents,
       labelFilterType: labelFilterType,
@@ -106,6 +112,7 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
     selectedResolutions,
     selectedStatuses,
     selectedIssueTypes,
+    selectedAssignees,
     selectedLabels,
     selectedComponents,
     labelFilterType,
@@ -130,6 +137,9 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
   }
   if (selectedIssueTypes.length) {
     options.push({ label: "Issue types", value: selectedIssueTypes.join() });
+  }
+  if (selectedAssignees.length) {
+    options.push({ label: "Assignees", value: selectedAssignees.join() });
   }
   if (selectedLabels.length) {
     options.push({
@@ -209,6 +219,17 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
                 options={issueTypes}
                 value={selectedIssueTypes}
                 onChange={setSelectedIssueTypes}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={4}>
+            <Form.Item label="Assignees">
+              <Select
+                mode="multiple"
+                allowClear={true}
+                options={assignees}
+                value={selectedAssignees}
+                onChange={setSelectedAssignees}
               />
             </Form.Item>
           </Col>

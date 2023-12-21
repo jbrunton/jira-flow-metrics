@@ -38,6 +38,7 @@ export class JiraIssueBuilder {
       "created",
       "labels",
       "components",
+      "assignee",
       this.epicLinkFieldId,
       this.parentFieldId,
     ];
@@ -50,6 +51,7 @@ export class JiraIssueBuilder {
       ?.name as StatusCategory;
     const issueType = json.fields.issuetype?.name;
     const resolution = json.fields.resolution?.name;
+    const assignee = json.fields.assignee?.displayName;
     const created = new Date(json.fields.created);
     const hierarchyLevel =
       issueType === "Epic" ? HierarchyLevel.Epic : HierarchyLevel.Story;
@@ -81,6 +83,7 @@ export class JiraIssueBuilder {
       hierarchyLevel,
       status,
       statusCategory,
+      assignee,
       created,
       parentKey: epicKey ?? parentKey,
       transitions,
