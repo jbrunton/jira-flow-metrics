@@ -1,4 +1,4 @@
-import { Issue } from "@entities/issues";
+import { HierarchyLevel, Issue } from "@entities/issues";
 import { useEffect, useState } from "react";
 import { useFilterContext } from "../../../filter/context";
 import { FilterOptionsForm } from "../components/filter-form/filter-options-form";
@@ -29,10 +29,15 @@ export const TimeSpentPage = () => {
     if (filter && issues) {
       const filteredIssues = filterIssues(issues, {
         ...filter,
-        hierarchyLevel: undefined,
+        hierarchyLevel: HierarchyLevel.Story,
         dateFilterType: DateFilterType.Intersects,
       });
-      setFilteredIssues(filteredIssues);
+      setFilteredIssues([
+        ...filteredIssues,
+        ...issues.filter(
+          (issue) => issue.hierarchyLevel === HierarchyLevel.Epic,
+        ),
+      ]);
     }
   }, [issues, filter, setFilteredIssues]);
 
@@ -128,6 +133,8 @@ export const TimeSpentPage = () => {
         filteredIssuesCount={filteredIssues.length}
         showDateSelector={true}
         showStatusFilter={false}
+        showHierarchyFilter={false}
+        clearHierarchyLevelByDefault={true}
         showResolutionFilter={true}
       />
 

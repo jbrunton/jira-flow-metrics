@@ -27,6 +27,7 @@ type FilterOptionsProps = {
   showDateSelector: boolean;
   showResolutionFilter: boolean;
   showStatusFilter: boolean;
+  showHierarchyFilter: boolean;
   clearHierarchyLevelByDefault?: boolean;
 };
 
@@ -36,6 +37,7 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
   showDateSelector,
   showResolutionFilter,
   showStatusFilter,
+  showHierarchyFilter,
   clearHierarchyLevelByDefault,
 }) => {
   const { filter: initialFilter, setFilter } = useFilterContext();
@@ -173,18 +175,20 @@ export const FilterOptionsForm: FC<FilterOptionsProps> = ({
               </Form.Item>
             </Col>
           ) : null}
-          <Col span={4}>
-            <Form.Item label="Hierarchy Level">
-              <Select
-                allowClear={true}
-                value={hierarchyLevel}
-                onChange={setHierarchyLevel}
-              >
-                <Select.Option value="Story">Story</Select.Option>
-                <Select.Option value="Epic">Epic</Select.Option>
-              </Select>
-            </Form.Item>
-          </Col>
+          {showHierarchyFilter ? (
+            <Col span={4}>
+              <Form.Item label="Hierarchy Level">
+                <Select
+                  allowClear={true}
+                  value={hierarchyLevel}
+                  onChange={setHierarchyLevel}
+                >
+                  <Select.Option value="Story">Story</Select.Option>
+                  <Select.Option value="Epic">Epic</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          ) : null}
           {showResolutionFilter ? (
             <Col span={4}>
               <Form.Item label="Resolution">

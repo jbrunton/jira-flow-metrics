@@ -78,6 +78,7 @@ export const ForecastPage = () => {
         showDateSelector={true}
         showStatusFilter={false}
         showResolutionFilter={true}
+        showHierarchyFilter={true}
       />
       <ExpandableOptions
         header={{

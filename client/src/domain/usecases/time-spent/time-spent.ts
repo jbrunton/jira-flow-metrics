@@ -110,7 +110,7 @@ export const timeSpentInPeriod = (
   const unassignedData: TimeSpentRow[] = issues
     .filter(
       (issue) =>
-        !issue.parentKey && issue.hierarchyLevel === HierarchyLevel.Story,
+        issue.hierarchyLevel === HierarchyLevel.Story && !issue.parentKey,
     )
     .map((issue) => {
       const timeInPeriod = timesInPeriod[issue.key];

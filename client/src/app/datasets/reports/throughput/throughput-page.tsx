@@ -53,6 +53,7 @@ export const ThroughputPage = () => {
         showDateSelector={true}
         showStatusFilter={false}
         showResolutionFilter={true}
+        showHierarchyFilter={true}
       />
 
       <ExpandableOptions
