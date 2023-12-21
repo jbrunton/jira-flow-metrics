@@ -69,6 +69,7 @@ export const WipPage = () => {
         showDateSelector={true}
         showStatusFilter={false}
         showResolutionFilter={false}
+        showHierarchyFilter={true}
       />
       <ExpandableOptions
         header={{
