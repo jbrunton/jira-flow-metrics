@@ -138,21 +138,6 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       key: "status",
       render: (_, issue) => <IssueStatus {...issue} />,
     },
-    {
-      title: "Resolution",
-      key: "resolution",
-      render: (_, issue) => <IssueResolution {...issue} />,
-    },
-    configureSort({
-      title: "Created",
-      dataIndex: ["created"],
-      key: "created",
-      render: (date) => {
-        return formatDate(date);
-      },
-      sorter: (a, b, sortOrder) =>
-        compareDates(a.created, b.created, sortOrder),
-    }),
     configureSort({
       title: "Started",
       dataIndex: ["metrics", "started"],
@@ -212,6 +197,28 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       sorter: (a, b, sortOrder) =>
         compareNumbers(a.metrics.cycleTime, b.metrics.cycleTime, sortOrder),
     }),
+    {
+      title: "Resolution",
+      key: "resolution",
+      render: (_, issue) => <IssueResolution {...issue} />,
+    },
+    configureSort({
+      title: "Created",
+      dataIndex: ["created"],
+      key: "created",
+      render: (date) => {
+        return formatDate(date);
+      },
+      sorter: (a, b, sortOrder) =>
+        compareDates(a.created, b.created, sortOrder),
+    }),
+    {
+      title: "Assignee",
+      key: "assignee",
+      render: (_, issue) => (
+        <span style={{ whiteSpace: "nowrap" }}>{issue.assignee}</span>
+      ),
+    },
   ];
 
   if (onExcludedIssuesChanged) {
@@ -275,7 +282,7 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
   };
 
   if (parentEpic) {
-    columns.push({
+    columns.splice(8, 0, {
       title: "Progress",
       key: "progress",
       render: (_, issue) => {
@@ -283,7 +290,7 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       },
     });
   } else {
-    columns.splice(6, 0, {
+    columns.splice(8, 0, {
       title: "Parent",
       key: "parent",
       render: (_, issue) =>
@@ -293,13 +300,14 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
     });
   }
 
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize, setPageSize] = useState(10);
 
   return (
     <>
       <Table
         dataSource={issues}
         size="small"
+        scroll={{ x: 1440 }}
         columns={columns}
         onChange={(_pagination, _filters, sorter) => {
           if ("columnKey" in sorter) {

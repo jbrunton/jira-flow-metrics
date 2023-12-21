@@ -36,6 +36,7 @@ export type Issue = {
   created: Date;
   transitions: Transition[];
   labels: string[];
+  assignee?: string;
   components: string[];
   metrics: IssueFlowMetrics;
   sortIndex?: number;

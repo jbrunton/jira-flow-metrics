@@ -84,6 +84,7 @@ export type IssueFilter = {
   fromStatus?: string;
   toStatus?: string;
   issueTypes?: string[];
+  assignees?: string[];
   labels?: string[];
   components?: string[];
   labelFilterType?: LabelFilterType;
@@ -107,6 +108,12 @@ export const filterIssues = (issues: Issue[], filter: IssueFilter): Issue[] => {
 
     if (filter.issueTypes && filter.issueTypes.length > 0) {
       if (!filter.issueTypes.includes(issue.issueType)) {
+        return false;
+      }
+    }
+
+    if (filter.assignees && filter.assignees.length > 0) {
+      if (!issue.assignee || !filter.assignees.includes(issue.assignee)) {
         return false;
       }
     }
