@@ -8,14 +8,7 @@ Clone the repository and run `./bootstrap.sh`.
 
 ## Development
 
-From `client/`:
-
 ```bash
-npm run dev
-```
-
-From `api/`:
-
-```bash
-npm run start:dev
+pnpm install
+pnpm dev
 ```
