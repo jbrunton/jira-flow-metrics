@@ -3,39 +3,52 @@ on: push
 
 jobs:
 
+#   - name: Setup Node.js 20
+#   uses: actions/setup-node@v3
+#   with:
+#     node-version: 20
+#     registry-url: 'https://npm.pkg.github.com'
+
+# - uses: pnpm/action-setup@v2
+#   with:
+#     version: 8
+
   lint:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        directory: ["client", "api"]
-    defaults:
-      run:
-        working-directory: ${{ matrix.directory }}
+        app: ["client", "api"]
     steps:
       - uses: actions/checkout@v3
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run build
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - run: pnpm install --filter ${{ matrix.app }}
+      - run: pnpm lint --filter ${{ matrix.app }}
+      - run: pnpm build --filter ${{ matrix.app }}
 
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        directory: ["client", "api"]
-    defaults:
-      run:
-        working-directory: ${{ matrix.directory }}
+        app: ["client", "api"]
     steps:
       - uses: actions/checkout@v3
-      - run: npm ci
-      - run: npm run test
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - run: pnpm install --filter ${{ matrix.app }}
+      - run: pnpm test --filter ${{ matrix.app }}
       
   test-e2e:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: api
+        working-directory: apps/api
     steps:
       - uses: actions/checkout@v3
-      - run: npm ci
-      - run: npm run test:e2e
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - run: pnpm install
+      - run: pnpm test:e2e
