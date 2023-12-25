@@ -1,14 +1,9 @@
-import {
-  HierarchyLevel,
-  Issue,
-  StatusCategory,
-  TransitionContext,
-  buildTransitions,
-} from "@jbrunton/flow-metrics";
+import { HierarchyLevel, Issue, StatusCategory } from "../types";
+import { TransitionContext, buildTransitions } from "../parse/issue_builder";
 
 let issueCount = 100;
 
-type IssueParams = Partial<Omit<Issue, "transitions">> & {
+type IssueParams = Partial<Omit<Issue, "transitions" | "fields">> & {
   transitions: TransitionContext[];
 };
 
@@ -22,12 +17,12 @@ export const buildIssue = (params: IssueParams): Issue => {
     summary: `Some issue ${issueCount}`,
     status: "Backlog",
     statusCategory: StatusCategory.ToDo,
-    transitions: [],
     labels: [],
     components: [],
-    assignee: undefined,
-    metrics: {},
+    assignee: "Test User",
     created: new Date(),
+    transitions: [],
+    metrics: {},
   };
 
   const result = {

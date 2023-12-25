@@ -9,7 +9,7 @@ module.exports = {
   extends: [
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended",
-    "plugin:boundaries/strict",
+    "plugin:boundaries/recommended",
   ],
   root: true,
   env: {
@@ -68,7 +68,7 @@ module.exports = {
       },
       {
         type: "usecases",
-        pattern: "src/domain/usecases",
+        pattern: ["src/domain/usecases"],
       },
       {
         type: "lib",

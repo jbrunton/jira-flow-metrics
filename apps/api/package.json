@@ -32,7 +32,8 @@
     "node-json-db": "^2.2.0",
     "rambda": "^8.3.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "@jbrunton/flow-metrics": "workspace:*"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.2.0",

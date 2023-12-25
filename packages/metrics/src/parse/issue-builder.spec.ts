@@ -3,8 +3,8 @@ import {
   exampleFields,
   exampleIssue,
   exampleStatuses,
-} from "../../../../../test/fixtures/example-json";
-import { StatusBuilder } from "./status-builder-spec";
+} from "../test/example-json";
+import { StatusBuilder } from "./status-builder";
 
 const now = new Date("2023-09-07T10:30:00.000Z");
 jest.useFakeTimers().setSystemTime(now);

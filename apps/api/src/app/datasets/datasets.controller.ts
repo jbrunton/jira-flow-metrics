@@ -1,8 +1,8 @@
 import { DatasetsRepository } from "@entities/datasets";
 import { IssuesRepository } from "@entities/issues";
+import { getFlowMetrics } from "@jbrunton/flow-metrics";
 import { Controller, Delete, Get, Param, Put, Query } from "@nestjs/common";
 import { SyncUseCase } from "@usecases/datasets/sync/sync-use-case";
-import { CycleTimesUseCase } from "@usecases/issues/metrics/cycle-times-use-case";
 
 @Controller("datasets")
 export class DatasetsController {
@@ -10,7 +10,6 @@ export class DatasetsController {
     private readonly datasets: DatasetsRepository,
     private readonly issues: IssuesRepository,
     private readonly sync: SyncUseCase,
-    private readonly cycleTimes: CycleTimesUseCase,
   ) {}
 
   @Get(":datasetId")
@@ -40,7 +39,7 @@ export class DatasetsController {
 
     const orderedStatuses = dataset.statuses.map((status) => status.name);
 
-    issues = this.cycleTimes.exec(
+    issues = getFlowMetrics(
       issues,
       ["true", "1"].includes(includeWaitTime),
       orderedStatuses,

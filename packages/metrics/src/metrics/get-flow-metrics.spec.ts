@@ -1,12 +1,10 @@
-import { HierarchyLevel, Status, StatusCategory } from "@entities/issues";
-import { CycleTimesUseCase } from "./cycle-times-use-case";
-import { buildIssue } from "@fixtures/factories/issue-factory";
+import { HierarchyLevel, Status, StatusCategory } from "../types";
+import { getFlowMetrics } from "./get-flow-metrics";
+import { buildIssue } from "../test/issue-factory";
 
 jest.useFakeTimers();
 
-describe("CycleTimesUseCase", () => {
-  const cycleTimes = new CycleTimesUseCase();
-
+describe("getFlowMetrics", () => {
   const backlog: Status = {
     jiraId: "12",
     name: "Backlog",
@@ -58,10 +56,7 @@ describe("CycleTimesUseCase", () => {
         transitions: [
           {
             date: new Date("2023-09-04T13:37:24.303Z"),
-            fromStatus: {
-              name: "backlog",
-              category: StatusCategory.ToDo,
-            },
+            fromStatus: backlog,
             toStatus: {
               name: "Ready for Development",
               category: StatusCategory.ToDo,
@@ -115,7 +110,7 @@ describe("CycleTimesUseCase", () => {
         metrics: {},
       });
 
-      const [result] = cycleTimes.exec([issue], false, orderedStatuses);
+      const [result] = getFlowMetrics([issue], false, orderedStatuses);
 
       expect(result.metrics).toEqual({
         cycleTime: 0.8824537037037037,
@@ -156,7 +151,7 @@ describe("CycleTimesUseCase", () => {
       });
 
       it("uses the first started date", () => {
-        const [result] = cycleTimes.exec([issue], false, orderedStatuses);
+        const [result] = getFlowMetrics([issue], false, orderedStatuses);
 
         expect(result.metrics).toEqual(
           expect.objectContaining({
@@ -167,7 +162,7 @@ describe("CycleTimesUseCase", () => {
       });
 
       it("excludes the paused status time when includeWaitTime = false", () => {
-        const [result] = cycleTimes.exec([issue], false, orderedStatuses);
+        const [result] = getFlowMetrics([issue], false, orderedStatuses);
 
         expect(result.metrics).toEqual(
           expect.objectContaining({
@@ -177,7 +172,7 @@ describe("CycleTimesUseCase", () => {
       });
 
       it("includes the paused status time when includeWaitTime = true", () => {
-        const [result] = cycleTimes.exec([issue], true, orderedStatuses);
+        const [result] = getFlowMetrics([issue], true, orderedStatuses);
 
         expect(result.metrics).toEqual(
           expect.objectContaining({
@@ -219,7 +214,7 @@ describe("CycleTimesUseCase", () => {
       });
 
       it("uses the last completed date", () => {
-        const [result] = cycleTimes.exec([issue], false, orderedStatuses);
+        const [result] = getFlowMetrics([issue], false, orderedStatuses);
 
         expect(result.metrics).toEqual(
           expect.objectContaining({
@@ -230,7 +225,7 @@ describe("CycleTimesUseCase", () => {
       });
 
       it("excludes the paused status time when includeWaitTime = false", () => {
-        const [result] = cycleTimes.exec([issue], false, orderedStatuses);
+        const [result] = getFlowMetrics([issue], false, orderedStatuses);
 
         expect(result.metrics).toEqual(
           expect.objectContaining({
@@ -240,7 +235,7 @@ describe("CycleTimesUseCase", () => {
       });
 
       it("includes the paused status time when includeWaitTime = true", () => {
-        const [result] = cycleTimes.exec([issue], true, orderedStatuses);
+        const [result] = getFlowMetrics([issue], true, orderedStatuses);
 
         expect(result.metrics).toEqual(
           expect.objectContaining({
@@ -275,7 +270,7 @@ describe("CycleTimesUseCase", () => {
         ],
       });
 
-      const [result] = cycleTimes.exec([issue], false, orderedStatuses);
+      const [result] = getFlowMetrics([issue], false, orderedStatuses);
 
       expect(result.metrics).toEqual({
         started: startedDate,
@@ -306,7 +301,7 @@ describe("CycleTimesUseCase", () => {
       });
 
       it("returns the age of the issue", () => {
-        const [result] = cycleTimes.exec([issue], true, orderedStatuses);
+        const [result] = getFlowMetrics([issue], true, orderedStatuses);
 
         expect(result.metrics).toEqual({
           started: startedDate,
@@ -315,7 +310,7 @@ describe("CycleTimesUseCase", () => {
       });
 
       it("excludes the current status when includeWaitTime is false", () => {
-        const [result] = cycleTimes.exec([issue], false, orderedStatuses);
+        const [result] = getFlowMetrics([issue], false, orderedStatuses);
 
         expect(result.metrics).toEqual({
           started: startedDate,
@@ -350,7 +345,7 @@ describe("CycleTimesUseCase", () => {
           ],
         });
 
-        const [result] = cycleTimes.exec(
+        const [result] = getFlowMetrics(
           [issue],
           false,
           orderedStatuses,
@@ -384,7 +379,7 @@ describe("CycleTimesUseCase", () => {
           ],
         });
 
-        const [result] = cycleTimes.exec(
+        const [result] = getFlowMetrics(
           [issue],
           false,
           orderedStatuses,
@@ -447,7 +442,7 @@ describe("CycleTimesUseCase", () => {
     });
 
     it("computes epic cycle time metrics based on stories", () => {
-      const [result] = cycleTimes.exec(
+      const [result] = getFlowMetrics(
         [epic, story1, story2],
         false,
         orderedStatuses,
@@ -466,7 +461,7 @@ describe("CycleTimesUseCase", () => {
         statusCategory: StatusCategory.InProgress,
       };
 
-      const [result] = cycleTimes.exec(
+      const [result] = getFlowMetrics(
         [inProgressEpic, story1, story2],
         false,
         orderedStatuses,
