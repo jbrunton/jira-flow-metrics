@@ -1,4 +1,4 @@
-import { isNil, map, path, pipe, reverse, sort, sum } from "rambda";
+import { isNil, map, pipe, reverse, sort, sumBy } from "remeda";
 import {
   HierarchyLevel,
   Issue,
@@ -7,51 +7,49 @@ import {
   Transition,
   isCompleted,
   isStarted,
-} from "@entities/issues";
+} from "../types";
 import { compareAsc, compareDesc } from "date-fns";
-import { getDifferenceInDays } from "@lib/dates";
+import { getDifferenceInDays } from "../lib/dates";
 
-export class CycleTimesUseCase {
-  exec(
-    issues: Issue[],
-    includeWaitTime: boolean,
-    orderedStatuses: string[],
-    fromStatus?: string,
-    toStatus?: string,
-  ): Issue[] {
-    const stories = issues.filter(
-      (issue) => issue.hierarchyLevel === HierarchyLevel.Story,
+export const getFlowMetrics = (
+  issues: Issue[],
+  includeWaitTime: boolean,
+  orderedStatuses: string[],
+  fromStatus?: string,
+  toStatus?: string,
+): Issue[] => {
+  const stories = issues.filter(
+    (issue) => issue.hierarchyLevel === HierarchyLevel.Story,
+  );
+
+  const epics = issues.filter(
+    (issue) => issue.hierarchyLevel === HierarchyLevel.Epic,
+  );
+
+  const updatedStories = stories.map((story) => {
+    const metrics = getStoryFlowMetrics(
+      story,
+      includeWaitTime,
+      orderedStatuses,
+      fromStatus,
+      toStatus,
     );
+    return {
+      ...story,
+      metrics,
+    };
+  });
 
-    const epics = issues.filter(
-      (issue) => issue.hierarchyLevel === HierarchyLevel.Epic,
-    );
+  const updatedEpics = epics.map((epic) => {
+    const metrics = estimateEpicFlowMetrics(epic, updatedStories);
+    return {
+      ...epic,
+      metrics,
+    };
+  });
 
-    const updatedStories = stories.map((story) => {
-      const metrics = getStoryFlowMetrics(
-        story,
-        includeWaitTime,
-        orderedStatuses,
-        fromStatus,
-        toStatus,
-      );
-      return {
-        ...story,
-        metrics,
-      };
-    });
-
-    const updatedEpics = epics.map((epic) => {
-      const metrics = estimateEpicFlowMetrics(epic, updatedStories);
-      return {
-        ...epic,
-        metrics,
-      };
-    });
-
-    return [...updatedEpics, ...updatedStories];
-  }
-}
+  return [...updatedEpics, ...updatedStories];
+};
 
 const getStartedDateIndex = (
   transitions: Array<Transition>,
@@ -134,17 +132,15 @@ const getStoryFlowMetrics = (
   }
 
   const getCycleTime = (transitions: Transition[]) => {
-    return sum(
-      transitions.slice(0, transitions.length - 1).map((transition) => {
-        if (includeWaitTime) {
-          return transition.timeInStatus;
-        } else {
-          return transition.toStatus.category === StatusCategory.InProgress
-            ? transition.timeInStatus
-            : 0;
-        }
-      }),
-    );
+    return sumBy(transitions.slice(0, transitions.length - 1), (transition) => {
+      if (includeWaitTime) {
+        return transition.timeInStatus;
+      } else {
+        return transition.toStatus.category === StatusCategory.InProgress
+          ? transition.timeInStatus
+          : 0;
+      }
+    });
   };
 
   if (completedIndex === -1) {
@@ -186,17 +182,19 @@ const estimateEpicFlowMetrics = (
   const completedChildren = children.filter(isCompleted);
 
   const startedDates = pipe(
-    map(path(["metrics", "started"])),
+    startedChildren,
+    map((issue) => issue.metrics.started),
     sort(compareAsc),
     map((x) => new Date(x)),
-  )(startedChildren);
+  );
   const started = startedDates[0];
 
   const completedDates = pipe(
-    map(path(["metrics", "completed"])),
+    completedChildren,
+    map((issue) => issue.metrics.completed),
     sort(compareDesc),
     map((x) => new Date(x)),
-  )(completedChildren);
+  );
 
   const completed =
     epic.statusCategory === StatusCategory.Done ? completedDates[0] : undefined;

@@ -2,22 +2,21 @@ name: Build
 on: push
 
 jobs:
+  #   - name: Setup Node.js 20
+  #   uses: actions/setup-node@v3
+  #   with:
+  #     node-version: 20
+  #     registry-url: 'https://npm.pkg.github.com'
 
-#   - name: Setup Node.js 20
-#   uses: actions/setup-node@v3
-#   with:
-#     node-version: 20
-#     registry-url: 'https://npm.pkg.github.com'
-
-# - uses: pnpm/action-setup@v2
-#   with:
-#     version: 8
+  # - uses: pnpm/action-setup@v2
+  #   with:
+  #     version: 8
 
   lint:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        app: ["client", "api"]
+        app: ["client", "api", "flow-metrics"]
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
@@ -31,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        app: ["client", "api"]
+        app: ["client", "api", "flow-metrics"]
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
@@ -39,7 +38,7 @@ jobs:
           version: 8
       - run: pnpm install --filter ${{ matrix.app }}
       - run: pnpm test --filter ${{ matrix.app }}
-      
+
   test-e2e:
     runs-on: ubuntu-latest
     defaults:

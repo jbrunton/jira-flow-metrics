@@ -1,11 +1,14 @@
 import { DatasetsRepository } from "@entities/datasets";
-import { HierarchyLevel, IssuesRepository } from "@entities/issues";
+import { IssuesRepository } from "@entities/issues";
 import { Injectable } from "@nestjs/common";
 import { JiraIssuesRepository } from "./jira-issues-repository";
-import { JiraIssueBuilder } from "./issue_builder";
+import {
+  JiraIssueBuilder,
+  StatusBuilder,
+  HierarchyLevel,
+} from "@jbrunton/flow-metrics";
 import { DomainsRepository } from "@entities/domains";
 import { sortStatuses } from "./sort-statuses";
-import { StatusBuilder } from "./status-builder-spec";
 
 @Injectable()
 export class SyncUseCase {

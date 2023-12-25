@@ -1,5 +1,5 @@
+import { TransitionStatus } from "@jbrunton/flow-metrics";
 import { Domain } from "./domains";
-import { TransitionStatus } from "./issues";
 
 export type Dataset = {
   id: string;

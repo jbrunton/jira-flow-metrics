@@ -1,9 +1,14 @@
 import { mapLimit } from "async";
 import { isNil, range, reject } from "rambda";
 import { Injectable } from "@nestjs/common";
-import { Field, Issue, Status, StatusCategory } from "@entities/issues";
+import {
+  Field,
+  Issue,
+  Status,
+  StatusCategory,
+  JiraIssueBuilder,
+} from "@jbrunton/flow-metrics";
 import { JiraIssuesRepository } from "@usecases/datasets/sync/jira-issues-repository";
-import { JiraIssueBuilder } from "@usecases/datasets/sync/issue_builder";
 import { createJiraClient } from "../client/jira-client";
 import { Domain } from "@entities/domains";
 

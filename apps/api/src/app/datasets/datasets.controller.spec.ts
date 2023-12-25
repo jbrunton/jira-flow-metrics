@@ -6,8 +6,9 @@ import { INestApplication } from "@nestjs/common";
 import { StorageModule } from "@data/storage/storage-module";
 import { TestStorageModule } from "@fixtures/data/storage/test-storage-module";
 import { buildIssue } from "@fixtures/factories/issue-factory";
-import { IssuesRepository, StatusCategory } from "@entities/issues";
+import { IssuesRepository } from "@entities/issues";
 import { DatasetsRepository } from "@entities/datasets";
+import { StatusCategory } from "@jbrunton/flow-metrics";
 
 jest.useFakeTimers().setSystemTime(Date.parse("2023-01-01T13:00:00.000Z"));
 

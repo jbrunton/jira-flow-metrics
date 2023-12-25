@@ -1,4 +1,4 @@
-import { Status, StatusCategory, TransitionStatus } from "@entities/issues";
+import { Status, StatusCategory, TransitionStatus } from "../types";
 
 export class StatusBuilder {
   private readonly map: Record<string, TransitionStatus> = {

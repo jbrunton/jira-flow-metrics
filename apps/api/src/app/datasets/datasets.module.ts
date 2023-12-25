@@ -1,9 +1,8 @@
 import { Module } from "@nestjs/common";
 import { DatasetsController } from "./datasets.controller";
 import { SyncUseCase } from "@usecases/datasets/sync/sync-use-case";
-import { CycleTimesUseCase } from "@usecases/issues/metrics/cycle-times-use-case";
 @Module({
-  providers: [SyncUseCase, CycleTimesUseCase],
+  providers: [SyncUseCase],
   controllers: [DatasetsController],
 })
 export class DatasetsModule {}

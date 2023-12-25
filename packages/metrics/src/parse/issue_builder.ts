@@ -1,15 +1,16 @@
 import { Version3Models } from "jira.js";
-import { reject, isNil } from "rambda";
+import assert from "node:assert";
+import { compact } from "remeda";
 import {
   Field,
   HierarchyLevel,
   Issue,
   StatusCategory,
   Transition,
-} from "@entities/issues";
+} from "../types";
 import { compareAsc } from "date-fns";
-import { StatusBuilder } from "./status-builder-spec";
-import { getDifferenceInDays } from "@lib/dates";
+import { StatusBuilder } from "./status-builder";
+import { getDifferenceInDays } from "../lib/dates";
 
 export type TransitionContext = Omit<Transition, "timeInStatus" | "until">;
 
@@ -24,12 +25,13 @@ export class JiraIssueBuilder {
   ) {
     this.epicLinkFieldId = fields.find((field) => field.name === "Epic Link")
       ?.jiraId;
+
     this.parentFieldId = fields.find((field) => field.name === "Parent")
       ?.jiraId;
   }
 
   getRequiredFields(): string[] {
-    return [
+    return compact([
       "key",
       "summary",
       "issuetype",
@@ -41,12 +43,12 @@ export class JiraIssueBuilder {
       "assignee",
       this.epicLinkFieldId,
       this.parentFieldId,
-    ];
+    ]);
   }
 
   build(json: Version3Models.Issue): Issue {
     const key = json.key;
-    const status = json.fields.status.name;
+    const status = json.fields.status.name ?? "Unknown";
     const statusCategory = json.fields.status.statusCategory
       ?.name as StatusCategory;
     const issueType = json.fields.issuetype?.name;
@@ -57,7 +59,7 @@ export class JiraIssueBuilder {
       issueType === "Epic" ? HierarchyLevel.Epic : HierarchyLevel.Story;
     const labels = json.fields.labels;
     const components = json.fields.components.map(
-      (component) => component.name,
+      (component) => component.name ?? "Unknown",
     );
 
     if (!statusCategory) {
@@ -71,8 +73,12 @@ export class JiraIssueBuilder {
       statusCategory,
     );
 
-    const epicKey = json["fields"][this.epicLinkFieldId] as string;
-    const parentKey = json["fields"][this.parentFieldId]?.key as string;
+    const epicKey = this.epicLinkFieldId
+      ? json["fields"][this.epicLinkFieldId]
+      : undefined;
+    const parentKey = this.parentFieldId
+      ? json["fields"][this.parentFieldId]?.key
+      : undefined;
 
     const issue: Issue = {
       key,
@@ -100,14 +106,20 @@ export class JiraIssueBuilder {
     status: string,
     statusCategory: StatusCategory,
   ): Transition[] {
-    const transitions: TransitionContext[] = reject(isNil)(
-      json.changelog?.histories?.map((event) => {
+    const histories = json.changelog?.histories ?? [];
+    const transitions: TransitionContext[] = compact(
+      histories.map((event) => {
         const statusChange = event.items?.find(
           (item) => item.field == "status",
         );
         if (!statusChange) {
           return null;
         }
+
+        assert(statusChange.from);
+        assert(statusChange.fromString);
+        assert(statusChange.to);
+        assert(statusChange.toString);
 
         const fromStatus = this.statusBuilder.getStatus(
           statusChange.from,
@@ -119,11 +131,13 @@ export class JiraIssueBuilder {
           statusChange.toString,
         );
 
-        return {
+        const transition: TransitionContext = {
           date: new Date(Date.parse(event.created ?? "")),
           fromStatus,
           toStatus,
         };
+
+        return transition;
       }),
     );
 
