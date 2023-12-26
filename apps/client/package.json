@@ -15,6 +15,10 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@jbrunton/flow-charts": "workspace:*",
+    "@jbrunton/flow-components": "workspace:*",
+    "@jbrunton/flow-lib": "workspace:*",
+    "@jbrunton/flow-metrics": "workspace:*",
     "@tanstack/react-query": "^4.35.3",
     "@types/seedrandom": "^3.0.7",
     "antd": "^5.10.1",
@@ -27,17 +31,15 @@
     "fuzzball": "^2.1.2",
     "mathjs": "^11.11.2",
     "rambda": "^8.4.0",
+    "rc-picker": "~3.14.5",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.16.0",
-    "seedrandom": "^3.0.5",
-    "rc-picker": "~3.14.5",
-    "@jbrunton/flow-charts": "workspace:*",
-    "@jbrunton/flow-metrics": "workspace:*",
-    "@jbrunton/flow-lib": "workspace:*"
+    "seedrandom": "^3.0.5"
   },
   "devDependencies": {
+    "@tsconfig/vite-react": "^3.0.0",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",

@@ -2,16 +2,19 @@ import { Button, Col, Drawer, Layout, Row, Space } from "antd";
 import { IssuesTable } from "../../../components/issues-table";
 import { HierarchyLevel } from "@jbrunton/flow-metrics";
 import { useNavigationContext } from "../../../navigation/context";
-import { IssueDetailsCard } from "../components/issue-details-card";
-import { IssueMetricsCard } from "../components/issue-metrics-card";
-import { IssueTransitionsCard } from "../components/issue-transitions-card";
+import {
+  IssueDetailsCard,
+  IssueMetricsCard,
+  IssueTransitionsCard,
+} from "@jbrunton/flow-components";
 import { useDatasetContext } from "../../context";
 import { useState } from "react";
 import { ZoomInOutlined } from "@ant-design/icons";
 import { EpicTimeline } from "./components/epic-timeline";
+import { issueDetailsPath } from "@app/navigation/paths";
 
 export const IssueDetailsPage = () => {
-  const { issueKey } = useNavigationContext();
+  const { issueKey, datasetId } = useNavigationContext();
   const { issues } = useDatasetContext();
   const issue = issues?.find((issue) => issue.key === issueKey);
   const isEpic = issue?.hierarchyLevel === HierarchyLevel.Epic;
@@ -19,13 +22,21 @@ export const IssueDetailsPage = () => {
     ? issues?.filter((issue) => issue.parentKey === issueKey)
     : undefined;
   const [showTimeline, setShowTimeline] = useState(false);
+  const issuePath = issueDetailsPath({ issueKey, datasetId });
+  const parentPath = issue?.parentKey
+    ? issueDetailsPath({ issueKey: issue.parentKey, datasetId })
+    : undefined;
   return issue ? (
     <>
       <h2>{issue.summary}</h2>
       <Row gutter={[8, 8]}>
         <Col md={12} sm={24}>
           <Space direction="vertical">
-            <IssueDetailsCard issue={issue} />
+            <IssueDetailsCard
+              issue={issue}
+              issuePath={issuePath}
+              parentPath={parentPath}
+            />
           </Space>
         </Col>
         <Col md={12} sm={24}>
