@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { CompletedIssue, Issue } from "@entities/issues";
-import { Interval, TimeUnit, getOverlappingInterval } from "@lib/intervals";
+import { CompletedIssue, Issue } from "@jbrunton/flow-metrics";
+import { Interval, TimeUnit, getOverlappingInterval } from "@jbrunton/flow-lib";
 import { ThroughputChart } from "./components/throughput-chart";
 import { Col, Form, Row, Select } from "antd";
 import {

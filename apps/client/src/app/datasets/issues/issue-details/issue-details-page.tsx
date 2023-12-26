@@ -1,6 +1,6 @@
 import { Button, Col, Drawer, Layout, Row, Space } from "antd";
 import { IssuesTable } from "../../../components/issues-table";
-import { HierarchyLevel } from "@entities/issues";
+import { HierarchyLevel } from "@jbrunton/flow-metrics";
 import { useNavigationContext } from "../../../navigation/context";
 import { IssueDetailsCard } from "../components/issue-details-card";
 import { IssueMetricsCard } from "../components/issue-metrics-card";

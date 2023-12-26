@@ -53,6 +53,7 @@ export type Issue = {
   externalUrl: string;
   hierarchyLevel: HierarchyLevel;
   parentKey?: string;
+  parent?: Issue;
   summary: string;
   issueType?: string;
   assignee?: string;

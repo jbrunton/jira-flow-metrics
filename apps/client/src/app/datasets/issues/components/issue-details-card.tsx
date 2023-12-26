@@ -1,7 +1,7 @@
 import React from "react";
-import { Issue } from "@entities/issues";
+import { Issue } from "@jbrunton/flow-metrics";
 import { Card, Descriptions, Space, Tag } from "antd";
-import { formatTime } from "@lib/format";
+import { formatTime } from "@jbrunton/flow-lib";
 import { issueDetailsPath } from "../../../navigation/paths";
 import { useNavigationContext } from "../../../navigation/context";
 import { Link } from "react-router-dom";

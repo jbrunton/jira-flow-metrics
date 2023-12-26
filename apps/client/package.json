@@ -10,7 +10,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "clean": "rm -rf node_modules && rm -rf dist"
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
@@ -31,7 +32,10 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.16.0",
     "seedrandom": "^3.0.5",
-    "rc-picker": "~3.14.5"
+    "rc-picker": "~3.14.5",
+    "@jbrunton/flow-charts": "workspace:*",
+    "@jbrunton/flow-metrics": "workspace:*",
+    "@jbrunton/flow-lib": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

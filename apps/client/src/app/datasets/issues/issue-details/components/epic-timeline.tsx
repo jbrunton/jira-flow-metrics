@@ -2,9 +2,9 @@ import { Tooltip, ChartOptions } from "chart.js";
 
 import { Bar } from "react-chartjs-2";
 import "chartjs-adapter-date-fns";
-import { Issue, Transition } from "@entities/issues";
+import { Issue, Transition } from "@jbrunton/flow-metrics";
 import { FC, useEffect, useState } from "react";
-import { formatDate } from "@lib/format";
+import { formatDate } from "@jbrunton/flow-lib";
 import {
   dropWhile,
   equals,

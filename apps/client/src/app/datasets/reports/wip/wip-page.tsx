@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Issue } from "@entities/issues";
+import { Issue } from "@jbrunton/flow-metrics";
 import { IssuesTable } from "../../../components/issues-table";
 import { useFilterContext } from "../../../filter/context";
 import { WipResult, calculateWip } from "@usecases/wip/wip";

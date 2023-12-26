@@ -1,6 +1,6 @@
-import { Issue } from "@entities/issues";
+import { Issue } from "@jbrunton/flow-metrics";
 import { Checkbox, Space, Table, Tag, Typography } from "antd";
-import { formatDate, formatNumber } from "@lib/format";
+import { formatDate, formatNumber } from "@jbrunton/flow-lib";
 import { compareAsc, differenceInMinutes } from "date-fns";
 import { ColumnType, ColumnsType, SortOrder } from "antd/es/table/interface";
 import { useEffect, useState } from "react";

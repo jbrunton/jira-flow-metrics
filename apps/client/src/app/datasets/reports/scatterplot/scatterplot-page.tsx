@@ -1,5 +1,6 @@
-import { CompletedIssue, Issue } from "@entities/issues";
-import { Scatterplot } from "./components/scatterplot";
+import { CompletedIssue, Issue } from "@jbrunton/flow-metrics";
+// import { Scatterplot } from "./components/scatterplot";
+import { Scatterplot } from "@jbrunton/flow-charts";
 import { useEffect, useState } from "react";
 import { IssueDetailsDrawer } from "./components/issue-details-drawer";
 import { IssuesTable } from "../../../components/issues-table";

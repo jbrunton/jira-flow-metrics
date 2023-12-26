@@ -1,14 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { intersection } from "rambda";
-import { Interval } from "@lib/intervals";
+import { Interval } from "@jbrunton/flow-lib";
 import {
   CompletedIssue,
   HierarchyLevel,
   Issue,
   IssueFlowMetrics,
   isCompleted,
-} from "@entities/issues";
+} from "@jbrunton/flow-metrics";
 
 const issuesQueryKey = "issues";
 
@@ -107,7 +107,7 @@ export const filterIssues = (issues: Issue[], filter: IssueFilter): Issue[] => {
     }
 
     if (filter.issueTypes && filter.issueTypes.length > 0) {
-      if (!filter.issueTypes.includes(issue.issueType)) {
+      if (!issue.issueType || !filter.issueTypes.includes(issue.issueType)) {
         return false;
       }
     }

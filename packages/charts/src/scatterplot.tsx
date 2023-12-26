@@ -1,14 +1,14 @@
 import { ReactElement } from "react";
-import { CompletedIssue, Issue } from "@entities/issues";
+import { CompletedIssue, Issue } from "@jbrunton/flow-metrics";
 import { ChartOptions } from "chart.js";
 import { Scatter } from "react-chartjs-2";
 import "chartjs-adapter-date-fns";
-import { formatDate } from "@lib/format";
+import "chartjs-plugin-datalabels";
+import { formatDate, Interval } from "@jbrunton/flow-lib";
 import { compareAsc, startOfDay } from "date-fns";
-import { sort, uniqBy } from "rambda";
+import { sort, uniqBy } from "remeda";
 import { AnnotationOptions } from "chartjs-plugin-annotation";
-import { Percentile } from "@usecases/scatterplot/cycle-times";
-import { Interval } from "@lib/intervals";
+import { Percentile } from "./percentiles";
 
 type ScatterplotProps = {
   issues: CompletedIssue[];
@@ -74,7 +74,7 @@ export const Scatterplot = ({
             value: p.cycleTime,
           };
           return [p.percentile.toString(), options];
-        }),
+        })
       )
     : undefined;
 
@@ -94,11 +94,11 @@ export const Scatterplot = ({
         callbacks: {
           title: (ctx) => {
             const dates = ctx.map(({ dataIndex }) =>
-              startOfDay(issues[dataIndex].metrics.completed),
+              startOfDay(issues[dataIndex].metrics.completed)
             );
             const uniqDates = sort(
-              compareAsc,
-              uniqBy((date: Date) => date.getTime(), dates),
+              uniqBy(dates, (date: Date) => date.getTime()),
+              compareAsc
             );
 
             if (uniqDates.length === 1) {

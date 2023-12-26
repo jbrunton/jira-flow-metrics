@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CompletedIssue } from "@entities/issues";
+import { CompletedIssue } from "@jbrunton/flow-metrics";
 import { useFilterContext } from "../../../filter/context";
 import { ForecastChart } from "./components/forecast-chart";
 import {
@@ -17,7 +17,7 @@ import { RedoOutlined } from "@ant-design/icons";
 import { FilterOptionsForm } from "../components/filter-form/filter-options-form";
 import { ExpandableOptions } from "../../../components/expandable-options";
 import { useDatasetContext } from "../../context";
-import { formatDate } from "@lib/format";
+import { formatDate } from "@jbrunton/flow-lib";
 import { filterCompletedIssues } from "@data/issues";
 import { SummaryRow, forecast } from "@usecases/forecast/forecast";
 

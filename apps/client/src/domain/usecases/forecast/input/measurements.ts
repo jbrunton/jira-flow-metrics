@@ -1,8 +1,8 @@
-import { CompletedIssue } from "@entities/issues";
+import { CompletedIssue } from "@jbrunton/flow-metrics";
 import { eachDayOfInterval, endOfDay, getISODay, startOfDay } from "date-fns";
 import { InputMeasurements } from "../simulation/run";
-import { excludeOutliersFromSeq } from "@lib/outliers";
-import { categorizeWeekday } from "@lib/weekdays";
+import { excludeOutliersFromSeq } from "@jbrunton/flow-lib";
+import { categorizeWeekday } from "@jbrunton/flow-lib";
 
 export const computeThroughput = (
   issues: CompletedIssue[],

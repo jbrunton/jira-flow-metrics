@@ -1,0 +1,38 @@
+{
+  "name": "@jbrunton/flow-charts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf node_modules && rm -rf dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@jbrunton/flow-lib": "workspace:*",
+    "@jbrunton/flow-metrics": "workspace:*",
+    "date-fns": "^2.30.0",
+    "mathjs": "^11.11.2",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "remeda": "^1.33.0"
+  },
+  "devDependencies": {
+    "@tsconfig/vite-react": "^3.0.0",
+    "@types/react": "^18.2.15",
+    "chart.js": "^4.4.0",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "chartjs-plugin-annotation": "^3.0.1",
+    "chartjs-plugin-datalabels": "^2.2.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "chart.js": "^4.4.0",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "chartjs-plugin-annotation": "^3.0.1",
+    "chartjs-plugin-datalabels": "^2.2.0"
+  }
+}
