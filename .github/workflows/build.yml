@@ -4,30 +4,24 @@ on: push
 jobs:
   lint:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        app: ["client", "api", "flow-metrics"]
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
         with:
           version: 8
-      - run: pnpm install --filter ${{ matrix.app }}
-      - run: pnpm lint --filter ${{ matrix.app }}
+      - run: pnpm install
+      - run: pnpm lint
 
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        app: ["client", "api", "flow-metrics"]
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
         with:
           version: 8
-      - run: pnpm install --filter ${{ matrix.app }}
-      - run: pnpm build --filter ${{ matrix.app }}
-      - run: pnpm test --filter ${{ matrix.app }}
+      - run: pnpm install
+      - run: pnpm build
+      - run: pnpm test
 
   test-e2e:
     runs-on: ubuntu-latest
