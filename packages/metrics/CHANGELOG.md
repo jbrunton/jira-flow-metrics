@@ -1,5 +1,11 @@
 # @jbrunton/flow-metrics
 
+## 0.0.4
+
+### Patch Changes
+
+- cbcda0c: fix metrics exports
+
 ## 0.0.2
 
 ### Patch Changes
