@@ -1,5 +1,11 @@
 # @jbrunton/flow-lib
 
+## 0.0.2
+
+### Patch Changes
+
+- c293f4d: fix: .gitignore files
+
 ## 0.0.1
 
 ### Patch Changes
