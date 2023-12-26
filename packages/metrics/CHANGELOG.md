@@ -1,5 +1,11 @@
 # @jbrunton/flow-metrics
 
+## 0.0.5
+
+### Patch Changes
+
+- 89f197d: fix: use replace() for forge runtime
+
 ## 0.0.4
 
 ### Patch Changes
