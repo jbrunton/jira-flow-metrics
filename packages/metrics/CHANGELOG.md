@@ -1,5 +1,11 @@
 # @jbrunton/flow-metrics
 
+## 0.0.6
+
+### Patch Changes
+
+- a603d5d: refactor: extract components package
+
 ## 0.0.5
 
 ### Patch Changes

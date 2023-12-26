@@ -1,5 +1,14 @@
 # @jbrunton/flow-charts
 
+## 0.0.5
+
+### Patch Changes
+
+- a603d5d: refactor: extract components package
+- Updated dependencies [a603d5d]
+  - @jbrunton/flow-metrics@0.0.6
+  - @jbrunton/flow-lib@0.0.3
+
 ## 0.0.4
 
 ### Patch Changes
