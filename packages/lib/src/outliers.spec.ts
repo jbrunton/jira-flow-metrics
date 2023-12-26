@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import { excludeOutliersFromSeq } from "./outliers";
 
 describe("excludeOutliersFromSeq", () => {
