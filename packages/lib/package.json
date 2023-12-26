@@ -12,15 +12,12 @@
     "dev": "pnpm run build -- --watch",
     "clean": "rm -rf node_modules && rm -rf dist"
   },
-  "exports": {
-    ".": "./index.ts"
-  },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
-    "exports": {
-      ".": "./dist/index.js"
-    }
+    "registry": "https://npm.pkg.github.com"
   },
+  "files": [
+    "dist/**"
+  ],
   "repository": "https://github.com/jbrunton/jira-flow-metrics.git",
   "keywords": [],
   "author": "",

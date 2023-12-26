@@ -1,0 +1,32 @@
+{
+  "name": "@jbrunton/flow-components",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf node_modules && rm -rf dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@jbrunton/flow-lib": "workspace:*",
+    "@jbrunton/flow-metrics": "workspace:*",
+    "remeda": "^1.33.0"
+  },
+  "devDependencies": {
+    "@ant-design/icons": "^5.2.6",
+    "@tsconfig/vite-react": "^3.0.0",
+    "@types/react": "^18.2.15",
+    "antd": "^5.10.1",
+    "react": "^18.2.0",
+    "react-router-dom": "^6.16.0"
+  },
+  "peerDependencies": {
+    "@ant-design/icons": "^5.2.6",
+    "antd": "^5.10.1",
+    "react": "^18.2.0",
+    "react-router-dom": "^6.16.0"
+  }
+}

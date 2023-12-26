@@ -2,21 +2,20 @@ import React from "react";
 import { Issue } from "@jbrunton/flow-metrics";
 import { Card, Descriptions, Space, Tag } from "antd";
 import { formatTime } from "@jbrunton/flow-lib";
-import { issueDetailsPath } from "../../../navigation/paths";
-import { useNavigationContext } from "../../../navigation/context";
-import { Link } from "react-router-dom";
-import { ExportOutlined } from "@ant-design/icons";
-import { IssueResolution, IssueStatus } from "../../../components/issue-fields";
-import { IssueParentLink } from "../../../components/issue-parent-link";
+import { IssueResolution, IssueStatus } from "./issue-fields";
+import { IssueExternalLink, IssueLink } from "./issue-links";
 
 export type IssueDetailsCardProps = {
   issue: Issue;
+  issuePath: string;
+  parentPath?: string;
 };
 
 export const IssueDetailsCard: React.FC<IssueDetailsCardProps> = ({
   issue,
+  issuePath,
+  parentPath,
 }) => {
-  const { datasetId } = useNavigationContext();
   return (
     <Card title="Details" size="small">
       <Descriptions
@@ -28,12 +27,8 @@ export const IssueDetailsCard: React.FC<IssueDetailsCardProps> = ({
       >
         <Descriptions.Item label="Key">
           <Space direction="horizontal">
-            <Link to={issueDetailsPath({ datasetId, issueKey: issue.key })}>
-              {issue.key}
-            </Link>
-            <Link to={issue.externalUrl} target="_blank">
-              <ExportOutlined />
-            </Link>
+            <IssueLink text={issue.key} path={issuePath} />
+            <IssueExternalLink externalUrl={issue.externalUrl} />
           </Space>
         </Descriptions.Item>
         <Descriptions.Item label="Issue Type">
@@ -48,9 +43,9 @@ export const IssueDetailsCard: React.FC<IssueDetailsCardProps> = ({
         <Descriptions.Item label="Created">
           {formatTime(issue.created)}
         </Descriptions.Item>
-        {issue.parent ? (
+        {issue.parent && parentPath ? (
           <Descriptions.Item label="Parent">
-            <IssueParentLink parent={issue.parent} datasetId={datasetId} />
+            <IssueLink text={issue.parent.summary} path={parentPath} tag />
           </Descriptions.Item>
         ) : null}
         <Descriptions.Item label="Components">

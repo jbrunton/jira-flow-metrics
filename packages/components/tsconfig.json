@@ -1,0 +1,10 @@
+{
+  "extends": "@tsconfig/vite-react/tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2021"],
+    "declaration": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["."],
+  "exclude": ["node_modules"]
+}

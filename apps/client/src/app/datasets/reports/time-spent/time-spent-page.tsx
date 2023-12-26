@@ -9,12 +9,17 @@ import {
   TimeSpentRow,
   timeSpentInPeriod,
 } from "@usecases/time-spent/time-spent";
-import { IssueExternalLink, IssueLink } from "../../../components/issue-links";
+import {
+  IssueExternalLink,
+  IssueLink,
+  IssueResolution,
+  IssueStatus,
+} from "@jbrunton/flow-components";
 import { useNavigationContext } from "../../../navigation/context";
-import { IssueResolution, IssueStatus } from "../../../components/issue-fields";
 import { DateFilterType, filterIssues } from "@data/issues";
 import { IssueDetailsDrawer } from "../scatterplot/components/issue-details-drawer";
 import { ZoomInOutlined } from "@ant-design/icons";
+import { issueDetailsPath } from "@app/navigation/paths";
 
 export const TimeSpentPage = () => {
   const { datasetId } = useNavigationContext();
@@ -50,11 +55,11 @@ export const TimeSpentPage = () => {
       dataIndex: "key",
       key: "key",
       render(_, row) {
-        return row.rowType === "category" ? (
-          row.summary
-        ) : (
-          <IssueLink issue={row} datasetId={datasetId} />
-        );
+        if (row.rowType === "category") {
+          return row.summary;
+        }
+        const path = issueDetailsPath({ issueKey: row.key, datasetId });
+        return <IssueLink text={row.key} path={path} />;
       },
     },
     {

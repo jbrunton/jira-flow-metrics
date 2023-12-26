@@ -1,16 +1,30 @@
 import { Drawer, Space } from "antd";
 import React, { ReactElement } from "react";
 import { Issue } from "@jbrunton/flow-metrics";
-import { IssueDetailsCard } from "../../../issues/components/issue-details-card";
-import { IssueMetricsCard } from "../../../issues/components/issue-metrics-card";
-import { IssueTransitionsCard } from "../../../issues/components/issue-transitions-card";
+import {
+  IssueDetailsCard,
+  IssueMetricsCard,
+  IssueTransitionsCard,
+} from "@jbrunton/flow-components";
+import { useNavigationContext } from "@app/navigation/context";
+import { issueDetailsPath } from "@app/navigation/paths";
 
 const IssueDetails = ({ issue }: { issue: Issue }): ReactElement => {
+  const { datasetId } = useNavigationContext();
+  const issuePath = issueDetailsPath({ issueKey: issue.key, datasetId });
+  const parentPath = issueDetailsPath({
+    issueKey: issue.parentKey,
+    datasetId,
+  });
   return (
     <>
       <h2>{issue.summary}</h2>
       <Space direction="vertical">
-        <IssueDetailsCard issue={issue} />
+        <IssueDetailsCard
+          issue={issue}
+          issuePath={issuePath}
+          parentPath={parentPath}
+        />
         <IssueMetricsCard issue={issue} />
         <IssueTransitionsCard issue={issue} />
       </Space>

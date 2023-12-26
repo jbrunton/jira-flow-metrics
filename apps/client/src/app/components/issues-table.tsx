@@ -7,11 +7,15 @@ import { useEffect, useState } from "react";
 import { useNavigationContext } from "../navigation/context";
 import { isNil } from "rambda";
 import { Percentile } from "@usecases/scatterplot/cycle-times";
-import { IssueExternalLink, IssueLink } from "./issue-links";
-import { IssueResolution, IssueStatus } from "./issue-fields";
-import { IssueParentLink } from "./issue-parent-link";
+import {
+  IssueExternalLink,
+  IssueLink,
+  IssueResolution,
+  IssueStatus,
+} from "@jbrunton/flow-components";
 import { IssueDetailsDrawer } from "@app/datasets/reports/scatterplot/components/issue-details-drawer";
 import { ZoomInOutlined } from "@ant-design/icons";
+import { issueDetailsPath } from "@app/navigation/paths";
 
 export type SortState = {
   columnKey: "created" | "started" | "completed" | "cycleTime" | undefined;
@@ -102,7 +106,10 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
     {
       title: "Key",
       key: "key",
-      render: (_, issue) => <IssueLink issue={issue} datasetId={datasetId} />,
+      render: (_, issue) => {
+        const path = issueDetailsPath({ issueKey: issue.key, datasetId });
+        return <IssueLink text={issue.key} path={path} />;
+      },
     },
     {
       key: "open",
@@ -293,10 +300,13 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
     columns.splice(8, 0, {
       title: "Parent",
       key: "parent",
-      render: (_, issue) =>
-        issue.parent ? (
-          <IssueParentLink parent={issue.parent} datasetId={datasetId} />
-        ) : null,
+      render: (_, issue) => {
+        if (!issue.parent) {
+          return null;
+        }
+        const path = issueDetailsPath({ issueKey: issue.parentKey, datasetId });
+        return <IssueLink text={issue.parent.summary} path={path} tag />;
+      },
     });
   }
 

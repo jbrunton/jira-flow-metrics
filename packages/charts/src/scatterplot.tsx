@@ -74,7 +74,7 @@ export const Scatterplot = ({
             value: p.cycleTime,
           };
           return [p.percentile.toString(), options];
-        })
+        }),
       )
     : undefined;
 
@@ -94,11 +94,11 @@ export const Scatterplot = ({
         callbacks: {
           title: (ctx) => {
             const dates = ctx.map(({ dataIndex }) =>
-              startOfDay(issues[dataIndex].metrics.completed)
+              startOfDay(issues[dataIndex].metrics.completed),
             );
             const uniqDates = sort(
               uniqBy(dates, (date: Date) => date.getTime()),
-              compareAsc
+              compareAsc,
             );
 
             if (uniqDates.length === 1) {
