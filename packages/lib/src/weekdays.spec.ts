@@ -1,5 +1,4 @@
-import { categorizeWeekday } from "@lib/weekdays";
-import { describe, expect, it } from "vitest";
+import { categorizeWeekday } from "./weekdays";
 
 describe("categorizeWeekday", () => {
   it("categorizes weekdays", () => {
