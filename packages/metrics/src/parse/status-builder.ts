@@ -49,5 +49,5 @@ export class StatusBuilder {
 }
 
 const titleize = (text: string): string => {
-  return text.toLowerCase().replaceAll(/(?:^|\s|-)\S/g, (x) => x.toUpperCase());
+  return text.toLowerCase().replace(/(?:^|\s|-)\S/g, (x) => x.toUpperCase());
 };
