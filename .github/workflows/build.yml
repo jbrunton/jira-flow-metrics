@@ -2,16 +2,6 @@ name: Build
 on: push
 
 jobs:
-  #   - name: Setup Node.js 20
-  #   uses: actions/setup-node@v3
-  #   with:
-  #     node-version: 20
-  #     registry-url: 'https://npm.pkg.github.com'
-
-  # - uses: pnpm/action-setup@v2
-  #   with:
-  #     version: 8
-
   lint:
     runs-on: ubuntu-latest
     strategy:
@@ -24,7 +14,6 @@ jobs:
           version: 8
       - run: pnpm install --filter ${{ matrix.app }}
       - run: pnpm lint --filter ${{ matrix.app }}
-      - run: pnpm build --filter ${{ matrix.app }}
 
   test:
     runs-on: ubuntu-latest
@@ -37,6 +26,7 @@ jobs:
         with:
           version: 8
       - run: pnpm install --filter ${{ matrix.app }}
+      - run: pnpm build --filter ${{ matrix.app }}
       - run: pnpm test --filter ${{ matrix.app }}
 
   test-e2e:
