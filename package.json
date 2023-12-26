@@ -13,6 +13,7 @@
     "lint": "turbo lint",
     "test": "turbo test",
     "build": "turbo build",
-    "dev": "turbo dev"
+    "dev": "turbo dev",
+    "clean": "turbo clean && rm -rf node_modules && rm -rf dist"
   }
 }

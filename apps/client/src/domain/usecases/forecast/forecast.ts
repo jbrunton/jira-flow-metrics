@@ -1,8 +1,8 @@
-import { CompletedIssue } from "@entities/issues";
+import { CompletedIssue } from "@jbrunton/flow-metrics";
 import { getLongTailCutoff, run } from "./simulation/run";
 import { addDays, compareAsc, getISODay } from "date-fns";
 import { groupBy } from "rambda";
-import { formatDate } from "@lib/format";
+import { formatDate } from "@jbrunton/flow-lib";
 import { newGenerator } from "./simulation/select";
 import { measure } from "./input/measurements";
 

@@ -1,6 +1,6 @@
 import { Drawer, Space } from "antd";
 import React, { ReactElement } from "react";
-import { Issue } from "@entities/issues";
+import { Issue } from "@jbrunton/flow-metrics";
 import { IssueDetailsCard } from "../../../issues/components/issue-details-card";
 import { IssueMetricsCard } from "../../../issues/components/issue-metrics-card";
 import { IssueTransitionsCard } from "../../../issues/components/issue-transitions-card";

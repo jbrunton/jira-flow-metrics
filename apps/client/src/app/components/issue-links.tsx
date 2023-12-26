@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { issueDetailsPath } from "../navigation/paths";
 import { FC } from "react";
-import { Issue } from "@entities/issues";
+import { Issue } from "@jbrunton/flow-metrics";
 import { ExportOutlined } from "@ant-design/icons";
 
 export type IssueLinkProps = {

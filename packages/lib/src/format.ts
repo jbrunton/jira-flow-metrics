@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { isNil } from "rambda";
+import { isNil } from "remeda";
 
 export const formatNumber = (x?: number): string | undefined => {
   if (!isNil(x)) {

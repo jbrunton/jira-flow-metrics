@@ -4,8 +4,8 @@ import { ChartOptions } from "chart.js";
 import { AnnotationOptions } from "chartjs-plugin-annotation";
 import "chartjs-adapter-date-fns";
 import { ThroughputResult } from "@usecases/throughput/throughput";
-import { TimeUnit } from "@lib/intervals";
-import { Issue } from "@entities/issues";
+import { TimeUnit } from "@jbrunton/flow-lib";
+import { Issue } from "@jbrunton/flow-metrics";
 
 type ThroughputChartProps = {
   result: ThroughputResult;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { IssuesTable, SortState } from "../../../components/issues-table";
 import { useFilterContext } from "../../../filter/context";
-import { Issue } from "@entities/issues";
+import { Issue } from "@jbrunton/flow-metrics";
 import { omit, pipe, sortBy } from "rambda";
 import { Col, Form, Input } from "antd";
 import * as fuzzball from "fuzzball";

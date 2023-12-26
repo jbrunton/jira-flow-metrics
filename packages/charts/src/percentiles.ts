@@ -7,7 +7,7 @@ export type Percentile = {
 };
 
 export const getCycleTimePercentiles = (
-  issues: CompletedIssue[],
+  issues: CompletedIssue[]
 ): Percentile[] | undefined => {
   const cycleTimes = issues.map((item) => item.metrics.cycleTime);
 

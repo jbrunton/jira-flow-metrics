@@ -1,7 +1,7 @@
 import { range } from "rambda";
-import { Issue } from "@entities/issues";
+import { Issue } from "@jbrunton/flow-metrics";
 import { addDays, differenceInDays } from "date-fns";
-import { Interval } from "../../../lib/intervals";
+import { Interval } from "@jbrunton/flow-lib";
 
 export type CalculateWipParams = {
   issues: Issue[];

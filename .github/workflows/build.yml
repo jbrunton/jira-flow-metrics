@@ -37,6 +37,7 @@ jobs:
         with:
           version: 8
       - run: pnpm install --filter ${{ matrix.app }}
+      - run: pnpm build --filter ${{ matrix.app }}
       - run: pnpm test --filter ${{ matrix.app }}
 
   test-e2e:

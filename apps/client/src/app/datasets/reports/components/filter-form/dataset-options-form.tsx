@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { HierarchyLevel } from "@entities/issues";
+import { HierarchyLevel } from "@jbrunton/flow-metrics";
 import { Checkbox, Col, Form, Row, Select, SelectProps, Tag } from "antd";
 import { ExpandableOptions } from "../../../../components/expandable-options";
 import { useDatasetStatuses } from "@data/issues";

@@ -1,12 +1,7 @@
 import { range } from "rambda";
 import { quantileSeq } from "mathjs";
-import { CompletedIssue } from "@entities/issues";
-import {
-  Interval,
-  TimeUnit,
-  addTime,
-  difference,
-} from "../../../lib/intervals";
+import { CompletedIssue } from "@jbrunton/flow-metrics";
+import { Interval, TimeUnit, addTime, difference } from "@jbrunton/flow-lib";
 
 export type CalculateThroughputParams = {
   issues: CompletedIssue[];

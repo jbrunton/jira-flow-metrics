@@ -1,4 +1,9 @@
-import { CompletedIssue, HierarchyLevel, Issue } from "@entities/issues";
+import {
+  CompletedIssue,
+  HierarchyLevel,
+  Issue,
+  StatusCategory,
+} from "@jbrunton/flow-metrics";
 
 let issueCount = 100;
 
@@ -11,7 +16,7 @@ export const buildIssue = (params: Partial<Issue>): Issue => {
     hierarchyLevel: HierarchyLevel.Story,
     summary: `Some issue ${issueCount}`,
     status: "Backlog",
-    statusCategory: "To Do",
+    statusCategory: StatusCategory.ToDo,
     transitions: [],
     metrics: {},
     issueType: "Story",

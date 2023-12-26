@@ -1,5 +1,5 @@
 {
-  "name": "@jbrunton/flow-metrics",
+  "name": "@jbrunton/flow-lib",
   "version": "0.0.0",
   "description": "",
   "main": "./dist/index.js",
@@ -36,6 +36,7 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "jira.js": "^2.19.1",
+    "mathjs": "^11.11.2",
     "remeda": "^1.33.0"
   }
 }

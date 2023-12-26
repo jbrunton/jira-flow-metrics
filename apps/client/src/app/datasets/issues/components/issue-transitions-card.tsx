@@ -1,6 +1,6 @@
 import { Card, Timeline, Tooltip } from "antd";
-import { formatNumber, formatTime } from "@lib/format";
-import { Issue } from "@entities/issues";
+import { formatNumber, formatTime } from "@jbrunton/flow-lib";
+import { Issue } from "@jbrunton/flow-metrics";
 import { categoryColors } from "../../../components/category-colors";
 
 export type IssueTransitionsCardProps = {

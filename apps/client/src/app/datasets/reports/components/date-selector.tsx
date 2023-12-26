@@ -11,7 +11,7 @@ import {
   subDays,
 } from "date-fns";
 import { useState } from "react";
-import { Interval } from "@lib/intervals";
+import { Interval } from "@jbrunton/flow-lib";
 
 export type DateSelectorProps = {
   dates?: Interval;

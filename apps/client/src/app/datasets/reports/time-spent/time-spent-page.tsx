@@ -1,4 +1,4 @@
-import { HierarchyLevel, Issue } from "@entities/issues";
+import { HierarchyLevel, Issue } from "@jbrunton/flow-metrics";
 import { useEffect, useState } from "react";
 import { useFilterContext } from "../../../filter/context";
 import { FilterOptionsForm } from "../components/filter-form/filter-options-form";

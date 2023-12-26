@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { HierarchyLevel } from "@entities/issues";
+import { HierarchyLevel } from "@jbrunton/flow-metrics";
 import { FilterContext } from "./context";
-import { defaultDateRange } from "@lib/intervals";
+import { defaultDateRange } from "@jbrunton/flow-lib";
 import { IssueFilter } from "@data/issues";
 
 export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({

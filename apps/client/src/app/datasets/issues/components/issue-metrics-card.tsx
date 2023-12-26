@@ -1,6 +1,6 @@
 import { Card, Descriptions } from "antd";
-import { Issue } from "@entities/issues";
-import { formatNumber, formatTime } from "@lib/format";
+import { Issue } from "@jbrunton/flow-metrics";
+import { formatNumber, formatTime } from "@jbrunton/flow-lib";
 import { isNil } from "rambda";
 
 export type IssueMetricsCardProps = {
