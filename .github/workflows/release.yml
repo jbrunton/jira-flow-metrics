@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_WORKFLOWS_PAT }}
 
       - name: Setup Node.js 20
         uses: actions/setup-node@v3
@@ -37,4 +39,4 @@ jobs:
         with:
           publish: pnpm publish-packages
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_WORKFLOWS_PAT }}
