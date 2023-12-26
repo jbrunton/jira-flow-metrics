@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - fix-job-permissions
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -15,6 +16,7 @@ jobs:
       contents: write
       pull-requests: write
       packages: write
+      actions: write
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
