@@ -7,15 +7,11 @@ import { useEffect, useState } from "react";
 import { useNavigationContext } from "../navigation/context";
 import { isNil } from "rambda";
 import { Percentile } from "@usecases/scatterplot/cycle-times";
-import {
-  IssueExternalLink,
-  IssueLink,
-  IssueResolution,
-  IssueStatus,
-} from "@jbrunton/flow-components";
+import { IssueResolution, IssueStatus } from "@jbrunton/flow-components";
 import { IssueDetailsDrawer } from "@app/datasets/reports/scatterplot/components/issue-details-drawer";
 import { ZoomInOutlined } from "@ant-design/icons";
 import { issueDetailsPath } from "@app/navigation/paths";
+import { IssueExternalLink, IssueLink } from "@app/datasets/components/foo";
 
 export type SortState = {
   columnKey: "created" | "started" | "completed" | "cycleTime" | undefined;

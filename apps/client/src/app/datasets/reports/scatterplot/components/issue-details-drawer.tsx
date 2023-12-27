@@ -8,6 +8,7 @@ import {
 } from "@jbrunton/flow-components";
 import { useNavigationContext } from "@app/navigation/context";
 import { issueDetailsPath } from "@app/navigation/paths";
+import { IssueExternalLink, IssueLink } from "@app/datasets/components/foo";
 
 const IssueDetails = ({ issue }: { issue: Issue }): ReactElement => {
   const { datasetId } = useNavigationContext();
@@ -24,6 +25,8 @@ const IssueDetails = ({ issue }: { issue: Issue }): ReactElement => {
           issue={issue}
           issuePath={issuePath}
           parentPath={parentPath}
+          IssueLinkComponent={IssueLink}
+          IssueExternalLinkComponent={IssueExternalLink}
         />
         <IssueMetricsCard issue={issue} />
         <IssueTransitionsCard issue={issue} />

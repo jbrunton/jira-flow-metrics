@@ -9,17 +9,13 @@ import {
   TimeSpentRow,
   timeSpentInPeriod,
 } from "@usecases/time-spent/time-spent";
-import {
-  IssueExternalLink,
-  IssueLink,
-  IssueResolution,
-  IssueStatus,
-} from "@jbrunton/flow-components";
+import { IssueResolution, IssueStatus } from "@jbrunton/flow-components";
 import { useNavigationContext } from "../../../navigation/context";
 import { DateFilterType, filterIssues } from "@data/issues";
 import { IssueDetailsDrawer } from "../scatterplot/components/issue-details-drawer";
 import { ZoomInOutlined } from "@ant-design/icons";
 import { issueDetailsPath } from "@app/navigation/paths";
+import { IssueExternalLink, IssueLink } from "@app/datasets/components/foo";
 
 export const TimeSpentPage = () => {
   const { datasetId } = useNavigationContext();

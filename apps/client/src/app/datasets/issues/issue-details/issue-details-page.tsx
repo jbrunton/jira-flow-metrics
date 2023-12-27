@@ -12,6 +12,7 @@ import { useState } from "react";
 import { ZoomInOutlined } from "@ant-design/icons";
 import { EpicTimeline } from "./components/epic-timeline";
 import { issueDetailsPath } from "@app/navigation/paths";
+import { IssueExternalLink, IssueLink } from "@app/datasets/components/foo";
 
 export const IssueDetailsPage = () => {
   const { issueKey, datasetId } = useNavigationContext();
@@ -36,6 +37,8 @@ export const IssueDetailsPage = () => {
               issue={issue}
               issuePath={issuePath}
               parentPath={parentPath}
+              IssueLinkComponent={IssueLink}
+              IssueExternalLinkComponent={IssueExternalLink}
             />
           </Space>
         </Col>

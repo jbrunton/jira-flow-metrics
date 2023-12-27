@@ -3,18 +3,22 @@ import { Issue } from "@jbrunton/flow-metrics";
 import { Card, Descriptions, Space, Tag } from "antd";
 import { formatTime } from "@jbrunton/flow-lib";
 import { IssueResolution, IssueStatus } from "./issue-fields";
-import { IssueExternalLink, IssueLink } from "./issue-links";
+import { IssueExternalLinkComponent, IssueLinkComponent } from "./issue-links";
 
 export type IssueDetailsCardProps = {
   issue: Issue;
   issuePath: string;
   parentPath?: string;
+  IssueLinkComponent: IssueLinkComponent;
+  IssueExternalLinkComponent: IssueExternalLinkComponent;
 };
 
 export const IssueDetailsCard: React.FC<IssueDetailsCardProps> = ({
   issue,
   issuePath,
   parentPath,
+  IssueLinkComponent,
+  IssueExternalLinkComponent,
 }) => {
   return (
     <Card title="Details" size="small">
@@ -27,8 +31,8 @@ export const IssueDetailsCard: React.FC<IssueDetailsCardProps> = ({
       >
         <Descriptions.Item label="Key">
           <Space direction="horizontal">
-            <IssueLink text={issue.key} path={issuePath} />
-            <IssueExternalLink externalUrl={issue.externalUrl} />
+            <IssueLinkComponent text={issue.key} path={issuePath} />
+            <IssueExternalLinkComponent externalUrl={issue.externalUrl} />
           </Space>
         </Descriptions.Item>
         <Descriptions.Item label="Issue Type">
@@ -45,7 +49,11 @@ export const IssueDetailsCard: React.FC<IssueDetailsCardProps> = ({
         </Descriptions.Item>
         {issue.parent && parentPath ? (
           <Descriptions.Item label="Parent">
-            <IssueLink text={issue.parent.summary} path={parentPath} tag />
+            <IssueLinkComponent
+              text={issue.parent.summary}
+              path={parentPath}
+              tag
+            />
           </Descriptions.Item>
         ) : null}
         <Descriptions.Item label="Components">
