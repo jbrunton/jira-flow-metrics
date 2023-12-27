@@ -2,10 +2,17 @@
   "name": "@jbrunton/flow-charts",
   "version": "0.0.7",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "scripts": {
+    "build": "tsup index.ts --format cjs,esm --dts",
+    "dev": "pnpm run build -- --watch",
     "clean": "rm -rf node_modules && rm -rf dist"
   },
+  "files": [
+    "dist/**"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
