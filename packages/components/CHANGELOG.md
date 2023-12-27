@@ -1,5 +1,11 @@
 # @jbrunton/flow-components
 
+## 0.0.3
+
+### Patch Changes
+
+- 6d5680c: fix: package contents
+
 ## 0.0.2
 
 ### Patch Changes
