@@ -1,5 +1,11 @@
 # @jbrunton/flow-charts
 
+## 0.0.7
+
+### Patch Changes
+
+- ba433c6: feat: add options prop to scatterplot
+
 ## 0.0.6
 
 ### Patch Changes
