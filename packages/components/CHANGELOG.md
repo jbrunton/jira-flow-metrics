@@ -1,5 +1,11 @@
 # @jbrunton/flow-components
 
+## 0.0.2
+
+### Patch Changes
+
+- 82d775b: refactor: remove dependency on react-router-dom from @jbrunton/flow-components
+
 ## 0.0.1
 
 ### Patch Changes
