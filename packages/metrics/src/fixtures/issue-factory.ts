@@ -4,7 +4,7 @@ import { TransitionContext, buildTransitions } from "../parse/issue_builder";
 let issueCount = 100;
 
 type IssueParams = Partial<Omit<Issue, "transitions" | "fields">> & {
-  transitions: TransitionContext[];
+  transitions?: TransitionContext[];
 };
 
 export const buildIssue = (params: IssueParams): Issue => {
@@ -17,6 +17,7 @@ export const buildIssue = (params: IssueParams): Issue => {
     summary: `Some issue ${issueCount}`,
     status: "Backlog",
     statusCategory: StatusCategory.ToDo,
+    issueType: params.hierarchyLevel === HierarchyLevel.Epic ? "Epic" : "Story",
     labels: [],
     components: [],
     assignee: "Test User",

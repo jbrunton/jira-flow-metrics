@@ -10,7 +10,7 @@ import {
 } from "../types";
 import { compareAsc } from "date-fns";
 import { StatusBuilder } from "./status-builder";
-import { getDifferenceInDays } from "../lib/dates";
+import { getDifferenceInDays } from "@jbrunton/flow-lib";
 
 export type TransitionContext = Omit<Transition, "timeInStatus" | "until">;
 

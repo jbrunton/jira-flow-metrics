@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { CompletedIssue, Issue } from "@jbrunton/flow-metrics";
+import {
+  CompletedIssue,
+  Issue,
+  filterCompletedIssues,
+} from "@jbrunton/flow-metrics";
 import { Interval, TimeUnit, getOverlappingInterval } from "@jbrunton/flow-lib";
 import { ThroughputChart } from "./components/throughput-chart";
 import { Col, Form, Row, Select } from "antd";
@@ -12,7 +16,6 @@ import { useFilterContext } from "../../../filter/context";
 import { ExpandableOptions } from "../../../components/expandable-options";
 import { FilterOptionsForm } from "../components/filter-form/filter-options-form";
 import { useDatasetContext } from "../../context";
-import { filterCompletedIssues } from "@data/issues";
 
 export const ThroughputPage = () => {
   const { issues } = useDatasetContext();
