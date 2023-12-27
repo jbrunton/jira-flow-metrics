@@ -1,5 +1,11 @@
 # @jbrunton/flow-charts
 
+## 0.0.6
+
+### Patch Changes
+
+- dfd6d59: feat: add style props to scatterplot
+
 ## 0.0.5
 
 ### Patch Changes
