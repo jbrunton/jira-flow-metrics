@@ -1,5 +1,11 @@
 # @jbrunton/flow-charts
 
+## 0.0.8
+
+### Patch Changes
+
+- 6d5680c: fix: package contents
+
 ## 0.0.7
 
 ### Patch Changes
