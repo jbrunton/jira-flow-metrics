@@ -2,17 +2,25 @@
   "name": "@jbrunton/flow-components",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "scripts": {
+    "build": "tsup index.ts --format cjs,esm --dts",
+    "dev": "pnpm run build -- --watch",
     "clean": "rm -rf node_modules && rm -rf dist"
   },
+  "files": [
+    "dist/**"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@jbrunton/flow-lib": "workspace:*",
     "@jbrunton/flow-metrics": "workspace:*",
-    "remeda": "^1.33.0"
+    "remeda": "^1.33.0",
+    "tsup": "^8.0.1"
   },
   "devDependencies": {
     "@ant-design/icons": "^5.2.6",
