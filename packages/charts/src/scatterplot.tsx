@@ -6,7 +6,7 @@ import "chartjs-adapter-date-fns";
 import "chartjs-plugin-datalabels";
 import { formatDate, Interval } from "@jbrunton/flow-lib";
 import { compareAsc, startOfDay } from "date-fns";
-import { sort, uniqBy } from "remeda";
+import { mergeDeep, sort, uniqBy } from "remeda";
 import { AnnotationOptions } from "chartjs-plugin-annotation";
 import { Percentile } from "./percentiles";
 
@@ -16,6 +16,7 @@ type ScatterplotProps = {
   range: Interval;
   showPercentileLabels: boolean;
   setSelectedIssues: (issues: Issue[]) => void;
+  options?: ChartOptions<"scatter">;
   style?: CSSProperties;
 };
 
@@ -25,6 +26,7 @@ export const Scatterplot = ({
   percentiles,
   showPercentileLabels,
   setSelectedIssues,
+  options: overrideOptions,
   style,
 }: ScatterplotProps): ReactElement => {
   const data = issues.map((issue) => ({
@@ -83,7 +85,7 @@ export const Scatterplot = ({
   const minDate = range.start.toISOString();
   const maxDate = range.end.toISOString();
 
-  const options: ChartOptions<"scatter"> = {
+  const defaultOptions: ChartOptions<"scatter"> = {
     onClick,
     plugins: {
       annotation: {
@@ -130,6 +132,11 @@ export const Scatterplot = ({
       },
     },
   };
+
+  const options: ChartOptions<"scatter"> = mergeDeep(
+    defaultOptions,
+    overrideOptions ?? {},
+  );
 
   return <Scatter data={{ datasets }} options={options} style={style} />;
 };
