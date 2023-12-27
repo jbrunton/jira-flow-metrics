@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { CSSProperties, ReactElement } from "react";
 import { CompletedIssue, Issue } from "@jbrunton/flow-metrics";
 import { ChartOptions } from "chart.js";
 import { Scatter } from "react-chartjs-2";
@@ -16,6 +16,7 @@ type ScatterplotProps = {
   range: Interval;
   showPercentileLabels: boolean;
   setSelectedIssues: (issues: Issue[]) => void;
+  style?: CSSProperties;
 };
 
 export const Scatterplot = ({
@@ -24,6 +25,7 @@ export const Scatterplot = ({
   percentiles,
   showPercentileLabels,
   setSelectedIssues,
+  style,
 }: ScatterplotProps): ReactElement => {
   const data = issues.map((issue) => ({
     x: issue.metrics.completed,
@@ -129,7 +131,7 @@ export const Scatterplot = ({
     },
   };
 
-  return <Scatter data={{ datasets }} options={options} />;
+  return <Scatter data={{ datasets }} options={options} style={style} />;
 };
 
 const getColorForPercentile = (percentile: number): string => {
