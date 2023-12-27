@@ -390,6 +390,9 @@ importers:
 
   packages/metrics:
     dependencies:
+      '@jbrunton/flow-lib':
+        specifier: workspace:*
+        version: link:../lib
       date-fns:
         specifier: ^2.30.0
         version: 2.30.0

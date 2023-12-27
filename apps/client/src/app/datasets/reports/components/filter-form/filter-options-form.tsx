@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { HierarchyLevel, Issue } from "@jbrunton/flow-metrics";
+import { HierarchyLevel, Issue, LabelFilterType } from "@jbrunton/flow-metrics";
 import { Col, Form, Row, Select, SelectProps, Space, Tag } from "antd";
 import { DateSelector } from "../date-selector";
 import { flatten, isNil, map, pipe, reject, uniq } from "rambda";
@@ -10,7 +10,6 @@ import {
   ExpandableOptionsHeader,
 } from "../../../../components/expandable-options";
 import { formatDate } from "@jbrunton/flow-lib";
-import { LabelFilterType } from "@data/issues";
 
 export type FilterOptions = {
   hierarchyLevel?: HierarchyLevel;

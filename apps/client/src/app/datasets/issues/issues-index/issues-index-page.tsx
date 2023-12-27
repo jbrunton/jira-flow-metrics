@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { IssuesTable, SortState } from "../../../components/issues-table";
 import { useFilterContext } from "../../../filter/context";
-import { Issue } from "@jbrunton/flow-metrics";
+import { Issue, filterIssues } from "@jbrunton/flow-metrics";
 import { omit, pipe, sortBy } from "rambda";
 import { Col, Form, Input } from "antd";
 import * as fuzzball from "fuzzball";
 import { useDatasetContext } from "../../context";
 import { FilterOptionsForm } from "../../reports/components/filter-form/filter-options-form";
-import { filterIssues } from "@data/issues";
 
 export const IssuesIndexPage = () => {
   const { issues } = useDatasetContext();

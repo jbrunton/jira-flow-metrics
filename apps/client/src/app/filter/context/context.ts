@@ -1,4 +1,4 @@
-import { IssueFilter } from "@data/issues";
+import { IssueFilter } from "@jbrunton/flow-metrics";
 import { createContext } from "react";
 
 export type FilterContextType = {

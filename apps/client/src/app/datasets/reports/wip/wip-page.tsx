@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Issue } from "@jbrunton/flow-metrics";
+import { Issue, filterIssues } from "@jbrunton/flow-metrics";
 import { IssuesTable } from "../../../components/issues-table";
 import { useFilterContext } from "../../../filter/context";
 import { WipResult, calculateWip } from "@usecases/wip/wip";
@@ -9,7 +9,6 @@ import { Checkbox, Col, Row } from "antd";
 import { FilterOptionsForm } from "../components/filter-form/filter-options-form";
 import { useDatasetContext } from "../../context";
 import { ExpandableOptions } from "../../../components/expandable-options";
-import { filterIssues } from "@data/issues";
 
 export const WipPage = () => {
   const { issues } = useDatasetContext();

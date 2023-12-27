@@ -36,6 +36,7 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "jira.js": "^2.19.1",
-    "remeda": "^1.33.0"
+    "remeda": "^1.33.0",
+    "@jbrunton/flow-lib": "workspace:*"
   }
 }

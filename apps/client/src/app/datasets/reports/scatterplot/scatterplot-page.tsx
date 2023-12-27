@@ -1,4 +1,8 @@
-import { CompletedIssue, Issue } from "@jbrunton/flow-metrics";
+import {
+  CompletedIssue,
+  Issue,
+  filterCompletedIssues,
+} from "@jbrunton/flow-metrics";
 // import { Scatterplot } from "./components/scatterplot";
 import { Scatterplot } from "@jbrunton/flow-charts";
 import { useEffect, useState } from "react";
@@ -13,7 +17,6 @@ import { FilterOptionsForm } from "../components/filter-form/filter-options-form
 import { useDatasetContext } from "../../context";
 import { Checkbox, Col, Row } from "antd";
 import { ExpandableOptions } from "../../../components/expandable-options";
-import { filterCompletedIssues } from "@data/issues";
 
 export const ScatterplotPage = () => {
   const { issues } = useDatasetContext();

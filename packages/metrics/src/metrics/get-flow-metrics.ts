@@ -9,7 +9,7 @@ import {
   isStarted,
 } from "../types";
 import { compareAsc, compareDesc } from "date-fns";
-import { getDifferenceInDays } from "../lib/dates";
+import { getDifferenceInDays } from "@jbrunton/flow-lib";
 
 export const getFlowMetrics = (
   issues: Issue[],

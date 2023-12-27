@@ -1,6 +1,6 @@
 import { HierarchyLevel, Status, StatusCategory } from "../types";
 import { getFlowMetrics } from "./get-flow-metrics";
-import { buildIssue } from "../test/issue-factory";
+import { buildIssue } from "../fixtures/issue-factory";
 
 jest.useFakeTimers();
 
