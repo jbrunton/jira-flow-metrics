@@ -1,5 +1,14 @@
 # client
 
+## 0.0.10
+
+### Patch Changes
+
+- Updated dependencies [3defb29]
+  - @jbrunton/flow-metrics@0.0.7
+  - @jbrunton/flow-charts@0.0.9
+  - @jbrunton/flow-components@0.0.4
+
 ## 0.0.9
 
 ### Patch Changes

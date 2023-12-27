@@ -1,5 +1,11 @@
 # @jbrunton/flow-metrics
 
+## 0.0.7
+
+### Patch Changes
+
+- 3defb29: feat: add filter functions to @jbrunton/flow-metrics
+
 ## 0.0.6
 
 ### Patch Changes
