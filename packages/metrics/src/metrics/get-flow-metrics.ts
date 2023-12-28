@@ -14,9 +14,7 @@ import { getDifferenceInDays } from "@jbrunton/flow-lib";
 export const getFlowMetrics = (
   issues: Issue[],
   includeWaitTime: boolean,
-  orderedStatuses: string[],
-  fromStatus?: string,
-  toStatus?: string,
+  statuses?: string[],
 ): Issue[] => {
   const stories = issues.filter(
     (issue) => issue.hierarchyLevel === HierarchyLevel.Story,
@@ -27,13 +25,7 @@ export const getFlowMetrics = (
   );
 
   const updatedStories = stories.map((story) => {
-    const metrics = getStoryFlowMetrics(
-      story,
-      includeWaitTime,
-      orderedStatuses,
-      fromStatus,
-      toStatus,
-    );
+    const metrics = getStoryFlowMetrics(story, includeWaitTime, statuses);
     return {
       ...story,
       metrics,
@@ -53,28 +45,31 @@ export const getFlowMetrics = (
 
 const getStartedDateIndex = (
   transitions: Array<Transition>,
-  orderedStatuses: string[],
-  fromStatusIndex?: number,
+  statuses?: string[],
 ): number => {
   return transitions.findIndex((transition) =>
-    isNil(fromStatusIndex)
+    isNil(statuses)
       ? transition.toStatus.category === StatusCategory.InProgress
-      : orderedStatuses.indexOf(transition.toStatus.name) >= fromStatusIndex,
+      : statuses.includes(transition.toStatus.name),
   );
 };
 
 const getCompletedDateIndex = (
   transitions: Array<Transition>,
-  orderedStatuses: string[],
-  toStatusIndex?: number,
+  statuses?: string[],
 ): number => {
-  const index = reverse(transitions).findIndex((transition) =>
-    isNil(toStatusIndex)
-      ? transition.toStatus.category === StatusCategory.Done &&
+  const index = reverse(transitions).findIndex((transition) => {
+    if (isNil(statuses)) {
+      return (
+        transition.toStatus.category === StatusCategory.Done &&
         transition.fromStatus.category !== StatusCategory.Done
-      : orderedStatuses.indexOf(transition.toStatus.name) === toStatusIndex &&
-        transition.fromStatus.name !== transition.toStatus.name,
-  );
+      );
+    }
+    return (
+      !statuses.includes(transition.toStatus.name) &&
+      statuses.includes(transition.fromStatus.name)
+    );
+  });
 
   return index === -1 ? -1 : transitions.length - index - 1;
 };
@@ -97,27 +92,11 @@ export const getCycleTime = (
 const getStoryFlowMetrics = (
   story: Issue,
   includeWaitTime: boolean,
-  orderedStatuses: string[],
-  fromStatus?: string,
-  toStatus?: string,
+  statuses?: string[],
 ): IssueFlowMetrics => {
   const now = new Date();
-  const fromStatusIndex = isNil(fromStatus)
-    ? undefined
-    : orderedStatuses.indexOf(fromStatus);
-  const toStatusIndex = isNil(toStatus)
-    ? undefined
-    : orderedStatuses.indexOf(toStatus);
-  const startedIndex = getStartedDateIndex(
-    story.transitions,
-    orderedStatuses,
-    fromStatusIndex,
-  );
-  const completedIndex = getCompletedDateIndex(
-    story.transitions,
-    orderedStatuses,
-    toStatusIndex,
-  );
+  const startedIndex = getStartedDateIndex(story.transitions, statuses);
+  const completedIndex = getCompletedDateIndex(story.transitions, statuses);
 
   if (startedIndex === -1 && completedIndex === -1) {
     return {};
@@ -136,9 +115,15 @@ const getStoryFlowMetrics = (
       if (includeWaitTime) {
         return transition.timeInStatus;
       } else {
-        return transition.toStatus.category === StatusCategory.InProgress
-          ? transition.timeInStatus
-          : 0;
+        if (statuses) {
+          return statuses.includes(transition.toStatus.name)
+            ? transition.timeInStatus
+            : 0;
+        } else {
+          return transition.toStatus.category === StatusCategory.InProgress
+            ? transition.timeInStatus
+            : 0;
+        }
       }
     });
   };

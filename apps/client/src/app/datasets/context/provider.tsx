@@ -13,8 +13,7 @@ export const DatasetProvider: React.FC<{ children: React.ReactNode }> = ({
   const { data: issues } = useIssues(
     dataset?.id,
     datasetOptions?.includeWaitTime ?? false,
-    datasetOptions?.fromStatus,
-    datasetOptions?.toStatus,
+    datasetOptions?.statuses,
   );
 
   const value: DatasetContextType = {

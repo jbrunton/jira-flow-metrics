@@ -35,15 +35,6 @@ describe("getFlowMetrics", () => {
     category: StatusCategory.Done,
   };
 
-  const orderedStatuses = [
-    "Created",
-    "Backlog",
-    "In Progress",
-    "In Review",
-    "Dev Complete",
-    "Done",
-  ];
-
   describe("for stories", () => {
     it("computes cycle time metrics", () => {
       const startedDate = new Date("2023-09-05T14:22:32.068Z");
@@ -110,7 +101,7 @@ describe("getFlowMetrics", () => {
         metrics: {},
       });
 
-      const [result] = getFlowMetrics([issue], false, orderedStatuses);
+      const [result] = getFlowMetrics([issue], false);
 
       expect(result.metrics).toEqual({
         cycleTime: 0.8824537037037037,
@@ -151,7 +142,7 @@ describe("getFlowMetrics", () => {
       });
 
       it("uses the first started date", () => {
-        const [result] = getFlowMetrics([issue], false, orderedStatuses);
+        const [result] = getFlowMetrics([issue], false);
 
         expect(result.metrics).toEqual(
           expect.objectContaining({
@@ -162,7 +153,7 @@ describe("getFlowMetrics", () => {
       });
 
       it("excludes the paused status time when includeWaitTime = false", () => {
-        const [result] = getFlowMetrics([issue], false, orderedStatuses);
+        const [result] = getFlowMetrics([issue], false);
 
         expect(result.metrics).toEqual(
           expect.objectContaining({
@@ -172,7 +163,7 @@ describe("getFlowMetrics", () => {
       });
 
       it("includes the paused status time when includeWaitTime = true", () => {
-        const [result] = getFlowMetrics([issue], true, orderedStatuses);
+        const [result] = getFlowMetrics([issue], true);
 
         expect(result.metrics).toEqual(
           expect.objectContaining({
@@ -214,7 +205,7 @@ describe("getFlowMetrics", () => {
       });
 
       it("uses the last completed date", () => {
-        const [result] = getFlowMetrics([issue], false, orderedStatuses);
+        const [result] = getFlowMetrics([issue], false);
 
         expect(result.metrics).toEqual(
           expect.objectContaining({
@@ -225,7 +216,7 @@ describe("getFlowMetrics", () => {
       });
 
       it("excludes the paused status time when includeWaitTime = false", () => {
-        const [result] = getFlowMetrics([issue], false, orderedStatuses);
+        const [result] = getFlowMetrics([issue], false);
 
         expect(result.metrics).toEqual(
           expect.objectContaining({
@@ -235,7 +226,7 @@ describe("getFlowMetrics", () => {
       });
 
       it("includes the paused status time when includeWaitTime = true", () => {
-        const [result] = getFlowMetrics([issue], true, orderedStatuses);
+        const [result] = getFlowMetrics([issue], true);
 
         expect(result.metrics).toEqual(
           expect.objectContaining({
@@ -270,7 +261,7 @@ describe("getFlowMetrics", () => {
         ],
       });
 
-      const [result] = getFlowMetrics([issue], false, orderedStatuses);
+      const [result] = getFlowMetrics([issue], false);
 
       expect(result.metrics).toEqual({
         started: startedDate,
@@ -301,7 +292,7 @@ describe("getFlowMetrics", () => {
       });
 
       it("returns the age of the issue", () => {
-        const [result] = getFlowMetrics([issue], true, orderedStatuses);
+        const [result] = getFlowMetrics([issue], true);
 
         expect(result.metrics).toEqual({
           started: startedDate,
@@ -310,7 +301,7 @@ describe("getFlowMetrics", () => {
       });
 
       it("excludes the current status when includeWaitTime is false", () => {
-        const [result] = getFlowMetrics([issue], false, orderedStatuses);
+        const [result] = getFlowMetrics([issue], false);
 
         expect(result.metrics).toEqual({
           started: startedDate,
@@ -319,79 +310,78 @@ describe("getFlowMetrics", () => {
       });
     });
 
-    describe("when given fromStatus and toStatus parameters", () => {
-      it("computes the cycle time between the parameters", () => {
-        const startedDate = new Date("2023-01-01T10:30:00.000Z");
-        const inReviewDate = new Date("2023-01-01T13:30:00.000Z");
-        const doneDate = new Date("2023-01-01T16:30:00.000Z");
+    describe("when given statuses parameter", () => {
+      const startedDate = new Date("2023-01-01T10:30:00.000Z");
+      const inReviewDate = new Date("2023-01-01T13:30:00.000Z");
+      const secondInProgressDate = new Date("2023-01-01T16:30:00.000Z");
+      const secondInReviewDate = new Date("2023-01-01T19:30:00.000Z");
+      const doneDate = new Date("2023-01-01T22:30:00.000Z");
 
-        const issue = buildIssue({
-          transitions: [
-            {
-              date: startedDate,
-              fromStatus: backlog,
-              toStatus: inProgress,
-            },
-            {
-              date: inReviewDate,
-              fromStatus: inProgress,
-              toStatus: inReview,
-            },
-            {
-              date: doneDate,
-              fromStatus: inReview,
-              toStatus: done,
-            },
-          ],
-        });
+      const issue = buildIssue({
+        transitions: [
+          {
+            date: startedDate,
+            fromStatus: backlog,
+            toStatus: inProgress,
+          },
+          {
+            date: inReviewDate,
+            fromStatus: inProgress,
+            toStatus: inReview,
+          },
+          {
+            date: secondInProgressDate,
+            fromStatus: inReview,
+            toStatus: inProgress,
+          },
+          {
+            date: secondInReviewDate,
+            fromStatus: inProgress,
+            toStatus: inReview,
+          },
+          {
+            date: doneDate,
+            fromStatus: inReview,
+            toStatus: done,
+          },
+        ],
+      });
 
-        const [result] = getFlowMetrics(
-          [issue],
-          false,
-          orderedStatuses,
+      it("computes the cycle time for the given statuses", () => {
+        const [result] = getFlowMetrics([issue], false, [
+          inProgress.name,
           inReview.name,
-          done.name,
-        );
+        ]);
 
         expect(result.metrics).toEqual({
-          started: inReviewDate,
+          started: startedDate,
           completed: doneDate,
-          cycleTime: 0.125,
+          cycleTime: 0.5,
         });
       });
 
-      it("computes the cycle time when statuses are skipped", () => {
-        const inReviewDate = new Date("2023-01-01T13:30:00.000Z");
-        const doneDate = new Date("2023-01-01T16:30:00.000Z");
+      it("excludes times in ignored statuses when includeWaitTime = false", () => {
+        const [result] = getFlowMetrics([issue], false, [inReview.name]);
 
-        const issue = buildIssue({
-          transitions: [
-            {
-              date: inReviewDate,
-              fromStatus: backlog,
-              toStatus: inReview,
-            },
-            {
-              date: doneDate,
-              fromStatus: inReview,
-              toStatus: done,
-            },
-          ],
-        });
-
-        const [result] = getFlowMetrics(
-          [issue],
-          false,
-          orderedStatuses,
-          inProgress.name,
-          done.name,
+        expect(result.metrics).toEqual(
+          expect.objectContaining({
+            cycleTime: 0.25,
+            started: inReviewDate,
+            completed: doneDate,
+          }),
         );
+      });
 
-        expect(result.metrics).toEqual({
-          started: inReviewDate,
-          completed: doneDate,
-          cycleTime: 0.125,
-        });
+      it("includes times in ignored statuses when includeWaitTime = true", () => {
+        const [result] = getFlowMetrics([issue], true, [inReview.name]);
+
+        expect(result.metrics).toEqual(
+          expect.objectContaining({
+            cycleTime: 0.375,
+            started: inReviewDate,
+            completed: doneDate,
+          }),
+        );
       });
     });
   });
@@ -442,11 +432,7 @@ describe("getFlowMetrics", () => {
     });
 
     it("computes epic cycle time metrics based on stories", () => {
-      const [result] = getFlowMetrics(
-        [epic, story1, story2],
-        false,
-        orderedStatuses,
-      );
+      const [result] = getFlowMetrics([epic, story1, story2], false);
 
       expect(result.metrics).toEqual({
         started: story1Started,
@@ -461,11 +447,7 @@ describe("getFlowMetrics", () => {
         statusCategory: StatusCategory.InProgress,
       };
 
-      const [result] = getFlowMetrics(
-        [inProgressEpic, story1, story2],
-        false,
-        orderedStatuses,
-      );
+      const [result] = getFlowMetrics([inProgressEpic, story1, story2], false);
 
       expect(result.metrics).toEqual({
         started: story1Started,
