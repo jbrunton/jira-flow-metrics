@@ -63,7 +63,7 @@ export class DomainsController {
     return this.datasets.addDataset({
       domainId,
       ...body,
-      statuses: [],
+      workflow: [],
     });
   }
 

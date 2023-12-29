@@ -1,4 +1,4 @@
-import { DatasetsRepository } from "@entities/datasets";
+import { DatasetsRepository, WorkflowStage } from "@entities/datasets";
 import { IssuesRepository } from "@entities/issues";
 import { Injectable } from "@nestjs/common";
 import { JiraIssuesRepository } from "./jira-issues-repository";
@@ -10,7 +10,6 @@ import {
 } from "@jbrunton/flow-metrics";
 import { DomainsRepository } from "@entities/domains";
 import { sortStatuses } from "./sort-statuses";
-import { flatten, groupBy } from "rambda";
 
 @Injectable()
 export class SyncUseCase {
@@ -51,21 +50,24 @@ export class SyncUseCase {
       canonicalStatuses.find((status) => status.name === name),
     );
 
-    const statusesByCategory = groupBy(
-      (status) => status.category,
-      sortedStatuses,
-    );
+    const getWorkflowStage = (category: StatusCategory): WorkflowStage => ({
+      name: category,
+      selectByDefault: category === StatusCategory.InProgress,
+      statuses: sortedStatuses.filter((status) => status.category === category),
+    });
+
+    const workflow = [
+      StatusCategory.ToDo,
+      StatusCategory.InProgress,
+      StatusCategory.Done,
+    ].map(getWorkflowStage);
 
     await this.datasets.updateDataset(datasetId, {
       lastSync: {
         date: new Date(),
         issueCount: issues.length,
       },
-      statuses: flatten([
-        statusesByCategory[StatusCategory.ToDo],
-        statusesByCategory[StatusCategory.InProgress],
-        statusesByCategory[StatusCategory.Done],
-      ]),
+      workflow,
     });
 
     return issues;

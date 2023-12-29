@@ -37,10 +37,13 @@ describe("DatasetsController", () => {
       domainId: "123",
       name: "My Dataset",
       jql: "proj=PROJ",
-      statuses: [
+      workflow: [
         {
           name: "In Progress",
-          category: StatusCategory.InProgress,
+          selectByDefault: true,
+          statuses: [
+            { name: "In Progress", category: StatusCategory.InProgress },
+          ],
         },
       ],
     });
@@ -93,17 +96,25 @@ describe("DatasetsController", () => {
     });
   });
 
-  describe("GET /datasets/:datasetId/statuses", () => {
-    it("returns statuses for issues in the dataset", async () => {
+  describe("GET /datasets/:datasetId/workflows", () => {
+    it("returns the workflows for issues in the dataset", async () => {
       const { id: datasetId } = await createDataset();
 
       const { body } = await request(app.getHttpServer())
-        .get(`/datasets/${datasetId}/statuses`)
+        .get(`/datasets/${datasetId}/workflows`)
         .expect(200);
 
       expect(body).toEqual({
         Epic: [],
-        Story: [{ name: "In Progress", category: "In Progress" }],
+        Story: [
+          {
+            name: "In Progress",
+            selectByDefault: true,
+            statuses: [
+              { name: "In Progress", category: StatusCategory.InProgress },
+            ],
+          },
+        ],
       });
     });
   });
