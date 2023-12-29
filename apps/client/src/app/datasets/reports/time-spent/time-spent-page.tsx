@@ -15,7 +15,10 @@ import { DateFilterType, filterIssues } from "@jbrunton/flow-metrics";
 import { IssueDetailsDrawer } from "../scatterplot/components/issue-details-drawer";
 import { ZoomInOutlined } from "@ant-design/icons";
 import { issueDetailsPath } from "@app/navigation/paths";
-import { IssueExternalLink, IssueLink } from "@app/datasets/components/foo";
+import {
+  IssueExternalLink,
+  IssueLink,
+} from "@app/datasets/components/issue-links";
 
 export const TimeSpentPage = () => {
   const { datasetId } = useNavigationContext();
