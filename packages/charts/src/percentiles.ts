@@ -7,7 +7,7 @@ export type Percentile = {
 };
 
 export const getCycleTimePercentiles = (
-  issues: CompletedIssue[]
+  issues: CompletedIssue[],
 ): Percentile[] | undefined => {
   const cycleTimes = issues.map((item) => item.metrics.cycleTime);
 
@@ -25,7 +25,7 @@ export const getCycleTimePercentiles = (
       const percentile = quantile * 100;
       return {
         percentile,
-        cycleTime: Math.ceil(quantileSeq(cycleTimes, quantile) as number),
+        cycleTime: quantileSeq(cycleTimes, quantile) as number,
       };
     })
     .reverse();

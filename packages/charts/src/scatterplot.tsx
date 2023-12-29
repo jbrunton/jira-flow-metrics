@@ -61,7 +61,9 @@ export const Scatterplot = ({
               backgroundColor: "#FFFFFF",
               padding: 4,
               position: "start",
-              content: `${p.percentile.toString()}% (${p.cycleTime} days)`,
+              content: `${p.percentile.toString()}% (${p.cycleTime.toFixed(
+                1,
+              )} days)`,
               display: showPercentileLabels,
               textAlign: "start",
               color: "#666666",

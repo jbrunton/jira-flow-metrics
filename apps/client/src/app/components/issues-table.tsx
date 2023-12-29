@@ -6,7 +6,6 @@ import { ColumnType, ColumnsType, SortOrder } from "antd/es/table/interface";
 import { useEffect, useState } from "react";
 import { useNavigationContext } from "../navigation/context";
 import { isNil } from "rambda";
-import { Percentile } from "@usecases/scatterplot/cycle-times";
 import { IssueResolution, IssueStatus } from "@jbrunton/flow-components";
 import { IssueDetailsDrawer } from "@app/datasets/reports/scatterplot/components/issue-details-drawer";
 import { ZoomInOutlined } from "@ant-design/icons";
@@ -15,6 +14,7 @@ import {
   IssueExternalLink,
   IssueLink,
 } from "@app/datasets/components/issue-links";
+import { Percentile } from "@jbrunton/flow-charts";
 
 export type SortState = {
   columnKey: "created" | "started" | "completed" | "cycleTime" | undefined;

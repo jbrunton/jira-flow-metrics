@@ -4,15 +4,15 @@ import {
   filterCompletedIssues,
 } from "@jbrunton/flow-metrics";
 // import { Scatterplot } from "./components/scatterplot";
-import { Scatterplot } from "@jbrunton/flow-charts";
+import {
+  Scatterplot,
+  Percentile,
+  getCycleTimePercentiles,
+} from "@jbrunton/flow-charts";
 import { useEffect, useState } from "react";
 import { IssueDetailsDrawer } from "./components/issue-details-drawer";
 import { IssuesTable } from "../../../components/issues-table";
 import { useFilterContext } from "../../../filter/context";
-import {
-  Percentile,
-  getCycleTimePercentiles,
-} from "@usecases/scatterplot/cycle-times";
 import { FilterOptionsForm } from "../components/filter-form/filter-options-form";
 import { useDatasetContext } from "../../context";
 import { Checkbox, Col, Row } from "antd";
