@@ -61,15 +61,13 @@ export class DatasetsController {
     });
   }
 
-  @Get(":datasetId/statuses")
-  async getStatuses(@Param("datasetId") datasetId: string) {
+  @Get(":datasetId/workflows")
+  async getWorkflows(@Param("datasetId") datasetId: string) {
     const dataset = await this.datasets.getDataset(datasetId);
-    const storyStatuses = dataset.statuses;
     // TODO: epic cycle time policies
-    const epicStatuses = [];
     return {
-      Story: storyStatuses,
-      Epic: epicStatuses,
+      Story: dataset.workflow,
+      Epic: [],
     };
   }
 }

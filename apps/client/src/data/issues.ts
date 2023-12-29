@@ -56,22 +56,28 @@ export const useIssues = (
   });
 };
 
-export type DatasetStatuses = {
-  [HierarchyLevel.Story]: TransitionStatus[];
-  [HierarchyLevel.Epic]: TransitionStatus[];
+export type WorkflowStage = {
+  name: string;
+  selectByDefault: boolean;
+  statuses: TransitionStatus[];
 };
 
-const getDatasetStatuses = async (
+export type DatasetWorkflows = {
+  [HierarchyLevel.Story]: WorkflowStage[];
+  [HierarchyLevel.Epic]: WorkflowStage[];
+};
+
+const getDatasetWorkflows = async (
   datasetId?: string,
-): Promise<DatasetStatuses> => {
-  const response = await axios.get(`/datasets/${datasetId}/statuses`);
+): Promise<DatasetWorkflows> => {
+  const response = await axios.get(`/datasets/${datasetId}/workflows`);
   return response.data;
 };
 
-export const useDatasetStatuses = (datasetId?: string) => {
+export const useDatasetWorkflows = (datasetId?: string) => {
   return useQuery({
     queryKey: [issuesQueryKey, datasetId],
-    queryFn: () => getDatasetStatuses(datasetId),
+    queryFn: () => getDatasetWorkflows(datasetId),
     enabled: datasetId !== undefined,
   });
 };

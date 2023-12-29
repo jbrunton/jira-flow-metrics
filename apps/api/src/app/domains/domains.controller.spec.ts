@@ -7,6 +7,7 @@ import { DataModule } from "@data/data-module";
 import { StorageModule } from "@data/storage/storage-module";
 import { TestStorageModule } from "@fixtures/data/storage/test-storage-module";
 import { DatasetsRepository } from "@entities/datasets";
+import { StatusCategory } from "@jbrunton/flow-metrics";
 
 describe("DomainsController", () => {
   let app: INestApplication;
@@ -81,7 +82,15 @@ describe("DomainsController", () => {
         domainId,
         name: "My Dataset",
         jql: "proj = MyProject",
-        statuses: [],
+        workflow: [
+          {
+            name: "In Progress",
+            selectByDefault: true,
+            statuses: [
+              { name: "In Progress", category: StatusCategory.InProgress },
+            ],
+          },
+        ],
       });
 
       await request(app.getHttpServer())
@@ -103,7 +112,7 @@ describe("DomainsController", () => {
         .expect(201, {
           id: "LO9BX58c5htj",
           domainId,
-          statuses: [],
+          workflow: [],
           ...params,
         });
     });

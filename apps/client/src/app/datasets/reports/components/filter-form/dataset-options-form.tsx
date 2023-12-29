@@ -1,8 +1,9 @@
 import { FC, Key, useEffect, useState } from "react";
-import { HierarchyLevel, StatusCategory } from "@jbrunton/flow-metrics";
-import { Checkbox, Col, Form, Row, SelectProps, Table, Tag } from "antd";
+import { HierarchyLevel, TransitionStatus } from "@jbrunton/flow-metrics";
+import { Checkbox, Col, Form, Row, Table, Tag } from "antd";
 import { ExpandableOptions } from "../../../../components/expandable-options";
-import { useDatasetStatuses } from "@data/issues";
+import { WorkflowStage, useDatasetWorkflows } from "@data/issues";
+import { flatten } from "rambda";
 
 export type DatasetOptions = {
   statuses?: string[];
@@ -20,37 +21,36 @@ export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
   onOptionsChanged,
   issuesCount,
 }) => {
-  const [statusOptions, setStatusOptions] = useState<SelectProps["options"]>();
-  const [selectedStatuses, setSelectedStatuses] = useState<string[]>();
+  const [workflowStages, setWorkflowStages] = useState<WorkflowStage[]>();
+  const [selectedStages, setSelectedStages] = useState<string[]>();
   const [includeWaitTime, setIncludeWaitTime] = useState(false);
 
-  const { data: datasetStatuses } = useDatasetStatuses(datasetId);
+  const { data: datasetWorkflows } = useDatasetWorkflows(datasetId);
 
   useEffect(() => {
-    if (!datasetStatuses) return;
+    if (!datasetWorkflows) return;
 
-    const statusOptions = datasetStatuses[HierarchyLevel.Story].map(
-      (status) => ({
-        label: status.name,
-        value: status.name,
-      }),
-    );
+    const workflowStages = datasetWorkflows[HierarchyLevel.Story];
 
-    setStatusOptions(statusOptions);
+    setWorkflowStages(workflowStages);
 
-    const defaultSelectedStatuses = datasetStatuses[HierarchyLevel.Story]
-      .filter((status) => status.category === StatusCategory.InProgress)
-      .map((status) => status.name);
+    const defaultSelectedStages = workflowStages
+      .filter((stage) => stage.selectByDefault)
+      .map((stage) => stage.name);
 
-    setSelectedStatuses(defaultSelectedStatuses);
-  }, [datasetStatuses, setStatusOptions]);
+    setSelectedStages(defaultSelectedStages);
+  }, [datasetWorkflows, setWorkflowStages]);
 
   useEffect(() => {
     onOptionsChanged({
       includeWaitTime,
-      statuses: selectedStatuses,
+      statuses: flatten(
+        datasetWorkflows?.[HierarchyLevel.Story]
+          .filter((stage) => selectedStages?.includes(stage.name))
+          .map((stage) => stage.statuses.map((status) => status.name)) ?? [],
+      ),
     });
-  }, [includeWaitTime, selectedStatuses, onOptionsChanged]);
+  }, [includeWaitTime, datasetWorkflows, selectedStages, onOptionsChanged]);
 
   return (
     <ExpandableOptions
@@ -58,9 +58,9 @@ export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
         title: "Dataset Options",
         options: [
           {
-            label: "statuses",
-            value: selectedStatuses
-              ? `Statuses=${selectedStatuses}`
+            label: "stages",
+            value: selectedStages
+              ? `Stages=${selectedStages}`
               : "StatusCategory=In Progress",
           },
           {
@@ -72,24 +72,43 @@ export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
     >
       <Form layout="vertical">
         <Row gutter={[8, 8]}>
-          <Col span={12}>
-            <Form.Item label="Selected Statuses">
+          <Col span={24}>
+            <Form.Item label="Selected Stages">
               <Table
                 size="small"
                 rowKey="value"
                 showHeader={false}
                 rowSelection={{
-                  selectedRowKeys: selectedStatuses,
+                  selectedRowKeys: selectedStages,
                   onChange: (keys: Key[]) =>
-                    setSelectedStatuses(keys as string[]),
+                    setSelectedStages(keys as string[]),
                 }}
-                dataSource={statusOptions}
+                dataSource={workflowStages}
                 pagination={false}
                 columns={[
                   {
-                    title: "Status",
-                    dataIndex: "value",
-                    key: "status",
+                    title: "Stage",
+                    dataIndex: "name",
+                    key: "name",
+                  },
+                  {
+                    title: "Statuses",
+                    dataIndex: "statuses",
+                    key: "statuses",
+                    render: (statuses: TransitionStatus[]) => (
+                      <>
+                        {statuses.map((status) => (
+                          <Tag
+                            bordered={true}
+                            key={status.name}
+                            color="#f9f9f9"
+                            style={{ color: "#999", borderColor: "#eee" }}
+                          >
+                            {status.name}
+                          </Tag>
+                        ))}
+                      </>
+                    ),
                   },
                 ]}
               />

@@ -1,6 +1,12 @@
 import { TransitionStatus } from "@jbrunton/flow-metrics";
 import { Domain } from "./domains";
 
+export type WorkflowStage = {
+  name: string;
+  selectByDefault: boolean;
+  statuses: TransitionStatus[];
+};
+
 export type Dataset = {
   id: string;
   domainId: string;
@@ -10,7 +16,7 @@ export type Dataset = {
     date: Date;
     issueCount: number;
   };
-  statuses: TransitionStatus[];
+  workflow: WorkflowStage[];
 };
 
 export type DataSource = {
