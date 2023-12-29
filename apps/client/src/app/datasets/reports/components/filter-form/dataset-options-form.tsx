@@ -76,7 +76,7 @@ export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
             <Form.Item label="Selected Stages">
               <Table
                 size="small"
-                rowKey="value"
+                rowKey="name"
                 showHeader={false}
                 rowSelection={{
                   selectedRowKeys: selectedStages,
