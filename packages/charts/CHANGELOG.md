@@ -1,5 +1,11 @@
 # @jbrunton/flow-charts
 
+## 0.0.11
+
+### Patch Changes
+
+- 9a1052e: fix: don't round percentiles
+
 ## 0.0.10
 
 ### Patch Changes
