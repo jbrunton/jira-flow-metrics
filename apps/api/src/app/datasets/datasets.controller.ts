@@ -2,6 +2,7 @@ import { DatasetsRepository } from "@entities/datasets";
 import { IssuesRepository } from "@entities/issues";
 import { getFlowMetrics } from "@jbrunton/flow-metrics";
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -10,7 +11,27 @@ import {
   Put,
   Query,
 } from "@nestjs/common";
+import { ApiProperty } from "@nestjs/swagger";
 import { SyncUseCase } from "@usecases/datasets/sync/sync-use-case";
+
+class WorkflowStageBody {
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty()
+  selectByDefault: boolean;
+
+  @ApiProperty()
+  statuses: string[];
+}
+
+class UpdateDatasetBody {
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty()
+  workflow: WorkflowStageBody[];
+}
 
 @Controller("datasets")
 export class DatasetsController {
@@ -23,6 +44,25 @@ export class DatasetsController {
   @Get(":datasetId")
   async getDataset(@Param("datasetId") datasetId: string) {
     return this.datasets.getDataset(datasetId);
+  }
+
+  @Put(":datasetId")
+  async updateDataset(
+    @Param("datasetId") datasetId: string,
+    @Body() request: UpdateDatasetBody,
+  ) {
+    const dataset = await this.datasets.getDataset(datasetId);
+    const workflow = request.workflow.map((stage) => ({
+      name: stage.name,
+      selectByDefault: stage.selectByDefault,
+      statuses: dataset.statuses.filter((status) =>
+        stage.statuses.includes(status.name),
+      ),
+    }));
+    const updatedDataset = await this.datasets.updateDataset(datasetId, {
+      workflow,
+    });
+    return updatedDataset;
   }
 
   @Delete(":datasetId")

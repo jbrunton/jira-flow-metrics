@@ -64,6 +64,7 @@ export class DomainsController {
       domainId,
       ...body,
       workflow: [],
+      statuses: [],
     });
   }
 

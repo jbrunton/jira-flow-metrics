@@ -1,5 +1,10 @@
-import { DeleteOutlined, PlusOutlined, SyncOutlined } from "@ant-design/icons";
-import { Button, Space, Table } from "antd";
+import {
+  DeleteOutlined,
+  PlusOutlined,
+  SettingOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
+import { Button, Drawer, Space, Table } from "antd";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AddDatasetModal } from "./add-dataset-modal";
@@ -15,13 +20,12 @@ import {
 import { RemoveDatasetModal } from "./remove-dataset-modal";
 import { formatDate } from "@jbrunton/flow-lib";
 import { useNavigationContext } from "../../navigation/context";
+import { EditDatasetForm } from "./edit-dataset-form";
 
 export const DatasetsIndexPage = () => {
   const { domainId } = useNavigationContext();
-  const [isAddDatasetModalOpen, setIsAddDatasetModalOpen] = useState(false);
-  const showAddDatasetModal = () => setIsAddDatasetModalOpen(true);
-  const hideAddDatasetModal = () => setIsAddDatasetModalOpen(false);
-
+  const [showAddDatasetForm, setShowAddDatasetForm] = useState(false);
+  const [datasetToEdit, setDatasetToEdit] = useState<Dataset>();
   const [datasetToRemove, setDatasetToRemove] = useState<Dataset>();
 
   const [loadingDatasetId, setLoadingDatasetId] = useState<string>();
@@ -51,7 +55,7 @@ export const DatasetsIndexPage = () => {
       <Button
         type="primary"
         icon={<PlusOutlined />}
-        onClick={showAddDatasetModal}
+        onClick={() => setShowAddDatasetForm(true)}
         style={{ marginBottom: "16px" }}
       >
         Add Data Set
@@ -121,7 +125,12 @@ export const DatasetsIndexPage = () => {
             title: "Actions",
             key: "actions",
             render: (_, dataset) => (
-              <Space size="large">
+              <Space>
+                <Button
+                  icon={<SettingOutlined />}
+                  onClick={() => setDatasetToEdit(dataset)}
+                  disabled={loadingDatasetId !== undefined}
+                />
                 <Button
                   icon={<DeleteOutlined />}
                   onClick={() => setDatasetToRemove(dataset)}
@@ -134,8 +143,8 @@ export const DatasetsIndexPage = () => {
       />
 
       <AddDatasetModal
-        isOpen={isAddDatasetModalOpen}
-        close={hideAddDatasetModal}
+        isOpen={showAddDatasetForm}
+        close={() => setShowAddDatasetForm(false)}
         domainId={domainId}
       />
       <RemoveDatasetModal
@@ -143,6 +152,18 @@ export const DatasetsIndexPage = () => {
         isOpen={datasetToRemove !== undefined}
         close={() => setDatasetToRemove(undefined)}
       />
+      <Drawer
+        size="large"
+        placement="bottom"
+        open={datasetToEdit !== undefined}
+        style={{ overflow: "hidden", height: "100%" }}
+        onClose={() => setDatasetToEdit(undefined)}
+      >
+        <EditDatasetForm
+          dataset={datasetToEdit}
+          onClose={() => setDatasetToEdit(undefined)}
+        />
+      </Drawer>
     </>
   );
 };

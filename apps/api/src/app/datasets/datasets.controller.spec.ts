@@ -46,6 +46,7 @@ describe("DatasetsController", () => {
           ],
         },
       ],
+      statuses: [{ name: "In Progress", category: StatusCategory.InProgress }],
     });
   };
 

@@ -15,6 +15,8 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@emotion/styled": "^11.11.0",
+    "@hello-pangea/dnd": "^16.5.0",
     "@jbrunton/flow-charts": "workspace:*",
     "@jbrunton/flow-components": "workspace:*",
     "@jbrunton/flow-lib": "workspace:*",
@@ -29,6 +31,7 @@
     "chartjs-plugin-datalabels": "^2.2.0",
     "date-fns": "^2.30.0",
     "fuzzball": "^2.1.2",
+    "immer": "^10.0.3",
     "mathjs": "^11.11.2",
     "rambda": "^8.4.0",
     "rc-picker": "~3.14.5",
