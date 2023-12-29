@@ -1,5 +1,16 @@
 # client
 
+## 0.0.11
+
+### Patch Changes
+
+- e306bc1: feat: select statuses for cycle times
+- 69e4770: fix: links to parents in issue details drawer
+- Updated dependencies [e306bc1]
+  - @jbrunton/flow-metrics@0.0.8
+  - @jbrunton/flow-charts@0.0.10
+  - @jbrunton/flow-components@0.0.5
+
 ## 0.0.10
 
 ### Patch Changes
