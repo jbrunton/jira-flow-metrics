@@ -6,9 +6,11 @@ import {
   JiraIssueBuilder,
   StatusBuilder,
   HierarchyLevel,
+  StatusCategory,
 } from "@jbrunton/flow-metrics";
 import { DomainsRepository } from "@entities/domains";
 import { sortStatuses } from "./sort-statuses";
+import { flatten, groupBy } from "rambda";
 
 @Injectable()
 export class SyncUseCase {
@@ -49,12 +51,21 @@ export class SyncUseCase {
       canonicalStatuses.find((status) => status.name === name),
     );
 
+    const statusesByCategory = groupBy(
+      (status) => status.category,
+      sortedStatuses,
+    );
+
     await this.datasets.updateDataset(datasetId, {
       lastSync: {
         date: new Date(),
         issueCount: issues.length,
       },
-      statuses: sortedStatuses,
+      statuses: flatten([
+        statusesByCategory[StatusCategory.ToDo],
+        statusesByCategory[StatusCategory.InProgress],
+        statusesByCategory[StatusCategory.Done],
+      ]),
     });
 
     return issues;

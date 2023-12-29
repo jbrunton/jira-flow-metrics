@@ -1,7 +1,15 @@
 import { DatasetsRepository } from "@entities/datasets";
 import { IssuesRepository } from "@entities/issues";
 import { getFlowMetrics } from "@jbrunton/flow-metrics";
-import { Controller, Delete, Get, Param, Put, Query } from "@nestjs/common";
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseArrayPipe,
+  Put,
+  Query,
+} from "@nestjs/common";
 import { SyncUseCase } from "@usecases/datasets/sync/sync-use-case";
 
 @Controller("datasets")
@@ -31,20 +39,18 @@ export class DatasetsController {
   async getIssues(
     @Param("datasetId") datasetId: string,
     @Query("includeWaitTime") includeWaitTime: string,
-    @Query("fromStatus") fromStatus?: string,
-    @Query("toStatus") toStatus?: string,
+    @Query(
+      "statuses",
+      new ParseArrayPipe({ items: String, separator: ",", optional: true }),
+    )
+    statuses?: string[],
   ) {
     let issues = await this.issues.getIssues(datasetId);
-    const dataset = await this.datasets.getDataset(datasetId);
-
-    const orderedStatuses = dataset.statuses.map((status) => status.name);
 
     issues = getFlowMetrics(
       issues,
       ["true", "1"].includes(includeWaitTime),
-      orderedStatuses,
-      fromStatus,
-      toStatus,
+      statuses,
     );
 
     return issues.map((issue) => {
@@ -58,7 +64,7 @@ export class DatasetsController {
   @Get(":datasetId/statuses")
   async getStatuses(@Param("datasetId") datasetId: string) {
     const dataset = await this.datasets.getDataset(datasetId);
-    const storyStatuses = dataset.statuses.map((status) => status.name);
+    const storyStatuses = dataset.statuses;
     // TODO: epic cycle time policies
     const epicStatuses = [];
     return {

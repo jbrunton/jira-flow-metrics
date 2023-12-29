@@ -103,7 +103,7 @@ describe("DatasetsController", () => {
 
       expect(body).toEqual({
         Epic: [],
-        Story: ["In Progress"],
+        Story: [{ name: "In Progress", category: "In Progress" }],
       });
     });
   });

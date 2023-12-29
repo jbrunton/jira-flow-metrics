@@ -4,6 +4,7 @@ import {
   HierarchyLevel,
   Issue,
   IssueFlowMetrics,
+  TransitionStatus,
 } from "@jbrunton/flow-metrics";
 
 const issuesQueryKey = "issues";
@@ -11,12 +12,11 @@ const issuesQueryKey = "issues";
 const getIssues = async (
   datasetId: string | undefined,
   includeWaitTime: boolean,
-  fromStatus?: string,
-  toStatus?: string,
+  statuses?: string[],
 ): Promise<Issue[]> => {
   let url = `/datasets/${datasetId}/issues?includeWaitTime=${includeWaitTime}`;
-  if (fromStatus && toStatus) {
-    url += `&fromStatus=${fromStatus}&toStatus=${toStatus}`;
+  if (statuses) {
+    url += `&statuses=${statuses.join()}`;
   }
   const response = await axios.get(url);
   return response.data.map((issue: Issue) => {
@@ -47,25 +47,18 @@ const parseDate = (date: string | Date | undefined): Date | undefined => {
 export const useIssues = (
   datasetId: string | undefined,
   includeWaitTime: boolean,
-  fromStatus?: string,
-  toStatus?: string,
+  statuses?: string[],
 ) => {
   return useQuery({
-    queryKey: [
-      issuesQueryKey,
-      datasetId,
-      includeWaitTime,
-      fromStatus,
-      toStatus,
-    ],
-    queryFn: () => getIssues(datasetId, includeWaitTime, fromStatus, toStatus),
+    queryKey: [issuesQueryKey, datasetId, includeWaitTime, statuses],
+    queryFn: () => getIssues(datasetId, includeWaitTime, statuses),
     enabled: datasetId !== undefined && includeWaitTime !== undefined,
   });
 };
 
 export type DatasetStatuses = {
-  [HierarchyLevel.Story]: string[];
-  [HierarchyLevel.Epic]: string[];
+  [HierarchyLevel.Story]: TransitionStatus[];
+  [HierarchyLevel.Epic]: TransitionStatus[];
 };
 
 const getDatasetStatuses = async (

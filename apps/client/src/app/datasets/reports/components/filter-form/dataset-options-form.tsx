@@ -1,12 +1,11 @@
-import { FC, useEffect, useState } from "react";
-import { HierarchyLevel } from "@jbrunton/flow-metrics";
-import { Checkbox, Col, Form, Row, Select, SelectProps, Tag } from "antd";
+import { FC, Key, useEffect, useState } from "react";
+import { HierarchyLevel, StatusCategory } from "@jbrunton/flow-metrics";
+import { Checkbox, Col, Form, Row, SelectProps, Table, Tag } from "antd";
 import { ExpandableOptions } from "../../../../components/expandable-options";
 import { useDatasetStatuses } from "@data/issues";
 
 export type DatasetOptions = {
-  fromStatus?: string;
-  toStatus?: string;
+  statuses?: string[];
   includeWaitTime: boolean;
 };
 
@@ -21,9 +20,8 @@ export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
   onOptionsChanged,
   issuesCount,
 }) => {
-  const [statuses, setStatuses] = useState<SelectProps["options"]>();
-  const [fromStatus, setFromStatus] = useState<string>();
-  const [toStatus, setToStatus] = useState<string>();
+  const [statusOptions, setStatusOptions] = useState<SelectProps["options"]>();
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>();
   const [includeWaitTime, setIncludeWaitTime] = useState(false);
 
   const { data: datasetStatuses } = useDatasetStatuses(datasetId);
@@ -31,18 +29,28 @@ export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
   useEffect(() => {
     if (!datasetStatuses) return;
 
-    const statusOptions = datasetStatuses[HierarchyLevel.Story];
-    const statuses = statusOptions.map((status) => ({
-      label: status,
-      value: status,
-    }));
+    const statusOptions = datasetStatuses[HierarchyLevel.Story].map(
+      (status) => ({
+        label: status.name,
+        value: status.name,
+      }),
+    );
 
-    setStatuses(statuses);
-  }, [datasetStatuses, setStatuses]);
+    setStatusOptions(statusOptions);
+
+    const defaultSelectedStatuses = datasetStatuses[HierarchyLevel.Story]
+      .filter((status) => status.category === StatusCategory.InProgress)
+      .map((status) => status.name);
+
+    setSelectedStatuses(defaultSelectedStatuses);
+  }, [datasetStatuses, setStatusOptions]);
 
   useEffect(() => {
-    onOptionsChanged({ fromStatus, toStatus, includeWaitTime });
-  }, [fromStatus, toStatus, includeWaitTime, onOptionsChanged]);
+    onOptionsChanged({
+      includeWaitTime,
+      statuses: selectedStatuses,
+    });
+  }, [includeWaitTime, selectedStatuses, onOptionsChanged]);
 
   return (
     <ExpandableOptions
@@ -50,14 +58,10 @@ export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
         title: "Dataset Options",
         options: [
           {
-            label: "from",
-            value: fromStatus
-              ? `Status=${fromStatus}`
+            label: "statuses",
+            value: selectedStatuses
+              ? `Statuses=${selectedStatuses}`
               : "StatusCategory=In Progress",
-          },
-          {
-            label: "to",
-            value: toStatus ? `Status=${toStatus}` : "StatusCategory=Done",
           },
           {
             value: `${includeWaitTime ? "Include" : "Exclude"} wait time`,
@@ -68,25 +72,26 @@ export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
     >
       <Form layout="vertical">
         <Row gutter={[8, 8]}>
-          <Col span={6}>
-            <Form.Item label="From Status (Stories)">
-              <Select
-                allowClear={true}
-                options={statuses}
-                value={fromStatus}
-                placeholder="StatusCategory=In Progress"
-                onChange={setFromStatus}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={6}>
-            <Form.Item label="To Status (Stories)">
-              <Select
-                allowClear={true}
-                options={statuses}
-                value={toStatus}
-                placeholder="StatusCategory=Done"
-                onChange={setToStatus}
+          <Col span={12}>
+            <Form.Item label="Selected Statuses">
+              <Table
+                size="small"
+                rowKey="value"
+                showHeader={false}
+                rowSelection={{
+                  selectedRowKeys: selectedStatuses,
+                  onChange: (keys: Key[]) =>
+                    setSelectedStatuses(keys as string[]),
+                }}
+                dataSource={statusOptions}
+                pagination={false}
+                columns={[
+                  {
+                    title: "Status",
+                    dataIndex: "value",
+                    key: "status",
+                  },
+                ]}
               />
             </Form.Item>
           </Col>
