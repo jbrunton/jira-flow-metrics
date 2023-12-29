@@ -8,7 +8,10 @@ import {
 } from "@jbrunton/flow-components";
 import { useNavigationContext } from "@app/navigation/context";
 import { issueDetailsPath } from "@app/navigation/paths";
-import { IssueExternalLink, IssueLink } from "@app/datasets/components/foo";
+import {
+  IssueExternalLink,
+  IssueLink,
+} from "@app/datasets/components/issue-links";
 
 const IssueDetails = ({ issue }: { issue: Issue }): ReactElement => {
   const { datasetId } = useNavigationContext();

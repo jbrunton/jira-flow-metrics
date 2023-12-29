@@ -11,7 +11,10 @@ import { IssueResolution, IssueStatus } from "@jbrunton/flow-components";
 import { IssueDetailsDrawer } from "@app/datasets/reports/scatterplot/components/issue-details-drawer";
 import { ZoomInOutlined } from "@ant-design/icons";
 import { issueDetailsPath } from "@app/navigation/paths";
-import { IssueExternalLink, IssueLink } from "@app/datasets/components/foo";
+import {
+  IssueExternalLink,
+  IssueLink,
+} from "@app/datasets/components/issue-links";
 
 export type SortState = {
   columnKey: "created" | "started" | "completed" | "cycleTime" | undefined;
