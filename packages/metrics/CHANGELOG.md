@@ -1,5 +1,11 @@
 # @jbrunton/flow-metrics
 
+## 0.0.8
+
+### Patch Changes
+
+- e306bc1: feat: select statuses for cycle times
+
 ## 0.0.7
 
 ### Patch Changes
