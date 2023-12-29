@@ -6,8 +6,8 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup index.ts --format cjs,esm --dts",
-    "dev": "pnpm run build -- --watch",
+    "build": "tsup --clean --dts",
+    "dev": "tsup --watch --onSuccess 'tsup --dts-only'",
     "clean": "rm -rf node_modules && rm -rf dist"
   },
   "files": [
