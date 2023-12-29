@@ -1,5 +1,11 @@
 # client
 
+## 0.0.12
+
+### Patch Changes
+
+- 409b2e4: feat: workflow stages
+
 ## 0.0.11
 
 ### Patch Changes
