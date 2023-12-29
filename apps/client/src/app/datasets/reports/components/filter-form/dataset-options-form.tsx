@@ -34,12 +34,13 @@ export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
 
     setWorkflowStages(workflowStages);
 
-    const defaultSelectedStages = workflowStages
-      .filter((stage) => stage.selectByDefault)
-      .map((stage) => stage.name);
-
-    setSelectedStages(defaultSelectedStages);
-  }, [datasetWorkflows, setWorkflowStages]);
+    if (!selectedStages) {
+      const defaultSelectedStages = workflowStages
+        .filter((stage) => stage.selectByDefault)
+        .map((stage) => stage.name);
+      setSelectedStages(defaultSelectedStages);
+    }
+  }, [datasetWorkflows, setWorkflowStages, selectedStages, setSelectedStages]);
 
   useEffect(() => {
     onOptionsChanged({
