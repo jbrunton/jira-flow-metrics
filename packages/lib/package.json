@@ -7,9 +7,9 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "test": "jest",
-    "build": "tsup index.ts --format cjs,esm --dts",
+    "build": "tsup --clean --dts",
+    "dev": "tsup --watch --onSuccess 'tsup --dts-only'",
     "lint": "eslint . --max-warnings 0",
-    "dev": "pnpm run build -- --watch",
     "clean": "rm -rf node_modules && rm -rf dist"
   },
   "publishConfig": {
