@@ -1,5 +1,11 @@
 # api
 
+## 0.0.9
+
+### Patch Changes
+
+- 409b2e4: feat: workflow stages
+
 ## 0.0.8
 
 ### Patch Changes
