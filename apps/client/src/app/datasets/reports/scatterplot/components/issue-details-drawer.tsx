@@ -13,10 +13,12 @@ import { IssueExternalLink, IssueLink } from "@app/datasets/components/foo";
 const IssueDetails = ({ issue }: { issue: Issue }): ReactElement => {
   const { datasetId } = useNavigationContext();
   const issuePath = issueDetailsPath({ issueKey: issue.key, datasetId });
-  const parentPath = issueDetailsPath({
-    issueKey: issue.parentKey,
-    datasetId,
-  });
+  const parentPath = issue.parentKey
+    ? issueDetailsPath({
+        issueKey: issue.parentKey,
+        datasetId,
+      })
+    : undefined;
   return (
     <>
       <h2>{issue.summary}</h2>
