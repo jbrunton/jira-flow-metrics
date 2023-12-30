@@ -1,6 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { client } from "./client";
+import { TransitionStatus } from "@jbrunton/flow-metrics";
+import { WorkflowStage } from "./issues";
 
 export type DataSource = {
   name: string;
@@ -13,6 +15,8 @@ export type Dataset = {
   name: string;
   jql: string;
   domainId: string;
+  statuses: TransitionStatus[];
+  workflow: WorkflowStage[];
   lastSync?: {
     date: Date;
     issueCount: number;
@@ -139,6 +143,27 @@ const createDataset = async (params: CreateDatasetParams): Promise<Dataset> => {
 export const useCreateDataset = () => {
   return useMutation({
     mutationFn: createDataset,
+    onSuccess: () => client.invalidateQueries(),
+  });
+};
+
+export type UpdateDatasetParams = {
+  id: string;
+  name: string;
+  workflow: { name: string; statuses: string[] }[];
+};
+
+const updateDataset = async ({
+  id,
+  ...params
+}: UpdateDatasetParams): Promise<Dataset> => {
+  const response = await axios.put(`/datasets/${id}`, params);
+  return response.data;
+};
+
+export const useUpdateDataset = () => {
+  return useMutation({
+    mutationFn: updateDataset,
     onSuccess: () => client.invalidateQueries(),
   });
 };

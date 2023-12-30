@@ -67,6 +67,7 @@ export class SyncUseCase {
         date: new Date(),
         issueCount: issues.length,
       },
+      statuses: sortedStatuses,
       workflow,
     });
 

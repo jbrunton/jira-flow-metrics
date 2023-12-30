@@ -16,6 +16,7 @@ export type Dataset = {
     date: Date;
     issueCount: number;
   };
+  statuses: TransitionStatus[];
   workflow: WorkflowStage[];
 };
 

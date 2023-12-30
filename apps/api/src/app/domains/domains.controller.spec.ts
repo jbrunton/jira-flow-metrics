@@ -91,6 +91,9 @@ describe("DomainsController", () => {
             ],
           },
         ],
+        statuses: [
+          { name: "In Progress", category: StatusCategory.InProgress },
+        ],
       });
 
       await request(app.getHttpServer())
@@ -113,6 +116,7 @@ describe("DomainsController", () => {
           id: "LO9BX58c5htj",
           domainId,
           workflow: [],
+          statuses: [],
           ...params,
         });
     });
