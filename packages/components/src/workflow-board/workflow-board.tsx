@@ -6,6 +6,8 @@ import {
   OnDragEndResponder,
 } from "@hello-pangea/dnd";
 import {
+  Dataset,
+  WorkflowStage,
   addColumn,
   datasetToState,
   deleteColumn,
@@ -17,7 +19,6 @@ import {
 } from "./state";
 import { WorkflowStageCard } from "./column";
 import { Flex } from "antd";
-import { Dataset, UpdateDatasetParams } from "@data/datasets";
 
 const Container = styled.div`
   display: flex;
@@ -25,7 +26,7 @@ const Container = styled.div`
 
 export const WorkflowBoard: FC<{
   dataset: Dataset;
-  onWorkflowChanged: (workflow: UpdateDatasetParams["workflow"]) => void;
+  onWorkflowChanged: (workflow: WorkflowStage[]) => void;
   disabled: boolean;
 }> = ({ dataset, onWorkflowChanged, disabled }) => {
   const [state, setState] = useState(() => datasetToState(dataset));
