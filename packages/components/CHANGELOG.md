@@ -1,5 +1,11 @@
 # @jbrunton/flow-components
 
+## 0.0.6
+
+### Patch Changes
+
+- 1dfa697: extract workflow board
+
 ## 0.0.5
 
 ### Patch Changes
