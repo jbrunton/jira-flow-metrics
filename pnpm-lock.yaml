@@ -328,12 +328,21 @@ importers:
 
   packages/components:
     dependencies:
+      '@emotion/styled':
+        specifier: ^11.11.0
+        version: 11.11.0(@emotion/react@11.11.3)(@types/react@18.2.15)(react@18.2.0)
+      '@hello-pangea/dnd':
+        specifier: ^16.5.0
+        version: 16.5.0(@types/react-dom@18.2.7)(@types/react@18.2.15)(react-dom@18.2.0)(react@18.2.0)
       '@jbrunton/flow-lib':
         specifier: workspace:*
         version: link:../lib
       '@jbrunton/flow-metrics':
         specifier: workspace:*
         version: link:../metrics
+      immer:
+        specifier: ^10.0.3
+        version: 10.0.3
       react-router-dom:
         specifier: ^6.16.0
         version: 6.16.0(react-dom@18.2.0)(react@18.2.0)

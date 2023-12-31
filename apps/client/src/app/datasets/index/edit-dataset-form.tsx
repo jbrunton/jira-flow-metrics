@@ -2,7 +2,7 @@ import { LoadingSpinner } from "@app/components/loading-spinner";
 import { Dataset, UpdateDatasetParams, useUpdateDataset } from "@data/datasets";
 import { Button, Form, Input } from "antd";
 import { FC, useState } from "react";
-import { WorkflowBoard } from "./board/workflow-board";
+import { WorkflowBoard } from "@jbrunton/flow-components";
 
 export type EditDatasetFormProps = {
   dataset?: Dataset;
@@ -45,7 +45,14 @@ export const EditDatasetForm: FC<EditDatasetFormProps> = ({
       <Form.Item label="Workflow" style={{ overflowX: "auto" }}>
         <WorkflowBoard
           dataset={dataset}
-          onWorkflowChanged={setUpdatedWorkflow}
+          onWorkflowChanged={(workflow) =>
+            setUpdatedWorkflow(
+              workflow.map((stage) => ({
+                ...stage,
+                statuses: stage.statuses.map((status) => status.name),
+              })),
+            )
+          }
           disabled={updateDataset.isLoading}
         />
       </Form.Item>

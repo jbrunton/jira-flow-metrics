@@ -1,8 +1,6 @@
 import { StatusCategory, TransitionStatus } from "@jbrunton/flow-metrics";
 import { DraggableLocation } from "@hello-pangea/dnd";
 import { produce } from "immer";
-import { WorkflowStage } from "@data/issues";
-import { Dataset, UpdateDatasetParams } from "@data/datasets";
 
 export type Status = {
   id: string;
@@ -13,6 +11,17 @@ export type WorkflowStageColumn = {
   id: string;
   title: string;
   statusIds: string[];
+};
+
+export type WorkflowStage = {
+  name: string;
+  selectByDefault: boolean;
+  statuses: TransitionStatus[];
+};
+
+export type Dataset = {
+  workflow: WorkflowStage[];
+  statuses: TransitionStatus[];
 };
 
 export type WorkflowState = {
@@ -125,9 +134,7 @@ export const moveToColumn = produce(
   },
 );
 
-export const stateToWorkflow = (
-  state: WorkflowState,
-): UpdateDatasetParams["workflow"] => {
+export const stateToWorkflow = (state: WorkflowState): WorkflowStage[] => {
   return state.columnOrder.map((columnId) => {
     const column = state.columns[columnId];
     const statuses = column.statusIds.map(
@@ -139,7 +146,7 @@ export const stateToWorkflow = (
     return {
       name: column.title,
       selectByDefault,
-      statuses: statuses.map((status) => status.name),
+      statuses,
     };
   });
 };
