@@ -10,6 +10,7 @@ import {
 } from "@jbrunton/flow-metrics";
 import { DomainsRepository } from "@entities/domains";
 import { sortStatuses } from "./sort-statuses";
+import { TransitionStatus } from "@jbrunton/flow-metrics";
 
 @Injectable()
 export class SyncUseCase {
@@ -50,17 +51,7 @@ export class SyncUseCase {
       canonicalStatuses.find((status) => status.name === name),
     );
 
-    const getWorkflowStage = (category: StatusCategory): WorkflowStage => ({
-      name: category,
-      selectByDefault: category === StatusCategory.InProgress,
-      statuses: sortedStatuses.filter((status) => status.category === category),
-    });
-
-    const workflow = [
-      StatusCategory.ToDo,
-      StatusCategory.InProgress,
-      StatusCategory.Done,
-    ].map(getWorkflowStage);
+    const workflow = dataset.workflow ?? buildDefaultWorkflow(sortedStatuses);
 
     await this.datasets.updateDataset(datasetId, {
       lastSync: {
@@ -74,3 +65,19 @@ export class SyncUseCase {
     return issues;
   }
 }
+
+const buildDefaultWorkflow = (sortedStatuses: TransitionStatus[]) => {
+  const getWorkflowStage = (category: StatusCategory): WorkflowStage => ({
+    name: category,
+    selectByDefault: category === StatusCategory.InProgress,
+    statuses: sortedStatuses.filter((status) => status.category === category),
+  });
+
+  const workflow = [
+    StatusCategory.ToDo,
+    StatusCategory.InProgress,
+    StatusCategory.Done,
+  ].map(getWorkflowStage);
+
+  return workflow;
+};
