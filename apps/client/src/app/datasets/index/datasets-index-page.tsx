@@ -129,7 +129,10 @@ export const DatasetsIndexPage = () => {
                 <Button
                   icon={<SettingOutlined />}
                   onClick={() => setDatasetToEdit(dataset)}
-                  disabled={loadingDatasetId !== undefined}
+                  disabled={
+                    loadingDatasetId !== undefined ||
+                    dataset?.lastSync === undefined
+                  }
                 />
                 <Button
                   icon={<DeleteOutlined />}
