@@ -1,6 +1,7 @@
 import { StatusCategory, TransitionStatus } from "@jbrunton/flow-metrics";
 import { DraggableLocation } from "@hello-pangea/dnd";
 import { produce } from "immer";
+import { flatten } from "remeda";
 
 export type Status = {
   id: string;
@@ -155,29 +156,47 @@ export const datasetToState = (dataset: Dataset): WorkflowState => {
   const taskId = (status: TransitionStatus) => `task:${status.name}`;
   const colId = (stage: WorkflowStage) => `col:${stage.name}`;
 
+  const tasks = Object.fromEntries(
+    dataset.statuses.map((status) => [
+      taskId(status),
+      {
+        id: taskId(status),
+        status: status,
+      },
+    ]),
+  );
+
+  const workflowColumns: WorkflowStageColumn[] = dataset.workflow.map(
+    (stage) => ({
+      id: colId(stage),
+      title: stage.name,
+      statusIds: stage.statuses.map((status) => taskId(status)),
+    }),
+  );
+
+  const usedStatusIds = new Set(
+    flatten(workflowColumns.map((column) => column.statusIds)),
+  );
+  const unusedStatusIds = Object.values(tasks)
+    .filter((task) => !usedStatusIds.has(task.id))
+    .map((task) => task.id);
+
+  workflowColumns.push({
+    id: "unused",
+    title: "Unused",
+    statusIds: unusedStatusIds,
+  });
+
+  const columns = Object.fromEntries(
+    workflowColumns.map((stage) => [stage.id, stage]),
+  );
+
+  const columnOrder = dataset.workflow.map((stage) => colId(stage));
+
   const workflowState: WorkflowState = {
-    tasks: Object.fromEntries(
-      dataset.statuses.map((status) => [
-        taskId(status),
-        {
-          id: taskId(status),
-          status: status,
-        },
-      ]),
-    ),
-    columns: Object.fromEntries(
-      dataset.workflow
-        .map((stage): [string, WorkflowStageColumn] => [
-          colId(stage),
-          {
-            id: colId(stage),
-            title: stage.name,
-            statusIds: stage.statuses.map((status) => taskId(status)),
-          },
-        ])
-        .concat([["unused", { id: "unused", title: "Unused", statusIds: [] }]]),
-    ),
-    columnOrder: dataset.workflow.map((stage) => colId(stage)),
+    tasks,
+    columns,
+    columnOrder,
   };
 
   return workflowState;
