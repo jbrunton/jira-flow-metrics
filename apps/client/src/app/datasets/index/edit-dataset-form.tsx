@@ -1,8 +1,9 @@
 import { LoadingSpinner } from "@app/components/loading-spinner";
 import { Dataset, UpdateDatasetParams, useUpdateDataset } from "@data/datasets";
 import { Button, Form, Input } from "antd";
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { WorkflowBoard } from "@jbrunton/flow-components";
+import { WorkflowStage } from "@data/issues";
 
 export type EditDatasetFormProps = {
   dataset?: Dataset;
@@ -17,6 +18,17 @@ export const EditDatasetForm: FC<EditDatasetFormProps> = ({
     useState<UpdateDatasetParams["workflow"]>();
 
   const updateDataset = useUpdateDataset();
+
+  const onWorkflowChanged = useCallback(
+    (workflow: WorkflowStage[]) =>
+      setUpdatedWorkflow(
+        workflow.map((stage) => ({
+          ...stage,
+          statuses: stage.statuses.map((status) => status.name),
+        })),
+      ),
+    [setUpdatedWorkflow],
+  );
 
   if (!dataset) {
     return <LoadingSpinner />;
@@ -45,14 +57,7 @@ export const EditDatasetForm: FC<EditDatasetFormProps> = ({
       <Form.Item label="Workflow" style={{ overflowX: "auto" }}>
         <WorkflowBoard
           dataset={dataset}
-          onWorkflowChanged={(workflow) =>
-            setUpdatedWorkflow(
-              workflow.map((stage) => ({
-                ...stage,
-                statuses: stage.statuses.map((status) => status.name),
-              })),
-            )
-          }
+          onWorkflowChanged={onWorkflowChanged}
           disabled={updateDataset.isLoading}
         />
       </Form.Item>
