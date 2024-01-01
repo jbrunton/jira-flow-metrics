@@ -1,5 +1,11 @@
 # @jbrunton/flow-components
 
+## 0.0.7
+
+### Patch Changes
+
+- 71223f5: fix: show unused statuses in workflow editor
+
 ## 0.0.6
 
 ### Patch Changes
