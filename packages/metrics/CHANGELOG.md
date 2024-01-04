@@ -1,5 +1,11 @@
 # @jbrunton/flow-metrics
 
+## 0.0.9
+
+### Patch Changes
+
+- 6220d26: fix: components filter
+
 ## 0.0.8
 
 ### Patch Changes
