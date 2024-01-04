@@ -44,4 +44,21 @@ describe("filterIssues", () => {
       expect(filteredIssues).toEqual([story]);
     });
   });
+
+  describe("combined filters", () => {
+    it("filters by components and status", () => {
+      const issues = [
+        buildIssue({ status: "Done", components: ["API"] }),
+        buildIssue({ status: "In Progress", components: ["API"] }),
+        buildIssue({ status: "Done", components: ["Web"] }),
+      ];
+
+      const filteredIssues = filterIssues(issues, {
+        components: ["API"],
+        statuses: ["Done"],
+      });
+
+      expect(filteredIssues).toEqual([issues[0]]);
+    });
+  });
 });

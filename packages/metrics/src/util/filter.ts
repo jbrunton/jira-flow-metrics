@@ -65,7 +65,9 @@ export const filterIssues = (issues: Issue[], filter: IssueFilter): Issue[] => {
     if (filter.components && filter.components.length > 0) {
       const intersects =
         intersection(filter.components, issue.components).length > 0;
-      return intersects;
+      if (!intersects) {
+        return false;
+      }
     }
 
     if (filter.statuses && filter.statuses.length > 0) {
