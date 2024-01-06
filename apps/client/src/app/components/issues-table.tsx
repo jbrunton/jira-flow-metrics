@@ -190,7 +190,6 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
             {formatNumber(cycleTime)}
             <Tag
               style={{
-                // float: "right",
                 borderStyle: percentile !== undefined ? "solid" : "dashed",
               }}
               color={color}
@@ -300,11 +299,19 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
       title: "Parent",
       key: "parent",
       render: (_, issue) => {
-        if (!issue.parent) {
+        const parent = issue.parent;
+        if (!parent) {
           return null;
         }
         const path = issueDetailsPath({ issueKey: issue.parentKey, datasetId });
-        return <IssueLink text={issue.parent.summary} path={path} tag />;
+        return (
+          <Space>
+            <a onClick={() => setSelectedIssue(parent)}>
+              <ZoomInOutlined />
+            </a>
+            <IssueLink text={parent.summary} path={path} tag />
+          </Space>
+        );
       },
     });
   }
