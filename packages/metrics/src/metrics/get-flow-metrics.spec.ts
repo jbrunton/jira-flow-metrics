@@ -1,6 +1,7 @@
 import { HierarchyLevel, Status, StatusCategory } from "../types";
 import { getFlowMetrics } from "./get-flow-metrics";
 import { buildIssue } from "../fixtures/issue-factory";
+import { LabelFilterType } from "../util";
 
 jest.useFakeTimers();
 
@@ -389,7 +390,7 @@ describe("getFlowMetrics", () => {
   describe("for epics", () => {
     const story1Started = new Date("2023-01-01T10:30:00.000Z");
     const story2Started = new Date("2023-01-01T12:30:00.000Z");
-    const story1Completed = new Date("2023-01-02T14:30:00.000Z");
+    const story1Completed = new Date("2023-01-02T13:30:00.000Z");
     const story2Completed = new Date("2023-01-02T16:30:00.000Z");
 
     const epic = buildIssue({
@@ -401,6 +402,7 @@ describe("getFlowMetrics", () => {
 
     const story1 = buildIssue({
       parentKey: epic.key,
+      labels: ["label1"],
       transitions: [
         {
           date: story1Started,
@@ -417,6 +419,7 @@ describe("getFlowMetrics", () => {
 
     const story2 = buildIssue({
       parentKey: epic.key,
+      labels: ["label2"],
       transitions: [
         {
           date: story2Started,
@@ -438,6 +441,22 @@ describe("getFlowMetrics", () => {
         started: story1Started,
         completed: story2Completed,
         cycleTime: 1.25,
+      });
+    });
+
+    it("applies epic cycle time policies", () => {
+      const [result] = getFlowMetrics(
+        [epic, story1, story2],
+        false,
+        undefined,
+        story1.labels,
+        LabelFilterType.Include,
+      );
+
+      expect(result.metrics).toEqual({
+        started: story1Started,
+        completed: story1Completed,
+        cycleTime: 1.125,
       });
     });
 

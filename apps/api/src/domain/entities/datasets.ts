@@ -17,6 +17,8 @@ export type Dataset = {
     issueCount: number;
   };
   statuses: TransitionStatus[];
+  labels: string[];
+  components: string[];
   workflow?: WorkflowStage[];
 };
 

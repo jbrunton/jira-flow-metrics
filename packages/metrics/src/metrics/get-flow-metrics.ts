@@ -10,11 +10,15 @@ import {
 } from "../types";
 import { compareAsc, compareDesc } from "date-fns";
 import { getDifferenceInDays } from "@jbrunton/flow-lib";
+import { IssueFilter, filterIssues } from "../util";
 
 export const getFlowMetrics = (
   issues: Issue[],
   includeWaitTime: boolean,
   statuses?: string[],
+  labels?: IssueFilter["labels"],
+  labelFilterType?: IssueFilter["labelFilterType"],
+  components?: IssueFilter["components"],
 ): Issue[] => {
   const stories = issues.filter(
     (issue) => issue.hierarchyLevel === HierarchyLevel.Story,
@@ -32,8 +36,27 @@ export const getFlowMetrics = (
     };
   });
 
+  const filteredStories = filterIssues(updatedStories, {
+    labels,
+    labelFilterType,
+    components,
+  });
+
+  const epicKeys = new Set(epics.map((epic) => epic.key));
+  const includedStoryKeys = new Set(
+    filteredStories
+      .filter((story) => story.parentKey && epicKeys.has(story.parentKey))
+      .map((story) => story.key),
+  );
+
+  updatedStories.forEach((story) => {
+    if (includedStoryKeys.has(story.key)) {
+      story.metrics.includedInEpic = true;
+    }
+  });
+
   const updatedEpics = epics.map((epic) => {
-    const metrics = estimateEpicFlowMetrics(epic, updatedStories);
+    const metrics = estimateEpicFlowMetrics(epic, filteredStories);
     return {
       ...epic,
       metrics,

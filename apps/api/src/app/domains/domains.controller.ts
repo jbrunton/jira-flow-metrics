@@ -2,6 +2,7 @@ import { DataSourcesRepository, DatasetsRepository } from "@entities/datasets";
 import { Domain, DomainsRepository } from "@entities/domains";
 import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
+import { omit } from "rambda";
 import { URL } from "url";
 
 class CreateDomainBody {
@@ -52,7 +53,8 @@ export class DomainsController {
 
   @Get(":domainId/datasets")
   async getDatasets(@Param("domainId") domainId: string) {
-    return this.datasets.getDatasets(domainId);
+    const datasets = await this.datasets.getDatasets(domainId);
+    return datasets.map((dataset) => omit(["issues"], dataset));
   }
 
   @Post(":domainId/datasets")
@@ -64,6 +66,8 @@ export class DomainsController {
       domainId,
       ...body,
       statuses: [],
+      labels: [],
+      components: [],
     });
   }
 

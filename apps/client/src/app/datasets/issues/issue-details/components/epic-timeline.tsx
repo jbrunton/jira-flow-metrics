@@ -3,7 +3,7 @@ import { Tooltip, ChartOptions } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import "chartjs-adapter-date-fns";
 import { Issue, Transition } from "@jbrunton/flow-metrics";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { formatDate } from "@jbrunton/flow-lib";
 import {
   dropWhile,
@@ -272,6 +272,12 @@ export const EpicTimeline: FC<EpicTimelineProps> = ({
   const [timelineIssues, setTimelineIssues] = useState<Issue[]>(issues);
   const [timelineEvents, setTimelineEvents] = useState<TimelineEvent[]>([]);
 
+  const defaultExcludedIssues = useMemo(() => {
+    return issues
+      .filter((issue) => !issue.metrics.includedInEpic)
+      .map((issue) => issue.key);
+  }, [issues]);
+
   useEffect(() => {
     const timelineIssues = issues.filter(
       (issue) =>
@@ -303,6 +309,7 @@ export const EpicTimeline: FC<EpicTimelineProps> = ({
         )}
         defaultSortField="started"
         onExcludedIssuesChanged={setExcludedIssues}
+        defaultExcludedIssueKeys={defaultExcludedIssues}
       />
       <IssueDetailsDrawer
         selectedIssues={selectedIssue ? [selectedIssue] : []}

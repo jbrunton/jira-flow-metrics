@@ -14,6 +14,9 @@ export const DatasetProvider: React.FC<{ children: React.ReactNode }> = ({
     dataset?.id,
     datasetOptions?.includeWaitTime ?? false,
     datasetOptions?.statuses,
+    datasetOptions?.labels,
+    datasetOptions?.labelFilterType,
+    datasetOptions?.components,
   );
 
   const value: DatasetContextType = {

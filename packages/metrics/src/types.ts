@@ -37,6 +37,7 @@ export type IssueFlowMetrics = {
   started?: Date;
   completed?: Date;
   cycleTime?: number;
+  includedInEpic?: boolean;
 };
 
 export type StartedFlowMetrics = IssueFlowMetrics & {
