@@ -47,6 +47,8 @@ describe("DatasetsController", () => {
         },
       ],
       statuses: [{ name: "In Progress", category: StatusCategory.InProgress }],
+      labels: [],
+      components: [],
     });
   };
 
@@ -94,29 +96,6 @@ describe("DatasetsController", () => {
           ],
         },
       ]);
-    });
-  });
-
-  describe("GET /datasets/:datasetId/workflows", () => {
-    it("returns the workflows for issues in the dataset", async () => {
-      const { id: datasetId } = await createDataset();
-
-      const { body } = await request(app.getHttpServer())
-        .get(`/datasets/${datasetId}/workflows`)
-        .expect(200);
-
-      expect(body).toEqual({
-        Epic: [],
-        Story: [
-          {
-            name: "In Progress",
-            selectByDefault: true,
-            statuses: [
-              { name: "In Progress", category: StatusCategory.InProgress },
-            ],
-          },
-        ],
-      });
     });
   });
 });

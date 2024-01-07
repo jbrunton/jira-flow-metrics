@@ -11,6 +11,7 @@ import {
 import { DomainsRepository } from "@entities/domains";
 import { sortStatuses } from "./sort-statuses";
 import { TransitionStatus } from "@jbrunton/flow-metrics";
+import { flatten, uniq } from "rambda";
 
 @Injectable()
 export class SyncUseCase {
@@ -53,12 +54,19 @@ export class SyncUseCase {
 
     const workflow = dataset.workflow ?? buildDefaultWorkflow(sortedStatuses);
 
+    const labels = uniq(flatten<string>(issues.map((issue) => issue.labels)));
+    const components = uniq(
+      flatten<string>(issues.map((issue) => issue.components)),
+    );
+
     await this.datasets.updateDataset(datasetId, {
       lastSync: {
         date: new Date(),
         issueCount: issues.length,
       },
       statuses: sortedStatuses,
+      components,
+      labels,
       workflow,
     });
 

@@ -1,13 +1,30 @@
 import { FC, Key, useEffect, useState } from "react";
-import { HierarchyLevel, TransitionStatus } from "@jbrunton/flow-metrics";
-import { Checkbox, Col, Form, Row, Table, Tag } from "antd";
-import { ExpandableOptions } from "../../../../components/expandable-options";
-import { WorkflowStage, useDatasetWorkflows } from "@data/issues";
+import { LabelFilterType, TransitionStatus } from "@jbrunton/flow-metrics";
+import {
+  Checkbox,
+  Col,
+  Form,
+  Row,
+  Select,
+  SelectProps,
+  Space,
+  Table,
+  Tag,
+} from "antd";
+import {
+  ExpandableOptions,
+  ExpandableOptionsHeader,
+} from "../../../../components/expandable-options";
+import { WorkflowStage } from "@data/issues";
 import { flatten } from "rambda";
+import { useDataset } from "@data/datasets";
 
 export type DatasetOptions = {
   statuses?: string[];
   includeWaitTime: boolean;
+  labels?: string[];
+  components?: string[];
+  labelFilterType?: LabelFilterType;
 };
 
 type DatasetOptionsProps = {
@@ -25,12 +42,12 @@ export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
   const [selectedStages, setSelectedStages] = useState<string[]>();
   const [includeWaitTime, setIncludeWaitTime] = useState(false);
 
-  const { data: datasetWorkflows } = useDatasetWorkflows(datasetId);
+  const { data: dataset } = useDataset(datasetId);
 
   useEffect(() => {
-    if (!datasetWorkflows) return;
+    if (!dataset) return;
 
-    const workflowStages = datasetWorkflows[HierarchyLevel.Story];
+    const workflowStages = dataset.workflow;
 
     setWorkflowStages(workflowStages);
 
@@ -40,34 +57,78 @@ export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
         .map((stage) => stage.name);
       setSelectedStages(defaultSelectedStages);
     }
-  }, [datasetWorkflows, setWorkflowStages, selectedStages, setSelectedStages]);
+  }, [dataset, setWorkflowStages, selectedStages, setSelectedStages]);
+
+  const [components, setComponents] = useState<SelectProps["options"]>();
+  const [labels, setLabels] = useState<SelectProps["options"]>();
+
+  const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
+  const [labelFilterType, setLabelFilterType] = useState<LabelFilterType>(
+    LabelFilterType.Include,
+  );
+
+  const [selectedComponents, setSelectedComponents] = useState<string[]>([]);
 
   useEffect(() => {
     onOptionsChanged({
       includeWaitTime,
+      labels: selectedLabels,
+      labelFilterType,
+      components: selectedComponents,
       statuses: flatten(
-        datasetWorkflows?.[HierarchyLevel.Story]
+        dataset?.workflow
           .filter((stage) => selectedStages?.includes(stage.name))
           .map((stage) => stage.statuses.map((status) => status.name)) ?? [],
       ),
     });
-  }, [includeWaitTime, datasetWorkflows, selectedStages, onOptionsChanged]);
+  }, [
+    includeWaitTime,
+    dataset,
+    selectedStages,
+    onOptionsChanged,
+    selectedLabels,
+    labelFilterType,
+    selectedComponents,
+  ]);
+
+  useEffect(() => {
+    setLabels(makeOptions(dataset?.labels));
+    setComponents(makeOptions(dataset?.components));
+  }, [dataset]);
+
+  const options: ExpandableOptionsHeader["options"][number][] = [
+    {
+      label: "stages",
+      value: selectedStages
+        ? `Stages=${selectedStages}`
+        : "StatusCategory=In Progress",
+    },
+    {
+      value: `${includeWaitTime ? "Include" : "Exclude"} wait time`,
+    },
+  ];
+
+  if (selectedLabels.length) {
+    options.push({
+      label:
+        labelFilterType === LabelFilterType.Include
+          ? "Include labels"
+          : "Exclude labels",
+      value: selectedLabels.join(),
+    });
+  }
+  if (selectedComponents.length) {
+    options.push({
+      label: "Components",
+      value: selectedComponents.join(),
+    });
+  }
 
   return (
     <ExpandableOptions
       header={{
         title: "Dataset Options",
-        options: [
-          {
-            label: "stages",
-            value: selectedStages
-              ? `Stages=${selectedStages}`
-              : "StatusCategory=In Progress",
-          },
-          {
-            value: `${includeWaitTime ? "Include" : "Exclude"} wait time`,
-          },
-        ],
+        options,
       }}
       extra={issuesCount ? <Tag>{issuesCount} issues</Tag> : null}
     >
@@ -124,7 +185,52 @@ export const DatasetOptionsForm: FC<DatasetOptionsProps> = ({
             Include wait time
           </Checkbox>
         </Row>
+        <Row gutter={[8, 8]}>
+          <Col span={8}>
+            <Form.Item label="Labels" style={{ width: "100%" }}>
+              <Space.Compact style={{ width: "100%" }}>
+                <Form.Item style={{ width: "25%" }}>
+                  <Select
+                    value={labelFilterType}
+                    onChange={setLabelFilterType}
+                    options={[
+                      { value: "include", label: "Include" },
+                      { value: "exclude", label: "Exclude" },
+                    ]}
+                  />
+                </Form.Item>
+                <Form.Item style={{ width: "75%" }}>
+                  <Select
+                    mode="multiple"
+                    allowClear={true}
+                    options={labels}
+                    value={selectedLabels}
+                    onChange={setSelectedLabels}
+                  />
+                </Form.Item>
+              </Space.Compact>
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item label="Components">
+              <Select
+                mode="multiple"
+                allowClear={true}
+                options={components}
+                value={selectedComponents}
+                onChange={setSelectedComponents}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
       </Form>
     </ExpandableOptions>
   );
+};
+
+const makeOptions = (values?: string[]): SelectProps["options"] => {
+  return values?.map((value) => ({
+    label: value,
+    value: value,
+  }));
 };

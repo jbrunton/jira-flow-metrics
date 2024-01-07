@@ -1,6 +1,6 @@
 import { DatasetsRepository } from "@entities/datasets";
 import { IssuesRepository } from "@entities/issues";
-import { getFlowMetrics } from "@jbrunton/flow-metrics";
+import { LabelFilterType, getFlowMetrics } from "@jbrunton/flow-metrics";
 import {
   Body,
   Controller,
@@ -84,6 +84,17 @@ export class DatasetsController {
       new ParseArrayPipe({ items: String, separator: ",", optional: true }),
     )
     statuses?: string[],
+    @Query(
+      "labels",
+      new ParseArrayPipe({ items: String, separator: ",", optional: true }),
+    )
+    labels?: string[],
+    @Query(
+      "components",
+      new ParseArrayPipe({ items: String, separator: ",", optional: true }),
+    )
+    components?: string[],
+    @Query("labelFilterType") labelFilterType?: LabelFilterType,
   ) {
     let issues = await this.issues.getIssues(datasetId);
 
@@ -91,6 +102,9 @@ export class DatasetsController {
       issues,
       ["true", "1"].includes(includeWaitTime),
       statuses,
+      labels,
+      labelFilterType,
+      components,
     );
 
     return issues.map((issue) => {
@@ -99,15 +113,5 @@ export class DatasetsController {
         : undefined;
       return { ...issue, parent };
     });
-  }
-
-  @Get(":datasetId/workflows")
-  async getWorkflows(@Param("datasetId") datasetId: string) {
-    const dataset = await this.datasets.getDataset(datasetId);
-    // TODO: epic cycle time policies
-    return {
-      Story: dataset.workflow,
-      Epic: [],
-    };
   }
 }

@@ -19,3 +19,7 @@
 .story-header td {
   border-bottom-color: #fafafa !important;
 }
+
+tr.excluded {
+  opacity: 0.5;
+}

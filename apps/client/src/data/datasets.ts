@@ -17,6 +17,8 @@ export type Dataset = {
   domainId: string;
   statuses: TransitionStatus[];
   workflow: WorkflowStage[];
+  labels: string[];
+  components: string[];
   lastSync?: {
     date: Date;
     issueCount: number;

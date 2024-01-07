@@ -1,5 +1,5 @@
 import { Issue } from "@jbrunton/flow-metrics";
-import { Checkbox, Space, Table, Tag, Typography } from "antd";
+import { Checkbox, Space, Table, Tag, Tooltip, Typography } from "antd";
 import { formatDate, formatNumber } from "@jbrunton/flow-lib";
 import { compareAsc, differenceInMinutes } from "date-fns";
 import { ColumnType, ColumnsType, SortOrder } from "antd/es/table/interface";
@@ -8,7 +8,7 @@ import { useNavigationContext } from "../navigation/context";
 import { isNil } from "rambda";
 import { IssueResolution, IssueStatus } from "@jbrunton/flow-components";
 import { IssueDetailsDrawer } from "@app/datasets/reports/scatterplot/components/issue-details-drawer";
-import { ZoomInOutlined } from "@ant-design/icons";
+import { QuestionCircleOutlined, ZoomInOutlined } from "@ant-design/icons";
 import { issueDetailsPath } from "@app/navigation/paths";
 import {
   IssueExternalLink,
@@ -28,6 +28,7 @@ export type IssuesTableProps = {
   sortState?: SortState;
   onSortStateChanged?: (sortState: SortState) => void;
   onExcludedIssuesChanged?: (excludedIssueKeys: string[]) => void;
+  defaultExcludedIssueKeys?: string[];
   percentiles?: Percentile[];
 };
 
@@ -38,11 +39,14 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
   sortState,
   onSortStateChanged,
   onExcludedIssuesChanged,
+  defaultExcludedIssueKeys,
   percentiles,
 }) => {
   const { datasetId } = useNavigationContext();
 
-  const [excludedIssueKeys, setExcludedIssueKeys] = useState<string[]>([]);
+  const [excludedIssueKeys, setExcludedIssueKeys] = useState<string[]>(
+    defaultExcludedIssueKeys ?? [],
+  );
 
   const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
 
@@ -253,6 +257,14 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
   const IssueProgress = ({ issue }: { issue: Issue }) => {
     if (!parentEpic) return null;
 
+    if (!issue.metrics.includedInEpic) {
+      return (
+        <Tooltip title="Excluded from epic metrics by dataset filters">
+          N/A <QuestionCircleOutlined />
+        </Tooltip>
+      );
+    }
+
     const parentStarted = parentEpic.metrics.started;
     if (!parentStarted) return null;
 
@@ -325,6 +337,9 @@ export const IssuesTable: React.FC<IssuesTableProps> = ({
         size="small"
         scroll={{ x: 1440 }}
         columns={columns}
+        rowClassName={(issue) =>
+          parentEpic && !issue.metrics.includedInEpic ? "excluded" : "included"
+        }
         onChange={(_pagination, _filters, sorter) => {
           if ("columnKey" in sorter) {
             const sortState = {

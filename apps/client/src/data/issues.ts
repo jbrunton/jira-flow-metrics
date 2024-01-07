@@ -4,6 +4,7 @@ import {
   HierarchyLevel,
   Issue,
   IssueFlowMetrics,
+  LabelFilterType,
   TransitionStatus,
 } from "@jbrunton/flow-metrics";
 
@@ -37,10 +38,22 @@ const getIssues = async (
   datasetId: string | undefined,
   includeWaitTime: boolean,
   statuses?: string[],
+  labels?: string[],
+  labelFilterType?: LabelFilterType,
+  components?: string[],
 ): Promise<Issue[]> => {
   let url = `/datasets/${datasetId}/issues?includeWaitTime=${includeWaitTime}`;
   if (statuses) {
     url += `&statuses=${statuses.join()}`;
+  }
+  if (labels && labels.length > 0) {
+    url += `&labels=${labels.join()}`;
+  }
+  if (labelFilterType) {
+    url += `&labelFilterType=${labelFilterType}`;
+  }
+  if (components && components.length > 0) {
+    url += `&components=${components.join()}`;
   }
   const response = await axios.get(url);
   return response.data.map(parseIssue);
@@ -54,10 +67,29 @@ export const useIssues = (
   datasetId: string | undefined,
   includeWaitTime: boolean,
   statuses?: string[],
+  labels?: string[],
+  labelFilterType?: LabelFilterType,
+  components?: string[],
 ) => {
   return useQuery({
-    queryKey: [issuesQueryKey, datasetId, includeWaitTime, statuses],
-    queryFn: () => getIssues(datasetId, includeWaitTime, statuses),
+    queryKey: [
+      issuesQueryKey,
+      datasetId,
+      includeWaitTime,
+      statuses,
+      labels,
+      labelFilterType,
+      components,
+    ],
+    queryFn: () =>
+      getIssues(
+        datasetId,
+        includeWaitTime,
+        statuses,
+        labels,
+        labelFilterType,
+        components,
+      ),
     enabled: datasetId !== undefined && includeWaitTime !== undefined,
   });
 };
